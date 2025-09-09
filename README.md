@@ -1,1 +1,1 @@
-# MOP-Management-System
+# Prisma-SQL Based Full Stack Template

@@ -1,0 +1,24 @@
+import express from "express";
+import { config } from "dotenv";
+import cors from "cors";
+import errorHandler from "./utils/ErrorHandler.js";
+
+config();
+
+const app = express();
+
+app.use(express.json());
+
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
+
+app.use(errorHandler);
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
