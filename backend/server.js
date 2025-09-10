@@ -2,6 +2,7 @@ import express from "express";
 import { config } from "dotenv";
 import cors from "cors";
 import errorHandler from "./utils/ErrorHandler.js";
+import authRoutes from "./routes/auth.route.js";
 
 config();
 
@@ -15,6 +16,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use("/auth", authRoutes)
 
 app.use(errorHandler);
 
