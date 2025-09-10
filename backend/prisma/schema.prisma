@@ -6,10 +6,79 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      Role
+  customer  Customer? 
+  notificationsSent     Notification[] @relation("SentNotifications")
+  notificationsReceived Notification[] @relation("ReceivedNotifications")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Customer {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  pendingAmt  Float    @default(0)
+  orders      order[]  @relation("CustomerOrders")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model order {
+  id          String    @id @default(uuid())
+  customerId  String
+  customer    Customer  @relation("CustomerOrders", fields: [customerId], references: [id])
+  status      Status
+  type        Type
+  totalAmt    Float
+  date        DateTime
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  sender    User     @relation("SentNotifications", fields: [senderId], references: [id])
+  senderId  String
+  receiver  User     @relation("ReceivedNotifications", fields: [receiverId], references: [id])
+  receiverId String
+  message   String
+}
+
+model menu {
+  id        String   @id @default(uuid())
+  options   String[]
+  type      Type
+  date      DateTime 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  PROVIDER
+  CUSTOMER
+}
+
+enum Status {
+  PLACED
+  SEEN
+  DELIVERED
+  CANCELLED
+}
+
+enum Type {
+  LUNCH
+  DINNER
 }
