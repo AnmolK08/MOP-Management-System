@@ -3,6 +3,8 @@ import { config } from "dotenv";
 import cors from "cors";
 import errorHandler from "./utils/ErrorHandler.js";
 import authRoutes from "./routes/auth.route.js";
+import providerRoutes from "./routes/provider.route.js";
+import orderRoutes from "./routes/order.route.js"
 
 config();
 
@@ -18,6 +20,8 @@ app.use(
 );
 
 app.use("/auth", authRoutes)
+app.use("/provider", providerRoutes);
+app.use("/order", orderRoutes)
 
 app.use(errorHandler);
 

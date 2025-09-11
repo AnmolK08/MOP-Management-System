@@ -30,8 +30,9 @@ model Customer {
   id          String   @id @default(uuid())
   userId      String   @unique
   user        User     @relation(fields: [userId], references: [id])
-  pendingAmt  Float    @default(0)
+  wallet      Float    @default(0)
   orders      order[]  @relation("CustomerOrders")
+  premium     Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -40,9 +41,11 @@ model order {
   id          String    @id @default(uuid())
   customerId  String
   customer    Customer  @relation("CustomerOrders", fields: [customerId], references: [id])
-  status      Status
+  items       String[]
+  status      Status    @default(PLACED)
   type        Type
-  totalAmt    Float
+  totalAmt    Float     @default(0)
+  paid        Boolean   @default(false)
   date        DateTime
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

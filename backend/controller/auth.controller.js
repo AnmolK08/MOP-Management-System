@@ -34,9 +34,9 @@ export const login = asyncHandler(async (req, res) => {
 });
 
 export const register = asyncHandler(async (req, res) => {
-  const { email, password, role, name } = req.body;
+  const { email, password, name } = req.body;
 
-  if (!email || !password || !role || !name) {
+  if (!email || !password || !name) {
     throw new ResponseError("Please provide all required fields", 400);
   }
 
@@ -48,7 +48,7 @@ export const register = asyncHandler(async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
     const token = jwt.sign(
-    { email, hashedPassword, name, role },
+    { email, hashedPassword, name },
     process.env.JWT_SECRET,
     {
       expiresIn: "5m",
@@ -87,13 +87,13 @@ export const verifyEmail = asyncHandler(async (req, res) => {
   if (!decoded) {
     throw new ResponseError("Invalid token", 401);
   }
-  const { email, hashedPassword, name, role } = decoded;
+  const { email, hashedPassword, name } = decoded;
 
   const user = await prisma.user.create({
     data: {
       email,
       password: hashedPassword,
-      role,
+      role: "CUSTOMER",
       name,
     },
   });
@@ -101,13 +101,11 @@ export const verifyEmail = asyncHandler(async (req, res) => {
     throw new ResponseError("Failed to create user", 500);
   }
 
-  if (role === "CUSTOMER") {
-    await prisma.customer.create({
-      data: {
-        userId: user.id,
-      },
-    });
-  }
+  await prisma.customer.create({
+    data: {
+      userId: user.id,
+    },
+  });
 
 //   const redirectUrl = `http://localhost:5173/login`;
 //   res.redirect(redirectUrl);
