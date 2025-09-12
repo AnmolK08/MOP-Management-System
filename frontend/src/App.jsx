@@ -1,4 +1,3 @@
-import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import AppLayout from "./Layout/AppLayout";
@@ -12,8 +11,8 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       { index: true,path:"/", element: <LandingPage /> },     
-      { path: "loginpage", element: <LoginPage /> },  
-      { path: "signupage", element: <SignupPage /> },  
+      { path: "login", element: <LoginPage /> },  
+      { path: "signup", element: <SignupPage /> },  
      
     ],
   },  
