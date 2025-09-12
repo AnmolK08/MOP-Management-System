@@ -1,4 +1,25 @@
 import React from 'react'
+import monday1 from '../assets/monday1.webp';
+import monday2 from '../assets/monday2.webp';
+import monday3 from '../assets/monday3.webp';
+import tues1 from '../assets/tues1.webp';
+import tues2 from '../assets/tues2.webp';
+import tues3 from '../assets/tues3.webp';
+import wed1 from '../assets/wed1.webp';
+import wed2 from '../assets/wed2.webp';
+import wed3 from '../assets/wed3.webp';
+import thur1 from '../assets/thur1.webp';
+import thur2 from '../assets/thur2.webp';
+import thur3 from '../assets/thur3.webp';
+import fri1 from '../assets/fri1.webp';
+import fri2 from '../assets/fri2.webp';
+import fri3 from '../assets/fri3.webp';
+import sat1 from '../assets/sat1.avif';
+import sat2 from '../assets/sat2.webp';
+import sat3 from '../assets/sat3.webp';
+import sunday1 from '../assets/sunday1.webp';
+import sunday2 from '../assets/sunday2.webp';
+import sunday3 from '../assets/sunday3.webp';
 
 // Menu Section Component
 const MenuItemCard = ({ imageUrl, title, description }) => (
@@ -19,127 +40,173 @@ const MenuItemCard = ({ imageUrl, title, description }) => (
 );
 
 const Menu = () => {
-    const menuData = {
-        "Monday": [
-            {
-                imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuCeQL0qN83dd8Qpd_m-rsBThtQHId46c-mwolCTNRiqc9oZRRmyRCOC9h84bh1_UYeKG0-Vbn_i2OxArL3ivw0d2KfdPhFXIlbmyF1WW2-oYWatY5tmgFRrsR2qRdOI2w1cXlpH5nkHK6fYoEfYsWO6mWISl2Tt85xr47EBOyT-D2Uw90jjwWgkB-6XJg8SW6lkciJun2QgUBv6D5lTfcCQwjqk6X24ejOhXk6IHXE90msvgUVSKXWEDmS16WZRd0u20l6DecpJ04s6",
-                title: "Lunch: Chicken Curry with Rice",
-                description: "A classic Indian dish with tender chicken in a rich, flavorful sauce."
-            },
-            {
-                imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuBnd3WcWl2QJ5AkqvGHdEsYAyffqn3iR6vHBDsHThZzOdXdIM4girfWiNAycm6t5UrRDEZZ_aIkqLgUu644WAzq8vtrpKmpIliQDidlVBMazJN6jNhv6m9BksjpS_rhOcVVEr-r2kNdR04VMr_QcdFvtqM7-7AfDJ5m9_SYJe1PHq3QpgqU7I9RkZ_WXbST1BbLDJqiWXy8PJ9wo7q4aA_ZtYTWReyFlIm5QbOVyN7advxR11YZlc4ngpcRCMMuV4PA-3aO76aBR6rv",
-                title: "Dinner: Vegetable Stir-Fry with Noodles",
-                description: "A healthy and satisfying stir-fry with a variety of fresh vegetables."
-            },
-            {
-                imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuCPawwK2dPp9oYHVNOXfxrOxD-dQzKI01wRW4v0CjHvdCoEQG-sI-GN5xuLyBYCghFLWyndrd43Cv1E8oKq54hhb0yunb3v3ysGs8uLOkhpuGXVqOgDO-r-yqY2P94rvJi3lyVFI2Y9WwHT2Rinlic-aw_KMxyYttZYGhqHFd21CLwJpC1p2t32lQuVC-ueaR5iPduVw8IsGNCyi1_N2fp2Krhovi_SDinN7gXbkIx2Um2wEPHx6bFx0STzZYUIxJ8Yxj_yoFGIrzI2",
-                title: "Breakfast: Oatmeal with Fruits and Nuts",
-                description: "A nutritious and delicious way to start your day with a mix of textures and flavors."
-            }
-        ],
-        "Tuesday": [
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?indian-breakfast",
-                title: "Breakfast: Masala Dosa",
-                description: "Crispy fermented rice crepe served with potato filling and coconut chutney."
-            },
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?indian-curry",
-                title: "Lunch: Dal Makhani with Naan",
-                description: "Creamy black lentils slow-cooked with butter and spices, served with fresh naan."
-            },
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?biryani",
-                title: "Dinner: Vegetable Biryani",
-                description: "Fragrant rice cooked with mixed vegetables and aromatic spices."
-            }
-        ],
-        "Wednesday": [
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?eggs-toast",
-                title: "Breakfast: Eggs Benedict",
-                description: "Poached eggs on toasted English muffins with hollandaise sauce."
-            },
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?pasta",
-                title: "Lunch: Penne Arrabbiata",
-                description: "Spicy tomato sauce with garlic and red chili, tossed with penne pasta."
-            },
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?grilled-chicken",
-                title: "Dinner: Grilled Chicken",
-                description: "Herb-marinated chicken with roasted vegetables and quinoa."
-            }
-        ],
-        "Thursday": [
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?smoothie-bowl",
-                title: "Breakfast: Acai Bowl",
-                description: "Fresh fruit smoothie bowl topped with granola and berries."
-            },
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?sushi",
-                title: "Lunch: Sushi Platter",
-                description: "Assorted sushi rolls with wasabi and pickled ginger."
-            },
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?steak",
-                title: "Dinner: Grilled Steak",
-                description: "Premium cut steak with garlic mashed potatoes and asparagus."
-            }
-        ],
-        "Friday": [
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?pancakes",
-                title: "Breakfast: Blueberry Pancakes",
-                description: "Fluffy pancakes with fresh blueberries and maple syrup."
-            },
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?salad",
-                title: "Lunch: Mediterranean Salad",
-                description: "Fresh greens with feta, olives, and balsamic dressing."
-            },
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?fish",
-                title: "Dinner: Grilled Salmon",
-                description: "Fresh salmon with lemon herb sauce and wild rice."
-            }
-        ],
-        "Saturday": [
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?avocado-toast",
-                title: "Breakfast: Avocado Toast",
-                description: "Sourdough toast with smashed avocado, eggs, and microgreens."
-            },
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?burger",
-                title: "Lunch: Gourmet Burger",
-                description: "Angus beef burger with caramelized onions and truffle aioli."
-            },
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?pizza",
-                title: "Dinner: Artisanal Pizza",
-                description: "Wood-fired pizza with fresh mozzarella and basil."
-            }
-        ],
-        "Sunday": [
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?french-toast",
-                title: "Breakfast: French Toast",
-                description: "Brioche French toast with berries and whipped cream."
-            },
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?roast-chicken",
-                title: "Lunch: Sunday Roast",
-                description: "Roasted chicken with Yorkshire pudding and vegetables."
-            },
-            {
-                imageUrl: "https://source.unsplash.com/800x600/?pasta-seafood",
-                title: "Dinner: Seafood Pasta",
-                description: "Linguine with mixed seafood in white wine sauce."
-            }
-        ]
-    };
+const menuData = {
+  Monday: [
+    {
+      imageUrl:
+        monday1,
+      title: "Breakfast: Sabji Paratha",
+      description:
+        "Stuffed parathas filled with spiced vegetables, served hot with curd and pickle.",
+    },
+    {
+      imageUrl:
+        monday2,
+      title: "Lunch: Seetafal Daal Makhani",
+      description:
+        "A rich and creamy lentil curry, slow-cooked with butter and spices for that comforting homestyle taste.",
+    },
+    {
+      imageUrl:
+        monday3,
+      title: "Dinner: Rajma Alu Tamatar",
+      description:
+        "Hearty kidney beans with potatoes in a tangy tomato gravy — a true North Indian classic.",
+    },
+  ],
+  Tuesday: [
+    {
+      imageUrl:
+        tues1,
+      title: "Breakfast: Poha",
+      description:
+        "Light and fluffy poha tossed with onions, peas, and a dash of lemon for freshness.",
+    },
+    {
+      imageUrl:
+        tues2,
+      title: "Lunch: Mix Veg Dal Fry",
+      description:
+        "A homely lentil curry cooked with seasonal vegetables and tempered with garlic and ghee.",
+    },
+    {
+      imageUrl:
+        tues3,
+      title: "Dinner: Soya Chaap Chole",
+      description:
+        "Soya chaap simmered in a spicy chickpea curry — protein-packed and flavorful.",
+    },
+  ],
+  Wednesday: [
+    {
+      imageUrl:
+       wed1,
+      title: "Breakfast: Alu Kachori Sabji",
+      description:
+        "Crispy fried bread stuffed with spiced potato filling, served with tangy chutney.",
+    },
+    {
+      imageUrl:
+        wed2,
+      title: "Lunch: Alu Tamatar Sabji Dal",
+      description:
+        "Simple yet comforting — potato-tomato curry paired with a bowl of hot dal.",
+    },
+    {
+      imageUrl:
+        wed3,
+      title: "Dinner: Alu Zeera Dal Fry",
+      description:
+        "A wholesome dinner combo of cumin-flavored potato curry with dal fry.",
+    },
+  ],
+  Thursday: [
+    {
+      imageUrl:
+        thur1,
+      title: "Breakfast: Sabji Paratha",
+      description:
+        "Soft parathas stuffed with veggies, perfect for a filling breakfast.",
+    },
+    {
+      imageUrl:
+        thur2,
+      title: "Lunch: Dal Alu Gobi",
+      description:
+        "Comforting dal served with potato-cauliflower curry — a homestyle favorite.",
+    },
+    {
+      imageUrl:
+        thur3,
+      title: "Dinner: Baigan Bharta Chole",
+      description:
+        "Smoky roasted eggplant mash paired with spicy chickpeas for a flavorful dinner.",
+    },
+  ],
+  Friday: [
+    {
+      imageUrl:
+        fri1,
+      title: "Breakfast: Aloo Paratha",
+      description:
+        "Golden parathas stuffed with spiced potatoes, best enjoyed with butter and pickle.",
+    },
+    {
+      imageUrl:
+        fri2,
+      title: "Lunch: Khadi Alu Shimla",
+      description:
+        "A tangy yogurt-based curry with potatoes and capsicum, light yet satisfying.",
+    },
+    {
+      imageUrl:
+        fri3,
+      title: "Dinner: Shahi Paneer Alu Sabji",
+      description:
+        "Experience a truly royal and indulgent North Indian curry. This dish features soft paneer and tender potatoes in a rich, creamy, and aromatic gravy made with tomatoes, onions, cashews, and a blend of exquisite spices [67, 68, 69].",
+    },
+  ],
+  Saturday: [
+    {
+      imageUrl:
+        sat1,
+      title: "Breakfast: Macroni",
+      description:
+        "Masala macaroni cooked desi-style with onions, capsicum, and Indian spices.",
+    },
+    {
+      imageUrl:
+        sat2,
+      title: "Lunch: Chole Bhature",
+      description:
+        "Fluffy bhature served with spicy chickpea curry — an indulgent weekend treat.",
+    },
+    {
+      imageUrl:
+        sat3,
+      title: "Dinner: Rajma Alu SoyaBean",
+      description:
+        "A nutritious mix of kidney beans, potatoes, and soy chunks in a spicy curry.",
+    },
+  ],
+  Sunday: [
+    {
+      imageUrl:
+        sunday1,
+      title: "Breakfast: Sandwich",
+      description:
+        "Simple and tasty sandwiches stuffed with veggies, chutneys, and cheese.",
+    },
+    {
+      imageUrl:
+        sunday2,
+      title: "Lunch: Veg Biryani",
+      description:
+        "Fragrant rice layered with vegetables and spices, served with raita.",
+    },
+    {
+      imageUrl:
+        sunday3,
+      title: "Dinner: Masala Bhindi Chole",
+      description:
+        "Okra stir-fried with spices and paired with a rich chickpea curry.",
+    },
+  ],
+};
+
+
+
+
 
     const days = Object.keys(menuData);
     const [selectedDay, setSelectedDay] = React.useState("Monday");

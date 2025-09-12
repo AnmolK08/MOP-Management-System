@@ -1,14 +1,15 @@
 import React from 'react'
+import heroBg from '../assets/heroBg.png';
 
 // Hero Section Component
 const Hero = () => {
   return (
-    <div className="@container w-full">
+    <div className="@container w-full mt-15 sm:mt-12">
       <div className="p-0 sm:p-4">
         <div 
           className="flex min-h-[350px] xs:min-h-[400px] sm:min-h-[520px] flex-col gap-4 xs:gap-6 sm:gap-8 items-center justify-center rounded-lg sm:rounded-2xl p-3 xs:p-4 sm:p-8 text-center relative overflow-hidden" 
           style={{
-            backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuA3XzP2pKBZPqA5ZbZ8k8yVlansY7avF0l4hRC8B1sedMo1NbI0H9FumA7m0bFNIqjEoOskk5hdfA83CgDA1h4hNoqgJHFuALob1Yvycx6mGmjj79n22laJP746-sjks4BjvEOtVP4T5AX8ise310tAFAFQ5n2KtWibraKuYLYGfwo_Q-pqM8ftW-HJddwwkpdXd7QIy5kTUf-7YZvQId9jlYR6POMizPCwSQOyDsqo7I0kz315HHSbqPIXnTLdl9j8qcA5TTBLZ1MJ")',
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%), url(${heroBg})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }}
@@ -22,9 +23,9 @@ const Hero = () => {
             </p>
           </div>
           <div className="w-full px-3 xs:px-4 sm:px-0 sm:w-auto max-w-md">
-            <button className="w-full sm:w-auto min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 xs:h-12 px-4 xs:px-6 bg-[#ec6d13] text-white text-base xs:text-lg font-bold leading-normal tracking-[0.015em] hover:bg-orange-600 transition-colors flex">
+            <a href="#plans"><button className="w-full sm:w-auto min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 xs:h-12 px-4 xs:px-6 bg-[#ec6d13] text-white text-base xs:text-lg font-bold leading-normal tracking-[0.015em] hover:bg-orange-600 transition-colors flex">
               <span className="truncate">View Plans</span>
-            </button>
+            </button></a>
           </div>
         </div>
       </div>

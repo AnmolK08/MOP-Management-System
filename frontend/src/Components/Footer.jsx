@@ -17,7 +17,7 @@ const Footer = () => {
                 <div className="flex flex-col items-center md:items-start">
                     <h3 className="text-stone-900 text-lg font-semibold mb-4">Quick Links</h3>
                     <div className="flex flex-col gap-3">
-                        <a className="text-stone-600 hover:text-[#ec6d13] text-base font-normal leading-normal transition-colors" href="#">Home</a>
+                        <a className="text-stone-600 hover:text-[#ec6d13] text-base font-normal leading-normal transition-colors" href="/">Home</a>
                         <a className="text-stone-600 hover:text-[#ec6d13] text-base font-normal leading-normal transition-colors" href="#menu">Menu</a>
                         <a className="text-stone-600 hover:text-[#ec6d13] text-base font-normal leading-normal transition-colors" href="#plans">Plans</a>
                         <a className="text-stone-600 hover:text-[#ec6d13] text-base font-normal leading-normal transition-colors" href="#contact">Contact</a>
