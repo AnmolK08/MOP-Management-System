@@ -4,6 +4,13 @@ import AppLayout from "./Layout/AppLayout";
 import LoginPage from "./Pages/LoginPage";
 import SignupPage from "./Pages/SignupPage";
 import LandingPage from "./Pages/LandingPage";
+import DashboardLayout from "./Layout/DashboardLayout";
+import DashboardPage from "./Pages/DashboardPage";
+import MenuPage from "./Pages/MenuPage";
+import OrderHistoryPage from "./Pages/OrderHistoryPage";
+import AttendancePage from "./Pages/AttendancePage";
+import ProfilePage from "./Pages/ProfilePage";
+import BillingPage from "./Pages/BillingPage";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +23,19 @@ const router = createBrowserRouter([
      
     ],
   },  
+
+  {
+    path: "/u",
+    element: <DashboardLayout />,
+    children: [
+      { index: true, element: <DashboardPage /> },
+      { path: "menu", element: <MenuPage /> },
+      { path: "orders", element: <OrderHistoryPage /> },
+      { path: "attendance", element: <AttendancePage /> },
+      { path: "profile" , element: <ProfilePage />},
+      { path: "billing" , element: <BillingPage />}
+    ],
+  },
 ]);
 
 function App() {
