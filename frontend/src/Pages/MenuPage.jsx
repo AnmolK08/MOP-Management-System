@@ -11,6 +11,12 @@ const MenuPage = () => {
         date: new Date(),
     };
 
+    const handlePlaceOrder = (orderData) => {
+        console.log("Order placed from Menu Page:", orderData);
+        // Here you would typically send this to a global state or an API
+        setOrderDialogOpen(false);
+    };
+
     return (
         <div className="max-w-4xl mx-auto">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
@@ -24,12 +30,8 @@ const MenuPage = () => {
             <div className="grid sm:grid-cols-2 gap-6">
                 <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-xl font-semibold text-gray-900">
-                            {menu.type} Menu
-                        </h3>
-                        <span className="text-sm text-gray-500">
-                            {new Date(menu.date).toLocaleDateString()}
-                        </span>
+                        <h3 className="text-xl font-semibold text-gray-900">{menu.type} Menu</h3>
+                        <span className="text-sm text-gray-500">{new Date(menu.date).toLocaleDateString()}</span>
                     </div>
                     <ul className="space-y-3 mb-6">
                         {menu.options.map((option, index) => (
@@ -62,7 +64,6 @@ const MenuPage = () => {
                             </div>
                         </div>
                     </div>
-
                     <div className="bg-white p-6 rounded-lg shadow-sm">
                         <h3 className="text-lg font-semibold text-gray-900 mb-4">Upcoming Meals</h3>
                         <div className="space-y-3">
@@ -83,6 +84,7 @@ const MenuPage = () => {
                 isOpen={isOrderDialogOpen} 
                 onClose={() => setOrderDialogOpen(false)} 
                 menu={menu}
+                onPlaceOrder={handlePlaceOrder}
             />
         </div>
     );
