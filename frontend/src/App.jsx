@@ -11,6 +11,10 @@ import OrderHistoryPage from "./Pages/OrderHistoryPage";
 import AttendancePage from "./Pages/AttendancePage";
 import ProfilePage from "./Pages/ProfilePage";
 import BillingPage from "./Pages/BillingPage";
+import ProviderLayout from "./Layout/ProviderLayout";
+import ProviderUsersPage from "./Pages/ProviderDashboard/ProviderUsersPage";
+import ProviderOrdersPage from "./Pages/ProviderDashboard/ProviderOrdersPage";
+import ProviderDashboardPage from "./Pages/ProviderDashboard/ProviderDashboardPage";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +40,17 @@ const router = createBrowserRouter([
       { path: "billing" , element: <BillingPage />}
     ],
   },
+
+  {
+        path: "/a",
+        element: <ProviderLayout />,
+        children: [
+            { index: true, element: <ProviderDashboardPage /> },
+            { path: "orders", element: <ProviderOrdersPage /> },
+            { path: "users", element: <ProviderUsersPage /> },
+            { path: "profile", element: <ProfilePage /> }, 
+        ],
+    },
 ]);
 
 function App() {
