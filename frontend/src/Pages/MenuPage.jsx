@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import OrderDialog from '../Components/OrderDialog';
+import Menu from '../Components/Menu';
 
 const MenuPage = () => {
     const [isOrderDialogOpen, setOrderDialogOpen] = useState(false);
@@ -78,6 +79,10 @@ const MenuPage = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div>
+                <Menu/>
             </div>
 
             <OrderDialog 

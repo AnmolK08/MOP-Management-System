@@ -136,7 +136,7 @@ const DashboardLayout = () => {
                                         to="/u/profile"
                                         className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
                                     >
-                                        Profile Settings
+                                        Profile
                                     </Link>
                                     <button 
                                         onClick={() => {
