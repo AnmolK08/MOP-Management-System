@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { LogoIcon, MenuIcon } from './SvgIcons';
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 whitespace-nowrap border-b border-solid border-b-[#f4f2f0] bg-white/80 backdrop-blur-sm">
@@ -27,7 +27,7 @@ const Header = () => {
               <a className="text-stone-700 hover:text-[#ec6d13] text-base font-medium leading-normal transition-colors" href="#plans">Plans</a>
               <a className="text-stone-700 hover:text-[#ec6d13] text-base font-medium leading-normal transition-colors" href="#contact">Contact</a>
             </nav>
-            <a href="/loginpage">
+            <a href="/login">
               <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-11 px-5 bg-[#ec6d13] text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-orange-600 transition-colors">
               <span className="truncate">Login / Register</span>
             </button>
