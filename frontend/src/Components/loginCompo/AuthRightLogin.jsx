@@ -6,27 +6,16 @@ export default function AuthRight() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Login submitted ✅");
-    // Example: navigate to dashboard after login
     navigate("/dashboard");
   };
 
   return (
-    <div className="flex flex-1 items-center justify-center p-6 lg:p-12 w-full lg:w-1/2 bg-gray-50">
+    <div className="flex flex-1 items-center justify-center ml-8 lg:p-12 w-full lg:w-[30vw] bg-white">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-10">
-          <div className="inline-block p-3 bg-blue-100 rounded-full mb-4">
-            <svg
-              className="h-8 w-8 text-blue-600"
-              fill="none"
-              viewBox="0 0 48 48"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M24 4C25.7818 14.2173 33.7827 22.2182 44 24C33.7827 25.7818 25.7818 33.7827 24 44C22.2182 33.7827 14.2172 25.7818 4 24C14.2172 22.2182 22.2182 14.2173 24 4Z"
-                fill="currentColor"
-              />
-            </svg>
+          <div className="inline-block bg-transparent rounded-full">
+            <img src="/login_logo3.gif" alt="login_logo3" className="w-40" />
           </div>
           <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
           <p className="text-gray-500 mt-2">
@@ -43,8 +32,9 @@ export default function AuthRight() {
               name="username"
               type="text"
               placeholder="Username"
-              className="w-full rounded-lg border border-gray-300 bg-gray-50 h-10 pl-5 text-base 
-                         focus:border-blue-300 focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full rounded-lg border border-[#ffd9c7] bg-[#fff5f2] h-10 pl-5 text-base 
+                         focus:border-[#ff9770] focus:ring-2 focus:ring-[#ff9770] outline-none 
+                         placeholder:text-gray-400 transition"
             />
           </div>
 
@@ -55,8 +45,9 @@ export default function AuthRight() {
               name="password"
               type="password"
               placeholder="Password"
-              className="w-full rounded-lg border h-10 pl-5 border-gray-300 bg-gray-50  text-base 
-                         focus:border-blue-300 focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full rounded-lg border border-[#ffd9c7] bg-[#fff5f2] h-10  pl-5 text-base 
+                         focus:border-[#ff9770] focus:ring-2 focus:ring-[#ff9770] outline-none 
+                         placeholder:text-gray-400 transition"
             />
           </div>
 
@@ -67,9 +58,12 @@ export default function AuthRight() {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="h-4 w-4 rounded border-[#ff9770] text-[#ff9770] focus:ring-[#ff9770]"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+              <label
+                htmlFor="remember-me"
+                className="ml-2 block text-sm text-gray-900"
+              >
                 Remember me
               </label>
             </div>
@@ -77,7 +71,7 @@ export default function AuthRight() {
               <button
                 type="button"
                 onClick={() => navigate("/forgot-password")}
-                className="font-medium text-blue-600 hover:text-blue-500"
+                className="font-medium text-[#ff7849] hover:text-[#e76f51] transition"
               >
                 Forgot Password?
               </button>
@@ -87,7 +81,9 @@ export default function AuthRight() {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full flex justify-center py-4 px-4 rounded-lg shadow-sm text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
+            className="w-full flex justify-center py-4 px-4 rounded-lg shadow-sm text-sm font-bold text-white 
+                       bg-[#ff9770] hover:bg-[#ff7849] focus:ring-2 focus:ring-offset-2 focus:ring-[#ffcdb2] 
+                       transition duration-150 ease-in-out"
           >
             Login
           </button>
@@ -99,7 +95,7 @@ export default function AuthRight() {
           <button
             type="button"
             onClick={() => navigate("/signup")}
-            className="font-medium text-blue-600 hover:text-blue-500"
+            className="font-medium text-[#ff7849] hover:text-[#e76f51] transition"
           >
             Register
           </button>
