@@ -216,18 +216,27 @@ const menuData = {
             <h2 className="text-stone-900 text-4xl font-bold leading-tight tracking-tight text-center mb-12">This Week's Menu</h2>
             <div className="max-w-5xl mx-auto">
                 <div className="flex justify-center border-b border-stone-200 mb-8">
-                    <div className="flex overflow-x-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                        {days.map((day) => (
-                            <button 
-                                key={day}
-                                onClick={() => setSelectedDay(day)}
-                                className={`flex flex-col items-center justify-center px-6 pb-3 pt-2 border-b-2 ${day === selectedDay ? 'border-b-[#ec6d13] text-[#ec6d13]' : 'border-b-transparent text-stone-500 hover:text-[#ec6d13] hover:border-b-[#ec6d13]/50 transition-colors'}`}
-                            >
-                                <p className="text-lg font-semibold leading-normal whitespace-nowrap">{day}</p>
-                            </button>
-                        ))}
-                    </div>
-                </div>
+            <div className="flex gap-1.5 overflow-x-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {days.map((day) => (
+                <button
+                  key={day}
+                  onClick={() => setSelectedDay(day)}
+                  className={`relative flex flex-col items-center justify-center px-6 pb-3 pt-2 
+                    text-stone-500 transition-colors 
+                    after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 
+                    after:h-[2px] after:w-[0%] after:rounded-full after:transition-all after:duration-300
+                    ${
+                      day === selectedDay
+                        ? "text-[#ec6d13] after:bg-[#ec6d13] after:w-[60%]"
+                        : "hover:text-[#ec6d13] hover:after:bg-[#ec6d13]/50 hover:after:w-[60%]"
+                    }`}
+                >
+                  <p className="text-lg font-semibold leading-normal whitespace-nowrap">{day}</p>
+                </button>
+                ))}
+              </div>
+            </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                     {menuData[selectedDay].map((item, index) => (
                         <MenuItemCard key={index} {...item} />
