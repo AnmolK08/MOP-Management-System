@@ -27,3 +27,25 @@ export const deleteMenu = asyncHandler(async (req, res) => {
     
     res.status(200).json({success: true, message: "Menu deleted successfully", data: menu});
 }); //done
+
+export const updateMenu = asyncHandler(async (req, res)=>{
+    const {menuId} = req.params;
+    const {type, options} = req.body
+    
+    if(!menuId || !type || !options || options.length==0)
+        throw new ResponseError("All the fields are required", 401)
+
+    const menu = await prisma.menu.update({
+        where: {id: menuId},
+        data:{
+            type,
+            options
+        }
+    })
+
+    if(!menu)
+      throw new ResponseError("Menu does not exist",404)
+
+    res.status(201).json({success: true, message: "Menu uploaded successfully", data: menu})
+    
+}) //done
