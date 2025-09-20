@@ -1,0 +1,239 @@
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { axiosInstance } from "../../libs/axios";
+
+// --- State Structure ---
+const initialState = {
+  userOrders: [],
+  providerOrders: [],
+  loading: false,
+  error: null,
+};
+
+// --- Async Thunks (Simplified) ---
+
+// 1. USER: Place order
+export const placeOrder = createAsyncThunk(
+  "orders/placeOrder",
+  async (orderData, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axiosInstance.post("/order/placeOrder", orderData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to place order"
+      );
+    }
+  }
+);
+
+// 2. USER: Fetch own orders
+export const fetchUserOrders = createAsyncThunk(
+  "orders/fetchUserOrders",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axiosInstance.get("/order/my-orders", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch user orders"
+      );
+    }
+  }
+);
+
+// 3. USER: Cancel order
+export const cancelOrder = createAsyncThunk(
+  "orders/cancelOrder",
+  async (orderId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axiosInstance.put(
+        `/order/cancelOrder/${orderId}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to cancel order"
+      );
+    }
+  }
+);
+
+// 4. PROVIDER: Fetch all orders
+export const fetchProviderOrders = createAsyncThunk(
+  "orders/fetchProviderOrders",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axiosInstance.get("/order/getAllOrders", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch provider orders"
+      );
+    }
+  }
+);
+
+// 5. PROVIDER: Mark as Seen
+export const markOrderAsSeen = createAsyncThunk(
+  "orders/markAsSeen",
+  async (orderId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axiosInstance.put(
+        `/order/seenOrder/${orderId}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to mark order as seen"
+      );
+    }
+  }
+);
+
+// 6. PROVIDER: Mark as Delivered
+export const markOrderAsDelivered = createAsyncThunk(
+  "orders/markAsDelivered",
+  async (orderId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axiosInstance.put(
+        `/order/orderDelivered/${orderId}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to mark order as delivered"
+      );
+    }
+  }
+);
+
+// 7. PROVIDER: Delete order
+export const deleteOrder = createAsyncThunk(
+  "orders/deleteOrder",
+  async (orderId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axiosInstance.delete(`/order/deleteOrder/${orderId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return { orderId };
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to delete order"
+      );
+    }
+  }
+);
+
+// --- The Slice Definition ---
+const ordersSlice = createSlice({
+  name: "orders",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    const updateOrderInState = (state, updatedOrder) => {
+      const userIndex = state.userOrders.findIndex(
+        (o) => o.id === updatedOrder.id
+      );
+      if (userIndex !== -1) state.userOrders[userIndex] = updatedOrder;
+
+      const providerIndex = state.providerOrders.findIndex(
+        (o) => o.id === updatedOrder.id
+      );
+      if (providerIndex !== -1)
+        state.providerOrders[providerIndex] = updatedOrder;
+    };
+
+    builder
+      // Place Order
+      .addCase(placeOrder.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(placeOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userOrders.push(action.payload);
+      })
+      .addCase(placeOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Fetch User Orders
+      .addCase(fetchUserOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userOrders = action.payload;
+      })
+
+      // Fetch Provider Orders
+      .addCase(fetchProviderOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.providerOrders = action.payload;
+      })
+
+      // Cancel Order
+      .addCase(cancelOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        updateOrderInState(state, action.payload);
+      })
+
+      // Mark Seen
+      .addCase(markOrderAsSeen.fulfilled, (state, action) => {
+        state.loading = false;
+        updateOrderInState(state, action.payload);
+      })
+
+      // Mark Delivered
+      .addCase(markOrderAsDelivered.fulfilled, (state, action) => {
+        state.loading = false;
+        updateOrderInState(state, action.payload);
+      })
+
+      // Delete Order
+      .addCase(deleteOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userOrders = state.userOrders.filter(
+          (o) => o.id !== action.payload.orderId
+        );
+        state.providerOrders = state.providerOrders.filter(
+          (o) => o.id !== action.payload.orderId
+        );
+      })
+
+      // Common Pending/Rejected
+      .addMatcher(
+        (action) => action.type.endsWith("/pending"),
+        (state) => {
+          state.loading = true;
+          state.error = null;
+        }
+      )
+      .addMatcher(
+        (action) => action.type.endsWith("/rejected"),
+        (state, action) => {
+          state.loading = false;
+          state.error = action.payload;
+        }
+      );
+  },
+});
+
+export default ordersSlice.reducer;
