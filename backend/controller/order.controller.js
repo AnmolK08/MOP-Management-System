@@ -203,8 +203,44 @@ export const getOdersForTheMenu = asyncHandler(async (req, res) => {
   if (!date || !type) {
     throw new ResponseError("Please provide all required fields");
   }
+
+  const today = new Date(date)
   const orders = await prisma.order.findMany({
-    where: { date: new Date(date), type },
+    where: { date: {
+      gte: new Date(today.setHours(0,0,0,0))
+    }, type },
   });
   res.status(200).json({ success: true, data: orders });
 }); //done
+
+export const updateOrder = asyncHandler(async (req, res)=>{
+  const {orderId} = req.params;
+  const {items} = req.body;
+
+  if(!orderId)
+      throw new ResponseError("Please provide Order id.")
+  
+  const order = await prisma.order.findUnique(
+    {
+      where:{
+        id: orderId
+      }
+    }
+  )
+
+  if(!order)
+    throw new ResponseError("Order not found.",404)
+
+  if(order.status!=="PLACED" )
+    throw new ResponseError("Can't be updated", 403)
+
+  const updatedOrder = await prisma.order.update({
+    where:{
+      id: orderId
+    },
+    data:{
+      items
+    }
+  })
+  res.status(200).json({success:true, message:"Updated Order.", data:updatedOrder})
+}) //done

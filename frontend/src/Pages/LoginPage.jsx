@@ -1,22 +1,32 @@
+import BackButton from "../Components/BackButton";
 import AuthLeft from "../Components/loginCompo/AuthLeftLogin";
 import AuthRight from "../Components/loginCompo/AuthRightLogin";
 
-
 export default function LoginPage() {
   return (
-   <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
-    <div className="relative">
-      {/* Background shadow */}
-      <div className="absolute inset-0 rounded-2xl bg-black/10 blur-2xl"></div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8">
+          {/* Back button at top */}
+          <div className="absolute top-4 left-4 z-10">
+            <BackButton />
+          </div>
+      <div className="relative w-full max-w-4xl">
+        {/* Background shadow */}
+        <div className="absolute inset-0 rounded-2xl bg-black/5 blur-2xl -z-10"></div>
 
-      {/* Card */}
-      <div className="relative flex w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden">
-        <AuthLeft />
-        <AuthRight />
+        {/* Card */}
+        <div className="relative flex flex-col lg:flex-row w-full bg-white rounded-2xl shadow-xl overflow-hidden min-h-[500px] sm:min-h-[600px]">
+          
+          {/* Left Side - Hidden on small screens */}
+          <div className="hidden lg:flex lg:w-5/12 items-center justify-center p-4">
+            <AuthLeft />
+          </div>
+
+          {/* Right Side */}
+          <div className="flex w-full lg:w-7/12 items-center justify-center p-6 sm:p-8">
+            <AuthRight />
+          </div>
+        </div>
       </div>
     </div>
-</div>
   );
 }
-
-
