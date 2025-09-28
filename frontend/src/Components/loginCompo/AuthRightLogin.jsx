@@ -1,17 +1,40 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
+import {userLogin} from '../../Redux/Slices/authSlice';
 
 export default function AuthRight() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    // Show a toast message if the user was just redirected from email verification
+    if (searchParams.get('verified') === 'true') {
+      toast.success('Email verified successfully! Please log in.');
+    }
+
+  }, [searchParams]);
+
   const [credentials, setCredentials] = useState({
-    username: "",
+    email: "",
     password: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log("Login submitted ✅", credentials);
-    navigate("/dashboard");
+    const toastId = toast.loading("Logging in...");
+    
+    try {
+      await dispatch(userLogin(credentials)).unwrap();
+      toast.success("Logged in successfully", { id: toastId });
+      navigate('/u');
+      
+    } catch (error) {
+      toast.error(error.message || "Login failed", { id: toastId });
+    }
   };
 
   const handleChange = (e) => {
@@ -45,13 +68,13 @@ export default function AuthRight() {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-          {/* Username */}
+          {/* Email */}
           <input
-            id="username"
-            name="username"
-            type="text"
-            placeholder="Username"
-            value={credentials.username}
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Email"
+            value={credentials.email}
             onChange={handleChange}
             className="w-full rounded-lg border border-[#ffd9c7] bg-[#fff5f2] h-11 sm:h-12 pl-3 sm:pl-4 text-sm sm:text-base
                        focus:border-[#ff9770] focus:ring-2 focus:ring-[#ff9770] outline-none

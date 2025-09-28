@@ -49,3 +49,22 @@ export const updateMenu = asyncHandler(async (req, res)=>{
     res.status(201).json({success: true, message: "Menu uploaded successfully", data: menu})
     
 }) //done
+
+export const getLatestMenu = asyncHandler(async (req, res)=>{
+    const date = new Date();
+
+    const startDay = new Date(date.setHours(0,0,0,0));
+
+    const menus = await prisma.menu.findMany({
+        where:{
+            date:{
+                gte: startDay
+            }
+        }
+    })
+
+    if(!menus || menus.length==0)
+        throw new ResponseError("No Menu Uploaded yet.", 404)
+
+    res.status(200).json({success: true, message: "Menu of the day", data:menus})
+}) 

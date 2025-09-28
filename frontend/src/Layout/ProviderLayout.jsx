@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   RiDashboardLine,
   RiFileListLine,
@@ -10,12 +10,17 @@ import {
   RiNotification3Line,
 } from "react-icons/ri";
 import { LogoIcon } from "../Components/SvgIcons"; // Assuming you have this icon
+import { userLogout } from "../Redux/Slices/authSlice";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
 const ProviderLayout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation();
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setSidebarOpen(false);
@@ -39,8 +44,19 @@ const ProviderLayout = () => {
     { path: "/a/profile", icon: RiSettingsLine, label: "Profile Settings" },
   ];
 
+  const handleLogout = () => {
+    const toastId = toast.loading("Logging Out");
+    dispatch(userLogout());
+
+    localStorage.removeItem("token");
+    navigate("/login");
+    toast.success("Logged out", {
+      id: toastId,
+    });
+  };
+
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
       {/* Sidebar */}
       <aside
         className={`fixed md:relative inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform ${
@@ -118,7 +134,9 @@ const ProviderLayout = () => {
                   >
                     Profile
                   </NavLink>
-                  <button className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
+                  <button 
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
                     Logout
                   </button>
                 </div>
@@ -126,7 +144,7 @@ const ProviderLayout = () => {
             </div>
           </div>
         </header>
-        <main className="flex-1 p-4 md:p-6">
+        <main className="flex-1 p-4 md:p-6 overflow-y-auto">
           <Outlet />
         </main>
       </div>

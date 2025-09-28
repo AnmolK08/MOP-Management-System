@@ -2,38 +2,38 @@ import React, { useState, useEffect } from 'react';
 import { RiCloseLine } from 'react-icons/ri';
 
 const MenuDialog = ({ isOpen, onClose, onSave, existingMenu }) => {
-    const [items, setItems] = useState([]);
-    const [newItem, setNewItem] = useState('');
+    const [options, setOptions] = useState([]);
+    const [newOption, setNewOption] = useState('');
     const [type, setType] = useState('Breakfast');
 
     useEffect(() => {
         // Populate form if we are editing an existing menu
         if (isOpen && existingMenu) {
-            setItems(existingMenu.items);
+            setOptions(existingMenu.options);
             setType(existingMenu.type);
         } 
         // Reset form when opening to create a new menu
         else if (isOpen) {
-            setItems([]);
+            setOptions([]);
             setType('Breakfast');
-            setNewItem('');
+            setNewOption('');
         }
     }, [isOpen, existingMenu]);
 
     const handleAddItem = () => {
-        if (newItem.trim()) {
-            setItems([...items, newItem.trim()]);
-            setNewItem('');
+        if (newOption.trim()) {
+            setOptions([...options, newOption.trim()]);
+            setNewOption('');
         }
     };
 
     const handleRemoveItem = (indexToRemove) => {
-        setItems(items.filter((_, index) => index !== indexToRemove));
+        setOptions(options.filter((_, index) => index !== indexToRemove));
     };
 
 
     const handleSave = () => {
-        onSave({ items, type });
+        onSave({ options, type });
         onClose(); // Close the dialog after saving
     };
 
@@ -72,7 +72,7 @@ const MenuDialog = ({ isOpen, onClose, onSave, existingMenu }) => {
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Menu Items</label>
                         <div className="space-y-2 mb-3">
-                            {items.map((item, index) => (
+                            {options.map((item, index) => (
                                 <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded-lg">
                                     <span className="text-gray-800">{item}</span>
                                     <button onClick={() => handleRemoveItem(index)} className="text-red-500 hover:text-red-700 font-bold">✕</button>
@@ -82,8 +82,8 @@ const MenuDialog = ({ isOpen, onClose, onSave, existingMenu }) => {
                         <div className="flex gap-3">
                             <input
                                 type="text"
-                                value={newItem}
-                                onChange={(e) => setNewItem(e.target.value)}
+                                value={newOption}
+                                onChange={(e) => setNewOption(e.target.value)}
                                 placeholder="Add an item"
                                 className="flex-grow p-2 border rounded-lg"
                                 onKeyPress={(e) => e.key === 'Enter' && handleAddItem()}

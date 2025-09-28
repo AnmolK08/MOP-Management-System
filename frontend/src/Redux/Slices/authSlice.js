@@ -5,7 +5,7 @@ export const userSignup = createAsyncThunk(
   "auth/signup",
   async ({ name, email, password }, { rejectWithValue }) => {
     try {
-      const res = await axiosInstance.post("auth/signup", {
+      const res = await axiosInstance.post("auth/register", {
         name,
         email,
         password,
@@ -37,7 +37,7 @@ export const userLogout = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axiosInstance.post("/auth/logout", {
+      const res = await axiosInstance.get("/auth/logout", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -69,9 +69,8 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(userSignup.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+      .addCase(userSignup.fulfilled, (state) => {
+        state.loading = false;
       })
       .addCase(userSignup.rejected, (state, action) => {
         state.loading = false;
