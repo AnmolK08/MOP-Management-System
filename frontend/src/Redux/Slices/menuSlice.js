@@ -23,10 +23,12 @@ export const fetchMenu = createAsyncThunk(
 
 export const createMenu = createAsyncThunk(
   "provider/createMenu",
-  async (_, { rejectWithValue }) => {
+  async (menuData, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axiosInstance.post("/provider/uploadMenu", {
+      console.log(menuData.options);
+      console.log(menuData.type);
+      const res = await axiosInstance.post("/provider/menuUpload", menuData.type , menuData.options ,{
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -43,10 +45,10 @@ export const createMenu = createAsyncThunk(
 
 export const updateMenu = createAsyncThunk(
   "provider/updateMenu",
-  async (_, { rejectWithValue }) => {
+  async ({ menuId, ...updateData }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axiosInstance.post("/provider/updateMenu", {
+      const res = await axiosInstance.patch(`/provider/updateMenu/${menuId}`, updateData.type , updateData.options, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -63,10 +65,10 @@ export const updateMenu = createAsyncThunk(
 
 export const deleteMenu = createAsyncThunk(
   "provider/deleteMenu",
-  async (_, { rejectWithValue }) => {
+  async (menuId, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axiosInstance.get("/provider/deleteMenu", {
+      const res = await axiosInstance.delete(`/provider/deleteMenu/${menuId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -97,13 +99,18 @@ const menuSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchMenu.fulfilled, (state, action) => {
-        state.menu = action.payload.menu;
+        state.menu = action.payload.data?.[0] || null;
         state.loading = false;
         state.error = null;
       })
       .addCase(fetchMenu.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        if (action.payload === "No Menu Uploaded yet.") {
+          state.menu = null;
+          state.error = null;
+        } else {
+          state.error = action.payload;
+        }
       })
       .addCase(createMenu.pending, (state) => {
         state.loading = true;

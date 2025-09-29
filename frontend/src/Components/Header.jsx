@@ -43,9 +43,11 @@ const Header = () => {
           <a className="px-4 py-2 text-stone-700 hover:text-[#ec6d13] text-base font-medium leading-normal transition-colors" href="#plans">Plans</a>
           <a className="px-4 py-2 text-stone-700 hover:text-[#ec6d13] text-base font-medium leading-normal transition-colors" href="#contact">Contact</a>
           <div className="px-4 pt-2">
-            <button className="w-full flex cursor-pointer items-center justify-center overflow-hidden rounded-md h-11 px-5 bg-[#ec6d13] text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-orange-600 transition-colors">
-              <span className="truncate">Login / Register</span>
-            </button>
+            <a href="/login">
+              <button className="w-full flex cursor-pointer items-center justify-center overflow-hidden rounded-md h-11 px-5 bg-[#ec6d13] text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-orange-600 transition-colors">
+                <span className="truncate">Login / Register</span>
+              </button>
+            </a>
           </div>
         </nav>
       </div>

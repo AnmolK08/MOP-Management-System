@@ -1,55 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import OrderDetailsModal from "../Components/OrderDetailsModal";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserOrders } from "../Redux/Slices/orderSlice";
 
 const OrderHistoryPage = () => {
   // Dummy Data with array of items
-  const orders = [
-    {
-      orderNumber: "#12345",
-      date: "2024-07-15",
-      total: 45.5,
-      status: "Delivered",
-      items: ["Chicken Biryani", "Coke"],
-      type: "Delivery",
-      paid: true,
-    },
-    {
-      orderNumber: "#12344",
-      date: "2024-07-10",
-      total: 22.75,
-      status: "Delivered",
-      items: ["Veg Thali"],
-      type: "Pickup",
-      paid: true,
-    },
-    {
-      orderNumber: "#12343",
-      date: "2024-07-05",
-      total: 30.0,
-      status: "Approved",
-      items: ["Paneer Butter Masala", "Naan", "Salad"],
-      type: "Delivery",
-      paid: false,
-    },
-    {
-      orderNumber: "#12342",
-      date: "2024-06-28",
-      total: 15.2,
-      status: "Placed",
-      items: ["Samosa"],
-      type: "Pickup",
-      paid: true,
-    },
-    {
-      orderNumber: "#12341",
-      date: "2024-06-20",
-      total: 55.0,
-      status: "Canceled",
-      items: ["Special Thali", "Lassi", "Gulab Jamun"],
-      type: "Delivery",
-      paid: false,
-    },
-  ];
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+      dispatch(fetchUserOrders());
+  }, []);
+  
+  const orders = useSelector((state)=> state.orders.userOrders);
 
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");

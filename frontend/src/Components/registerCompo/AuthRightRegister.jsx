@@ -1,14 +1,58 @@
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { userSignup } from "../../Redux/Slices/authSlice";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function AuthRightRegister() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Register submitted ✅");
-    navigate("/dashboard");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    if (formData.password.length < 6) {
+      toast.error("Password must be at least 6 characters long");
+      return;
+    }
+
+    const toastId = toast.loading("Creating your account...");
+    
+    try {
+      await dispatch(userSignup({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      })).unwrap();
+
+      toast.success("Please verify your email", { id: toastId });
+      navigate("/email-verification", { 
+        state: { email: formData.email }
+      });
+    } catch (error) {
+      toast.error(error || "Registration failed", { id: toastId });
+    }
+  }
+  
   return (
     <div className="flex flex-1 items-center justify-center w-full">
       <div className="w-full max-w-sm sm:max-w-md"> {/* narrower like login */}
@@ -30,13 +74,16 @@ export default function AuthRightRegister() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
-            id="fullname"
-            name="fullname"
+            id="name"
+            name="name"
             type="text"
             placeholder="Full Name"
+            value={formData.name}
+            onChange={handleChange}
             className="w-full rounded-lg border border-[#ffd9c7] bg-[#fff5f2] h-11 pl-4 text-base 
                        focus:border-[#d06842] focus:ring-2 focus:ring-[#ff9770] outline-none
                        placeholder:text-gray-400 transition"
+            required
           />
 
           <input
@@ -44,9 +91,12 @@ export default function AuthRightRegister() {
             name="email"
             type="email"
             placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
             className="w-full rounded-lg border border-[#ffd9c7] bg-[#fff5f2] h-11 pl-4 text-base 
                        focus:border-[#c76542] focus:ring-2 focus:ring-[#ff9770] outline-none
                        placeholder:text-gray-400 transition"
+            required
           />
 
           <input
@@ -54,36 +104,27 @@ export default function AuthRightRegister() {
             name="password"
             type="password"
             placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
             className="w-full rounded-lg border border-[#ffd9c7] bg-[#fff5f2] h-11 pl-4 text-base 
                        focus:border-[#e36335] focus:ring-2 focus:ring-[#ff9770] outline-none
                        placeholder:text-gray-400 transition"
+            required
           />
 
           <input
-            id="confirm-password"
-            name="confirm-password"
+            id="confirmPassword"
+            name="confirmPassword"
             type="password"
             placeholder="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
             className="w-full rounded-lg border border-[#ffd9c7] bg-[#fff5f2] h-11 pl-4 text-base 
                        focus:border-[#b95835] focus:ring-2 focus:ring-[#ff9770] outline-none
                        placeholder:text-gray-400 transition"
+            required
           />
 
-          {/* Terms */}
-          <div className="flex items-center">
-            <input
-              id="terms"
-              name="terms"
-              type="checkbox"
-              className="h-4 w-4 rounded border-[#ff9770] text-[#ff9770] focus:ring-[#ff9770]"
-            />
-            <label htmlFor="terms" className="ml-2 text-sm text-gray-700">
-              I agree to the{" "}
-              <span className="text-[#c1532f] hover:underline cursor-pointer">
-                Terms & Conditions
-              </span>
-            </label>
-          </div>
 
           {/* Submit */}
           <button

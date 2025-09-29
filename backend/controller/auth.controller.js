@@ -30,7 +30,17 @@ export const login = asyncHandler(async (req, res) => {
     secure: true,
   });
 
-  res.status(200).json({ success: true, message: "Login successful", data: token });
+  res.status(200).json({
+    success: true,
+    message: "Login successful",
+    token: token,
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+  });
 });
 
 export const register = asyncHandler(async (req, res) => {
@@ -47,7 +57,7 @@ export const register = asyncHandler(async (req, res) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-    const token = jwt.sign(
+  const token = jwt.sign(
     { email, hashedPassword, name },
     process.env.JWT_SECRET,
     {
@@ -65,12 +75,29 @@ export const register = asyncHandler(async (req, res) => {
     },
   });
 
-  await transporter.sendMail({
-    from: process.env.EMAIL,
-    to: email,
-    subject: "Verify your email",
-    html: `<p>Click the link to verify:</p><a href="${verificationLink}">${verificationLink}</a>`,
-  });
+await transporter.sendMail({
+  from: process.env.EMAIL,
+  to: email,
+  subject: "Verify your email - Minipahadganj",
+  html: `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 10px;">
+      <h2 style="color: #ff7849; text-align: center;">Welcome to Minipahadganj</h2>
+      <p>Hi there,</p>
+      <p>Thanks for signing up! Please verify your email address to activate your account.</p>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${verificationLink}" 
+           style="background-color: #ff7849; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+          Verify Email
+        </a>
+      </div>
+      <p>If the button above doesn’t work, copy and paste the link below into your browser:</p>
+      <p style="word-break: break-word; color: #555;"><a href="${verificationLink}" style="color:#ff7849;">${verificationLink}</a></p>
+      <p style="margin-top: 30px;">This link will expire in <b>15 minutes</b> for your security.</p>
+      <p>Cheers,<br><b>The Mini Team</b></p>
+    </div>
+  `
+});
+
 
   res.status(200).json({ success: true, message: "Email sent successful" });
 });
@@ -107,8 +134,8 @@ export const verifyEmail = asyncHandler(async (req, res) => {
     },
   });
 
-//   const redirectUrl = `http://localhost:5173/login`;
-//   res.redirect(redirectUrl);
+  const redirectUrl = `http://localhost:5173/login?verified=true`;
+  res.redirect(redirectUrl);
 
   res.json({
     success: true,
@@ -117,6 +144,6 @@ export const verifyEmail = asyncHandler(async (req, res) => {
 });
 
 export const logout = asyncHandler(async (req, res) => {
-    res.clearCookie("token");
-    res.status(200).json({ success: true, message: "Logged out successfully" });
+  res.clearCookie("token");
+  res.status(200).json({ success: true, message: "Logged out successfully" });
 });
