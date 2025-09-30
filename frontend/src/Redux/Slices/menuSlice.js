@@ -6,7 +6,7 @@ export const fetchMenu = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axiosInstance.get("/provider/fetchMenu", {
+      const res = await axiosInstance.get("/fetch/fetchMenu", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -26,9 +26,8 @@ export const createMenu = createAsyncThunk(
   async (menuData, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      console.log(menuData.options);
-      console.log(menuData.type);
-      const res = await axiosInstance.post("/provider/menuUpload", menuData.type , menuData.options ,{
+      const res = await axiosInstance.post("/provider/menuUpload",{ type: menuData.type , options: menuData.options }
+        ,{
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -48,7 +47,12 @@ export const updateMenu = createAsyncThunk(
   async ({ menuId, ...updateData }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axiosInstance.patch(`/provider/updateMenu/${menuId}`, updateData.type , updateData.options, {
+      const res = await axiosInstance.patch(`/provider/updateMenu/${menuId}`,
+        { 
+          type: updateData.type,
+          options: updateData.options
+        },
+        {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -116,7 +120,7 @@ const menuSlice = createSlice({
         state.loading = true;
       })
       .addCase(createMenu.fulfilled, (state, action) => {
-        state.menu = action.payload.menu;
+        state.menu = action.payload.data;
         state.loading = false;
         state.error = null;
       })
@@ -128,7 +132,7 @@ const menuSlice = createSlice({
         state.loading = true;
       })
       .addCase(updateMenu.fulfilled, (state, action) => {
-        state.menu = action.payload.menu;
+        state.menu = action.payload.data;
         state.loading = false;
         state.error = null;
       })

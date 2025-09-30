@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import OrderDialog from '../Components/OrderDialog';
 import Menu from '../Components/Menu';
+import { useSelector } from 'react-redux';
 
 const MenuPage = () => {
     const [isOrderDialogOpen, setOrderDialogOpen] = useState(false);
     
     // Dummy Data
-    const menu = {
-        options: ["Dal", "Rajma", "Alu Tamatar" , "Baigan Barta" , "Chole" , "Kadhi"],
-        type: "Breakfast",
-        date: new Date(),
-    };
+    const {menu} = useSelector(state=>state.menuSlice)
 
     const handlePlaceOrder = (orderData) => {
         console.log("Order placed from Menu Page:", orderData);
@@ -29,7 +26,9 @@ const MenuPage = () => {
             </div>
 
             <div className="grid sm:grid-cols-2 gap-6">
+
                 <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    {menu!=null ? <div>
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="text-xl font-semibold text-gray-900">{menu.type} Menu</h3>
                         <span className="text-sm text-gray-500">{new Date(menu.date).toLocaleDateString()}</span>
@@ -48,6 +47,9 @@ const MenuPage = () => {
                     >
                         Place New Order
                     </button>
+                    </div>: <div className='flex justify-center items-center h-full'>
+                        Menu not uploaded yet
+                        </div>}
                 </div>
 
                 {/* Menu Statistics */}

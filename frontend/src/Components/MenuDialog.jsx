@@ -4,7 +4,7 @@ import { RiCloseLine } from 'react-icons/ri';
 const MenuDialog = ({ isOpen, onClose, onSave, existingMenu }) => {
     const [options, setOptions] = useState([]);
     const [newOption, setNewOption] = useState('');
-    const [type, setType] = useState('Breakfast');
+    const [type, setType] = useState('LUNCH');
 
     useEffect(() => {
         // Populate form if we are editing an existing menu
@@ -15,7 +15,7 @@ const MenuDialog = ({ isOpen, onClose, onSave, existingMenu }) => {
         // Reset form when opening to create a new menu
         else if (isOpen) {
             setOptions([]);
-            setType('Breakfast');
+            setType('LUNCH');
             setNewOption('');
         }
     }, [isOpen, existingMenu]);
@@ -62,9 +62,8 @@ const MenuDialog = ({ isOpen, onClose, onSave, existingMenu }) => {
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Menu Type</label>
                         <select value={type} onChange={(e) => setType(e.target.value)} className="w-full p-2 border rounded-lg bg-gray-50">
-                            <option>Breakfast</option>
-                            <option>Lunch</option>
-                            <option>Dinner</option>
+                            <option>LUNCH</option>
+                            <option>DINNER</option>
                         </select>
                     </div>
 

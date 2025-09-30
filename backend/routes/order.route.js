@@ -9,6 +9,7 @@ import {
   seenOrder,
   getOdersForTheMenu,
   updateOrder,
+  myOrders,
 } from "../controller/order.controller.js";
 import isAuthenticated from "../middleware/isAuthenticated.js";
 import isProvider from "../middleware/isProvider.js";
@@ -37,5 +38,7 @@ router.put("/seenOrder/:id", isAuthenticated, isProvider, seenOrder);
 router.get("/ordersForMenu", isAuthenticated, isProvider, getOdersForTheMenu);
 
 router.patch("/updateOrder/:orderId", isAuthenticated, updateOrder)
+
+router.get("/myOrders", isAuthenticated, myOrders)
 
 export default router;

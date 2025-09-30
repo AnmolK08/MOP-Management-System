@@ -17,7 +17,10 @@ export const placeOrder = createAsyncThunk(
   async (orderData, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axiosInstance.post("/order/placeOrder", orderData, {
+      const res = await axiosInstance.post("/order/placeOrder", {
+        items:orderData.items, 
+        type:orderData.type
+      }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return res.data.data;
@@ -35,7 +38,7 @@ export const fetchUserOrders = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axiosInstance.get("/order/my-orders", {
+      const res = await axiosInstance.get("/order/myOrders", {
         headers: { Authorization: `Bearer ${token}` },
       });
       return res.data.data;
@@ -143,6 +146,25 @@ export const deleteOrder = createAsyncThunk(
   }
 );
 
+export const updateOrder = createAsyncThunk(
+  "order/updateOrder",
+  async ({orderData, orderId}, {rejectWithValue})=>{
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axiosInstance.patch(`/order/updateOrder/${orderId}`, {
+        items:orderData.items
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to place order"
+      );
+    }
+  }
+)
+
 // --- The Slice Definition ---
 const ordersSlice = createSlice({
   name: "orders",
@@ -187,6 +209,11 @@ const ordersSlice = createSlice({
       .addCase(fetchProviderOrders.fulfilled, (state, action) => {
         state.loading = false;
         state.providerOrders = action.payload;
+      })
+
+      .addCase(updateOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        updateOrderInState(state, action.payload);
       })
 
       // Cancel Order
