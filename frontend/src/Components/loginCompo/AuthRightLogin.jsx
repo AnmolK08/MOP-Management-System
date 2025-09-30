@@ -3,10 +3,13 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
 import {userLogin} from '../../Redux/Slices/authSlice';
+import { Eye, EyeOff } from "lucide-react";
 
 export default function AuthRight() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [showPass, setShowPass] = useState(false)
+  const [disable, setDisable] = useState(false)
 
   const [searchParams] = useSearchParams();
 
@@ -25,6 +28,7 @@ export default function AuthRight() {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+    setDisable(true)
     const toastId = toast.loading("Logging in...");
     
     try {
@@ -34,6 +38,9 @@ export default function AuthRight() {
       
     } catch (error) {
       toast.error(error.message || "Login failed", { id: toastId });
+    }
+    finally{
+      setDisable(false)
     }
   };
 
@@ -83,10 +90,11 @@ export default function AuthRight() {
           />
 
           {/* Password */}
+          <div className="w-full relative"> 
           <input
             id="password"
             name="password"
-            type="password"
+            type={showPass?"text":"password"}
             placeholder="Password"
             value={credentials.password}
             onChange={handleChange}
@@ -95,6 +103,11 @@ export default function AuthRight() {
                        placeholder:text-gray-400 transition"
             required
           />
+          <div className="absolute right-5 top-3 text-gray-600" onClick={()=>setShowPass(!showPass)}>
+            {!showPass?<EyeOff/>
+            :<Eye/>}
+          </div>
+          </div>
 
           {/* Remember + Forgot */}
           <div className="flex items-center justify-between flex-wrap gap-2 text-xs sm:text-sm">
@@ -110,7 +123,7 @@ export default function AuthRight() {
             <button
               type="button"
               onClick={() => navigate("/forgot-password")}
-              className="font-medium text-[#ff7849] hover:text-[#e76f51] transition"
+              className={`font-medium text-[#ff7849] hover:text-[#e76f51] transition`}
             >
               Forgot Password?
             </button>
@@ -119,9 +132,9 @@ export default function AuthRight() {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full py-2.5 sm:py-3 px-4 rounded-lg shadow-sm text-sm sm:text-base font-bold text-white 
+            className={`w-full py-2.5 sm:py-3 px-4 rounded-lg shadow-sm text-sm sm:text-base font-bold text-white 
                        bg-[#ff9770] hover:bg-[#ff7849] focus:ring-2 focus:ring-offset-2 focus:ring-[#ffcdb2] 
-                       transition duration-150 ease-in-out"
+                       transition duration-150 ease-in-out ${disable?"pointer-events-none":""}`}
           >
             Login
           </button>

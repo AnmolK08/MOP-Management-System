@@ -10,7 +10,6 @@ export const userSignup = createAsyncThunk(
         email,
         password,
       });
-      localStorage.setItem("token", res.data.token);
 
       return res.data;
     } catch (error) {

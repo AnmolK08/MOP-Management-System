@@ -3,10 +3,13 @@ import { useDispatch } from "react-redux";
 import { userSignup } from "../../Redux/Slices/authSlice";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function AuthRightRegister() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [showPass, setShowPass] = useState(false)
+  const [disable, setDisable] = useState(false)
 
   const [formData, setFormData] = useState({
     name: "",
@@ -25,7 +28,7 @@ export default function AuthRightRegister() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    setDisable(true)
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match");
       return;
@@ -50,6 +53,9 @@ export default function AuthRightRegister() {
       });
     } catch (error) {
       toast.error(error || "Registration failed", { id: toastId });
+    }
+    finally{
+      setDisable(false)
     }
   }
   
@@ -98,11 +104,11 @@ export default function AuthRightRegister() {
                        placeholder:text-gray-400 transition"
             required
           />
-
+          <div className="w-full relative">
           <input
             id="password"
             name="password"
-            type="password"
+            type={showPass?"text":"password"}
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
@@ -111,7 +117,11 @@ export default function AuthRightRegister() {
                        placeholder:text-gray-400 transition"
             required
           />
-
+          <div className="absolute right-5 top-3 text-gray-600" onClick={()=>setShowPass(!showPass)}>
+            {!showPass?<EyeOff/>
+            :<Eye/>}
+          </div>
+          </div>
           <input
             id="confirmPassword"
             name="confirmPassword"
@@ -129,9 +139,9 @@ export default function AuthRightRegister() {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full py-3 rounded-lg text-sm font-bold text-white 
+            className={`w-full py-3 rounded-lg text-sm font-bold text-white 
                        bg-[#e7764e] hover:bg-[#e24d1b] focus:ring-2 focus:ring-offset-2 
-                       focus:ring-[#ffcdb2] transition"
+                       focus:ring-[#ffcdb2] transition ${disable?"pointer-events-none":""}`}
           >
             Register
           </button>
