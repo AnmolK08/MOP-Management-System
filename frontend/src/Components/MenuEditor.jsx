@@ -16,14 +16,14 @@ const MenuEditor = () => {
     menu: activeMenu,
     loading,
     error,
-  } = useSelector((state) => state.menu);
+  } = useSelector((state) => state.menuSlice);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [menuToEdit, setMenuToEdit] = useState(null);
 
   // 2. Fetch the menu when the component loads
   useEffect(() => {
-    dispatch(fetchMenu());
+    dispatch(fetchMenu())
   }, [dispatch]);
 
   // Handle and display errors from Redux

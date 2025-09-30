@@ -20,3 +20,27 @@ export const fetchMenu = asyncHandler(async (_, res)=>{
 
     res.status(200).json({success: true, message: "Menu of the day", data:menus})
 }) //done
+
+export const fetchUser = asyncHandler(async (req , res)=>{
+    const userId = req.userId
+
+    if(!userId)
+        throw new ResponseError("Unauthenticated", 403)
+
+    const user = await prisma.user.findUnique({
+        where:{
+            id: userId
+        },
+        omit:{
+            password:true
+        },
+        include:{
+            customer:true
+        }
+    })
+
+    if(!user)
+        throw new ResponseError("User not found.",404)
+
+    res.status(200).json({success: true, message: "User data fetched", data:user})
+}) //done

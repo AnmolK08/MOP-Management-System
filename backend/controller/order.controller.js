@@ -244,3 +244,19 @@ export const updateOrder = asyncHandler(async (req, res)=>{
   })
   res.status(200).json({success:true, message:"Updated Order.", data:updatedOrder})
 }) //done
+
+export const myOrders = asyncHandler(async(req, res)=>{
+  const userId = req.userId
+  const customer = await prisma.customer.findUnique({
+    where:{
+      userId: userId
+    }
+  })
+
+  if(!customer)
+    throw new ResponseError("Customer does not exist.", 404)
+  
+  const orders = await prisma.order.findMany({ where: { customerId: customer.id } });
+  
+  res.status(200).json({ success: true, data: orders });
+})
