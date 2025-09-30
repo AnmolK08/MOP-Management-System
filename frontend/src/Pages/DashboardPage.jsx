@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import OrderDialog from "../Components/OrderDialog"; // Import the dialog
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMenu } from "../Redux/Slices/menuSlice";
-import { fetchUserOrders, placeOrder, updateOrder } from "../Redux/Slices/orderSlice";
+import { cancelOrder, fetchUserOrders, placeOrder, updateOrder } from "../Redux/Slices/orderSlice";
 
 // Child components for better organization
 const MenuCard = ({ menu, onOrderNow }) => (
@@ -37,7 +37,15 @@ const MenuCard = ({ menu, onOrderNow }) => (
 
 const LatestOrderCard = ({ order, onEdit, onCancel }) => (
   <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-    <h3 className="text-lg sm:text-xl font-semibold mb-4">Your Latest Order</h3>
+    <div className="flex justify-between w-full">
+      <h3 className="text-lg sm:text-xl font-semibold mb-4">Your Latest Order</h3>
+      <p>
+        <span className="text-gray-600">Date:</span> {new Date(order.date).toLocaleDateString()}
+      </p>
+    </div>
+    <div className="my-2 text-blue-700 font-bold">
+      <span className="text-gray-600">Type:</span> {order.type}
+    </div>
     <div className="space-y-3">
       {order.items.map((item, index) => (
         <p key={index} className="text-gray-700 bg-gray-50 p-2 rounded-md">
@@ -47,13 +55,13 @@ const LatestOrderCard = ({ order, onEdit, onCancel }) => (
     </div>
     <div className="flex justify-between items-center mt-4 text-sm">
       <p className="font-medium">
-        Status: <span className="text-green-600">{order?.status||"placed"}</span>
+        Status: <span className="text-green-600">{order.status}</span>
       </p>
       <p className="font-medium">
-        Total: <span className="text-blue-600">${order?.total||"60"}</span>
+        Total: <span className="text-blue-600">₹{order?.total||"60"}</span>
       </p>
     </div>
-    <div className="flex gap-3 mt-4">
+    {order.status=="PLACED" && <div className="flex gap-3 mt-4">
       <button
         onClick={onEdit}
         className="flex-1 bg-yellow-400 text-white py-2 rounded-lg hover:bg-yellow-500"
@@ -66,14 +74,14 @@ const LatestOrderCard = ({ order, onEdit, onCancel }) => (
       >
         Cancel Order
       </button>
-    </div>
+    </div>}
   </div>
 );
 
 const DashboardPage = () => {
   const { userOrders } = useSelector(state=>state.orderSlice)
   const [isOrderDialogOpen, setOrderDialogOpen] = useState(false);
-  const [latestOrder, setLatestOrder] = useState(userOrders[0]);
+  const [latestOrder, setLatestOrder] = useState(userOrders[userOrders.length-1]);
   const [editingOrder, setEditingOrder] = useState(null);
 
   const dispatch = useDispatch();
@@ -89,7 +97,7 @@ const DashboardPage = () => {
 
   useEffect(()=>{
     dispatch(fetchUserOrders()).then((res)=>{      
-      setLatestOrder(res.payload[0])
+      setLatestOrder(res.payload[res.payload.length-1])
     })
   },[dispatch])
 
@@ -110,6 +118,12 @@ const DashboardPage = () => {
     setEditingOrder(latestOrder);
     setOrderDialogOpen(true);
   };
+
+  const handleCancel = () => {
+    dispatch(cancelOrder(latestOrder.id)).then((res)=>{
+      setLatestOrder(res.payload)
+    })
+  }
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -144,7 +158,7 @@ const DashboardPage = () => {
           <LatestOrderCard
             order={latestOrder}
             onEdit={handleOpenEdit}
-            onCancel={() => setLatestOrder(null)}
+            onCancel={handleCancel}
           />
         ) : (
           <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm flex items-center justify-center text-gray-500">
