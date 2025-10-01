@@ -89,9 +89,25 @@ export const cancelOrder = asyncHandler(async (req, res) => {
 }); //done
 
 export const getAllOrders = asyncHandler(async (_, res) => {
-  const orders = await prisma.order.findMany();
+  const orders = await prisma.order.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      customer: {
+        include: {
+          user: {  
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
   res.status(200).json({ success: true, data: orders });
-}); //done
+});
 
 export const getOrderByUser = asyncHandler(async (req, res) => {
   const { userId } = req.params;
@@ -260,3 +276,29 @@ export const myOrders = asyncHandler(async(req, res)=>{
   
   res.status(200).json({ success: true, data: orders });
 })
+
+export const getOrdersForToday = asyncHandler(async (req, res) => {
+  const { date } = req.query;
+  if (!date) {
+    throw new ResponseError("Please provide all required fields");
+  }
+
+  const today = new Date(date)
+  const orders = await prisma.order.findMany({
+    where: { date: {
+      gte: new Date(today.setHours(0,0,0,0))
+    }}, 
+    include:{
+      customer: {
+        include:{
+          user: {
+            select:{
+              name: true
+            }
+          }
+        }
+    }
+  },
+  });
+  res.status(200).json({ success: true, data: orders });
+}); //done

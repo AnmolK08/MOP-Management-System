@@ -1,166 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllUsers } from "../../Redux/Slices/providerSlice";
 
 const ProviderUsersPage = () => {
-  // Dummy user data
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      paid: true,
-      premium: true,
-    },
-    {
-      id: 2,
-      name: "Bob Williams",
-      email: "bob@example.com",
-      paid: false,
-      premium: false,
-    },
-    {
-      id: 1,
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      paid: true,
-      premium: true,
-    },
-    {
-      id: 2,
-      name: "Bob Williams",
-      email: "bob@example.com",
-      paid: false,
-      premium: false,
-    },{
-      id: 1,
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      paid: true,
-      premium: true,
-    },
-    {
-      id: 2,
-      name: "Bob Williams",
-      email: "bob@example.com",
-      paid: false,
-      premium: false,
-    },{
-      id: 1,
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      paid: true,
-      premium: true,
-    },
-    {
-      id: 2,
-      name: "Bob Williams",
-      email: "bob@example.com",
-      paid: false,
-      premium: false,
-    },{
-      id: 1,
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      paid: true,
-      premium: true,
-    },
-    {
-      id: 2,
-      name: "Bob Williams",
-      email: "bob@example.com",
-      paid: false,
-      premium: false,
-    },{
-      id: 1,
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      paid: true,
-      premium: true,
-    },
-    {
-      id: 2,
-      name: "Bob Williams",
-      email: "bob@example.com",
-      paid: false,
-      premium: false,
-    },{
-      id: 1,
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      paid: true,
-      premium: true,
-    },
-    {
-      id: 2,
-      name: "Bob Williams",
-      email: "bob@example.com",
-      paid: false,
-      premium: false,
-    },{
-      id: 1,
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      paid: true,
-      premium: true,
-    },
-    {
-      id: 2,
-      name: "Bob Williams",
-      email: "bob@example.com",
-      paid: false,
-      premium: false,
-    },{
-      id: 1,
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      paid: true,
-      premium: true,
-    },
-    {
-      id: 2,
-      name: "Bob Williams",
-      email: "bob@example.com",
-      paid: false,
-      premium: false,
-    },{
-      id: 1,
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      paid: true,
-      premium: true,
-    },
-    {
-      id: 2,
-      name: "Bob Williams",
-      email: "bob@example.com",
-      paid: false,
-      premium: false,
-    },
-    {
-      id: 3,
-      name: "Catherine Davis",
-      email: "catherine@example.com",
-      paid: true,
-      premium: false,
-    },
-    {
-      id: 4,
-      name: "David Miller",
-      email: "david@example.com",
-      paid: false,
-      premium: true,
-    },
-  ]);
+
+  const dispatch = useDispatch();
+
+  const users = useSelector((state) => state.providerSlice.users);
+
+  useEffect(() => {
+    if (!users || users.length === 0) dispatch(getAllUsers());
+  }, [dispatch, users]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
 
-  const togglePremium = (userId) => {
-    setUsers(
-      users.map((user) =>
-        user.id === userId ? { ...user, premium: !user.premium } : user
-      )
-    );
-  };
+  const togglePremium = () => {};
 
   const filteredUsers = users.filter((user) => {
     const matchesSearch = user.name
@@ -168,8 +23,6 @@ const ProviderUsersPage = () => {
       .includes(searchTerm.toLowerCase());
     const matchesFilter =
       filter === "all" ||
-      (filter === "paid" && user.paid) ||
-      (filter === "unpaid" && !user.paid) ||
       (filter === "premium" && user.premium) ||
       (filter === "not-premium" && !user.premium);
     return matchesSearch && matchesFilter;
@@ -193,8 +46,6 @@ const ProviderUsersPage = () => {
           className="p-2 border rounded-lg"
         >
           <option value="all">All Users</option>
-          <option value="paid">Paid</option>
-          <option value="unpaid">Not Paid</option>
           <option value="premium">Premium</option>
           <option value="not-premium">Not Premium</option>
         </select>
@@ -207,8 +58,8 @@ const ProviderUsersPage = () => {
             <tr>
               <th className="text-left p-3">Name</th>
               <th className="text-left p-3">Email</th>
-              <th className="text-left p-3">Payment Status</th>
               <th className="text-left p-3">Premium Status</th>
+              <th className="text-left p-3">Wallet</th>
               <th className="text-left p-3">Actions</th>
             </tr>
           </thead>
@@ -220,18 +71,7 @@ const ProviderUsersPage = () => {
                 <td className="p-3">
                   <span
                     className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                      user.paid
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {user.paid ? "Paid" : "Unpaid"}
-                  </span>
-                </td>
-                <td className="p-3">
-                  <span
-                    className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                      user.premium
+                      user.customer.premium
                         ? "bg-yellow-100 text-yellow-800"
                         : "bg-gray-100 text-gray-800"
                     }`}
@@ -239,6 +79,7 @@ const ProviderUsersPage = () => {
                     {user.premium ? "Premium" : "Normal"}
                   </span>
                 </td>
+                <td className="p-3">{user.customer.wallet}</td>
                 <td className="p-3">
                   <button
                     onClick={() => togglePremium(user.id)}

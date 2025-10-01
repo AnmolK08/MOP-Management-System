@@ -7,6 +7,7 @@ import providerRoutes from "./routes/provider.route.js";
 import orderRoutes from "./routes/order.route.js"
 import paymentRoutes from "./routes/payment.route.js"
 import fetchRoute from "./routes/fetch.route.js"
+import profileRoutes from "./routes/profile.route.js"
 
 config();
 
@@ -26,6 +27,7 @@ app.use("/provider", providerRoutes);
 app.use("/order", orderRoutes)
 app.use("/payment", paymentRoutes)
 app.use("/fetch", fetchRoute)
+app.use("/profile" , profileRoutes);
 
 app.use(errorHandler);
 
