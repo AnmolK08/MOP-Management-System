@@ -7,7 +7,6 @@ const ProviderOrdersPage = () => {
   const dispatch = useDispatch();
 
   const orders = useSelector((state) => state.orderSlice.providerOrders);
-  console.log(orders);
 
   useEffect(() => {
     if (!orders || orders.length === 0) {
