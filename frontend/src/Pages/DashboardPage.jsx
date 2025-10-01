@@ -14,7 +14,12 @@ const MenuCard = ({ menu, onOrderNow }) => (
           Today's Menu ({menu.type})
         </h3>
         <p className="text-sm text-gray-500">
-          Date: {new Date(menu.date).toLocaleDateString()}
+          Date:{" "}
+          {new Date(menu.date).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "2-digit",
+          })}
         </p>
       </div>
       <ul className="space-y-2 mb-6 flex-grow">
@@ -40,19 +45,24 @@ const LatestOrderCard = ({ order, onEdit, onCancel }) => (
     <div className="flex justify-between w-full">
       <h3 className="text-lg sm:text-xl font-semibold mb-4">Your Latest Order</h3>
       <p>
-        <span className="text-gray-600">Date:</span> {new Date(order.date).toLocaleDateString()}
+        <span className="text-gray-600">Date:</span> {new Date(order.date).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "2-digit",
+          })}
       </p>
     </div>
     <div className="my-2 text-blue-700 font-bold">
       <span className="text-gray-600">Type:</span> {order.type}
     </div>
-    <div className="space-y-3">
-      {order.items.map((item, index) => (
-        <p key={index} className="text-gray-700 bg-gray-50 p-2 rounded-md">
-          {item}
-        </p>
-      ))}
-    </div>
+    <ul className="space-y-2 mb-6 flex-grow">
+        {order.items?.map((item, index) => (
+          <li key={index} className="flex items-center gap-2 text-gray-600">
+            <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+            {item}
+          </li>
+        ))}
+      </ul>
     <div className="flex justify-between items-center mt-4 text-sm">
       <p className="font-medium">
         Status: <span className="text-green-600">{order.status}</span>
@@ -104,6 +114,7 @@ const DashboardPage = () => {
   const handlePlaceOrder = (orderData) => {
     if(!editingOrder){
     dispatch(placeOrder(orderData)).then((res)=>{
+      console.log(res);
       setLatestOrder(res.payload)
     })}else{
       dispatch(updateOrder({orderData, orderId: latestOrder.id})).then((res)=>
@@ -129,12 +140,8 @@ const DashboardPage = () => {
     <div className="space-y-6 sm:space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-          Welcome back, Alex
+          Welcome back
         </h2>
-        <div className="flex items-center gap-2 text-sm text-gray-500">
-          <span>Last login:</span>
-          <span className="font-medium">Today, 9:30 AM</span>
-        </div>
       </div>
 
       {/* Main Section */}

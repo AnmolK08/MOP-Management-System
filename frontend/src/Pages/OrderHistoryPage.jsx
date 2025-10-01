@@ -4,14 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserOrders } from "../Redux/Slices/orderSlice";
 
 const OrderHistoryPage = () => {
-  // Dummy Data with array of items
   const dispatch = useDispatch();
 
+  const orders = useSelector((state) => state.orderSlice.userOrders);
+
   useEffect(() => {
+    if (!orders || orders.length === 0) {
       dispatch(fetchUserOrders());
-  }, []);
-  
-  const orders = useSelector((state)=> state.orders.userOrders);
+    }
+  }, [dispatch, orders]);
 
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
@@ -31,10 +32,7 @@ const OrderHistoryPage = () => {
       if (filter !== "All" && order.status !== filter) return false;
       if (search) {
         const searchLower = search.toLowerCase();
-        return (
-          order.orderNumber.toLowerCase().includes(searchLower) ||
-          order.date.toLowerCase().includes(searchLower)
-        );
+        return order.date.toLowerCase().includes(searchLower);
       }
       return true;
     })
@@ -49,13 +47,13 @@ const OrderHistoryPage = () => {
 
   const getStatusClass = (status) => {
     switch (status) {
-      case "Delivered":
+      case "DELIVERED":
         return "bg-green-100 text-green-800";
-      case "Approved":
+      case "APPROVED":
         return "bg-yellow-100 text-yellow-800";
-      case "Placed":
+      case "PLACED":
         return "bg-blue-100 text-blue-800";
-      case "Canceled":
+      case "CANCELLED":
         return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
@@ -73,7 +71,7 @@ const OrderHistoryPage = () => {
       <div className="flex flex-wrap items-center justify-between mb-4 gap-4">
         <input
           type="text"
-          placeholder="Search by order # or date"
+          placeholder="Search by date"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="p-2 border rounded-md w-full md:w-auto flex-grow"
@@ -81,7 +79,7 @@ const OrderHistoryPage = () => {
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="p-2 border rounded-md"
+          className="p-2 border rounded-md w-full md:w-auto"
         >
           <option value="dateDesc">Sort by Date (Latest first)</option>
           <option value="dateAsc">Sort by Date (Oldest first)</option>
@@ -89,13 +87,13 @@ const OrderHistoryPage = () => {
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="p-2 border rounded-md"
+          className="p-2 border rounded-md w-full md:w-auto"
         >
-          <option value="All">All</option>
-          <option value="Delivered">Delivered</option>
-          <option value="Approved">Approved</option>
-          <option value="Placed">Placed</option>
-          <option value="Canceled">Canceled</option>
+          <option value="All">All Status</option>
+          <option value="DELIVERED">Delivered</option>
+          <option value="SEEN">Seen</option>
+          <option value="PLACED">Placed</option>
+          <option value="CANCELLED">Cancelled</option>
         </select>
       </div>
 
@@ -104,7 +102,6 @@ const OrderHistoryPage = () => {
         <table className="min-w-full">
           <thead className="bg-gray-50">
             <tr>
-              <th className="text-left py-3 px-4">Order #</th>
               <th className="text-left py-3 px-4">Date</th>
               <th className="text-left py-3 px-4">Total</th>
               <th className="text-left py-3 px-4">Status</th>
@@ -115,10 +112,15 @@ const OrderHistoryPage = () => {
           <tbody>
             {filteredOrders.length > 0 ? (
               filteredOrders.map((order) => (
-                <tr key={order.orderNumber} className="border-b">
-                  <td className="py-3 px-4">{order.orderNumber}</td>
-                  <td className="py-3 px-4">{order.date}</td>
-                  <td className="py-3 px-4">${order.total.toFixed(2)}</td>
+                <tr key={order.id} className="border-b">
+                  <td className="py-3 px-4">
+                    {new Date(order.date).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </td>
+                  <td className="py-3 px-4">${order.totalAmt}</td>
                   <td className="py-3 px-4">
                     <span
                       className={`px-2 py-1 rounded-full text-sm font-semibold ${getStatusClass(

@@ -91,8 +91,7 @@ await transporter.sendMail({
         </a>
       </div>
       <p>If the button above doesn’t work, copy and paste the link below into your browser:</p>
-      <p style="word-break: break-word; color: #555;"><a href="${verificationLink}" style="color:#ff7849;">${verificationLink}</a></p>
-      <p style="margin-top: 30px;">This link will expire in <b>15 minutes</b> for your security.</p>
+      <p style="margin-top: 30px;">This link will expire in <b>5 minutes</b> for your security.</p>
       <p>Cheers,<br><b>The Mini Team</b></p>
     </div>
   `

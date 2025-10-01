@@ -76,7 +76,9 @@ export const fetchProviderOrders = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axiosInstance.get("/order/getAllOrders", {
+      const today = new Date().toISOString(); 
+      const res = await axiosInstance.get("/order/ordersForToday", {
+        params: { date: today },
         headers: { Authorization: `Bearer ${token}` },
       });
       return res.data.data;

@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MenuEditor from "../../Components/MenuEditor";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProviderOrders } from "../../Redux/Slices/orderSlice";
 
 // A simple card for displaying stats
 const StatCard = ({ title, value, change }) => (
@@ -22,6 +24,17 @@ const StatCard = ({ title, value, change }) => (
 
 
 const ProviderDashboardPage = () => {
+
+    const dispatch = useDispatch();
+  
+    const orders = useSelector((state) => state.orderSlice.providerOrders);
+
+    useEffect(() => {
+      if (!orders || orders.length === 0) {
+        dispatch(fetchProviderOrders());
+      }
+    }, [dispatch, orders]);
+
   return (
     <div className="space-y-6">
       <h2 className="text-3xl font-bold text-gray-800">Dashboard</h2>
@@ -29,18 +42,15 @@ const ProviderDashboardPage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <StatCard
           title="Total Orders Today"
-          value="125"
-          change="+10%"
+          value={orders.length}
         />
         <StatCard
           title="Customer Attendance"
-          value="87"
-          change="-5%"
+          value={orders.length - orders.filter(order => order.status != "CANCELLED").length}
         />
         <StatCard
           title="Payments Received"
-          value="$2,500"
-          change="+15%"
+          value="NA"
         />
       </div>
 

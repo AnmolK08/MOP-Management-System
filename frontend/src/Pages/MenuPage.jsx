@@ -1,19 +1,33 @@
 import React, { useState } from 'react';
 import OrderDialog from '../Components/OrderDialog';
 import Menu from '../Components/Menu';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { placeOrder } from '../Redux/Slices/orderSlice';
+import toast from 'react-hot-toast';
 
 const MenuPage = () => {
     const [isOrderDialogOpen, setOrderDialogOpen] = useState(false);
     
     // Dummy Data
     const {menu} = useSelector(state=>state.menuSlice)
+    const dispatch = useDispatch();
 
     const handlePlaceOrder = (orderData) => {
-        console.log("Order placed from Menu Page:", orderData);
-        // Here you would typically send this to a global state or an API
-        setOrderDialogOpen(false);
-    };
+        const toastId = toast.loading("Placing an order")
+        dispatch(placeOrder(orderData)).then((res)=>{
+          if(res.meta.requestStatus === "rejected"){
+            toast.error(res.payload,
+                {
+                    id: toastId
+                }
+            );
+          }
+          else toast.success("Order placed",{
+            id:toastId
+          })
+          setOrderDialogOpen(false);
+        })
+        }
 
     return (
         <div className="max-w-4xl mx-auto">
