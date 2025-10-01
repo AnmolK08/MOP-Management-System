@@ -59,6 +59,7 @@ const ProviderUsersPage = () => {
               <th className="text-left p-3">Name</th>
               <th className="text-left p-3">Email</th>
               <th className="text-left p-3">Premium Status</th>
+              <th className="text-left p-3">Wallet</th>
               <th className="text-left p-3">Actions</th>
             </tr>
           </thead>
@@ -78,6 +79,7 @@ const ProviderUsersPage = () => {
                     {user.premium ? "Premium" : "Normal"}
                   </span>
                 </td>
+                <td className="p-3">{user.customer.wallet}</td>
                 <td className="p-3">
                   <button
                     onClick={() => togglePremium(user.id)}
