@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUsers } from "../../Redux/Slices/providerSlice";
+import { getAllUsers, togglePremiumStatus } from "../../Redux/Slices/providerSlice";
+import { toast } from "react-hot-toast";
 
 const ProviderUsersPage = () => {
 
@@ -15,7 +16,23 @@ const ProviderUsersPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
 
-  const togglePremium = () => {};
+  const togglePremium = (customerId) => {
+    const toastId = toast.loading("Toggling premium status...");
+    if(!customerId)
+      toast.error("Customer ID is missing");
+
+    dispatch(togglePremiumStatus(customerId))
+    .then((res) => {
+      if (res.error) {
+        toast.error(res.error.message || "Failed to toggle premium status", { id: toastId });
+      } else {
+        toast.success("Premium status toggled successfully", { id: toastId });
+      }
+    })
+    .catch(() => {
+      toast.error("An unexpected error occurred", { id: toastId });
+    });
+  };
 
   const filteredUsers = users.filter((user) => {
     const matchesSearch = user.name
@@ -76,13 +93,13 @@ const ProviderUsersPage = () => {
                         : "bg-gray-100 text-gray-800"
                     }`}
                   >
-                    {user.premium ? "Premium" : "Normal"}
+                    {user.customer.premium ? "Premium" : "Normal"}
                   </span>
                 </td>
                 <td className="p-3">{user.customer.wallet}</td>
                 <td className="p-3">
                   <button
-                    onClick={() => togglePremium(user.id)}
+                    onClick={() => togglePremium(user.customer.id)}
                     className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm"
                   >
                     Toggle Premium

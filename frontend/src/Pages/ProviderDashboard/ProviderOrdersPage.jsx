@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import OrderDetailsModal from "../../Components/OrderDetailsModal";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProviderOrders } from "../../Redux/Slices/orderSlice";
+import { fetchProviderOrders, markOrdersDelivered, markOrdersSeen } from "../../Redux/Slices/orderSlice";
+import toast from "react-hot-toast";
 
 const ProviderOrdersPage = () => {
   const dispatch = useDispatch();
@@ -17,16 +18,7 @@ const ProviderOrdersPage = () => {
   const [filter, setFilter] = useState("All");
   const [type, setType] = useState("All");
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState("dateDesc");
-  const [selectedOrder, setSelectedOrder] = useState(null);
-
-  const handleViewClick = (order) => {
-    setSelectedOrder(order);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedOrder(null);
-  };
+  const [mark, setMark] = useState("")
 
   const filteredOrders = orders
     .filter((order) => {
@@ -40,14 +32,6 @@ const ProviderOrdersPage = () => {
       }
       return true;
     })
-    .sort((a, b) => {
-      if (sortBy === "dateAsc") {
-        return new Date(a.date) - new Date(b.date);
-      } else if (sortBy === "dateDesc") {
-        return new Date(b.date) - new Date(a.date);
-      }
-      return 0;
-    });
 
   const getStatusClass = (status) => {
     switch (status) {
@@ -63,6 +47,71 @@ const ProviderOrdersPage = () => {
         return "bg-gray-100 text-gray-800";
     }
   };
+
+  const [selectForSeen, setSelectForSeen] = useState(false);
+  const [selectForDelivered, setSelectForDelivered] = useState(false);
+
+  const [selectedOrders, setSelectedOrders] = useState({});
+
+  const handleCheckboxChange = (orderId) => {
+    setSelectedOrders((prev) => ({
+      ...prev,
+      [orderId]: !prev[orderId],
+    }));
+  };
+
+  const handleMark = (e) =>{
+    e.preventDefault()
+    setMark(e.target.value)
+    if(e.target.value=="MarkSeen"){
+      setSelectForSeen(true)
+      setSelectForDelivered(false)
+    }else if(e.target.value=="MarkDelivered"){
+      setSelectForSeen(false)
+      setSelectForDelivered(true)
+    }else{
+      setSelectForSeen(false)
+      setSelectForDelivered(false)
+    }
+    setSelectedOrders({})
+  }
+
+  const markAs=()=>{
+    if(selectForSeen){
+      const orderIds = Object.keys(selectedOrders).filter((key) => selectedOrders[key]);
+      dispatch(markOrdersSeen({orderIds}))
+      .then((res)=>{
+        if(res.error){
+          toast.error(res.error.message)
+        }else{
+          toast.success("Orders marked as seen")
+          setSelectedOrders({})
+          setSelectForSeen(false)
+          setMark("")
+        }
+      })
+  }
+  else if(selectForDelivered){
+      const orderIds = Object.keys(selectedOrders).filter((key) => selectedOrders[key]);
+      dispatch(markOrdersDelivered({orderIds}))
+      .then((res)=>{
+        if(res.error){
+          toast.error(res.error.message)
+        }else{
+          toast.success("Orders marked as delivered")
+          setSelectedOrders({})
+          setSelectForDelivered(false)
+          setMark("")
+        } 
+    })
+  }
+}
+
+  const cancelSelect = ()=>{
+    setSelectedOrders({})
+    setSelectForDelivered(false)
+    setSelectForSeen(false)
+  }
 
   return (
     <div>
@@ -90,14 +139,6 @@ const ProviderOrdersPage = () => {
           <option value="DINNER">Dinner</option>
         </select>
         <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          className="p-2 border rounded-md w-full md:w-auto"
-        >
-          <option value="dateDesc">Sort by Date (Latest first)</option>
-          <option value="dateAsc">Sort by Date (Oldest first)</option>
-        </select>
-        <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
           className="p-2 border rounded-md w-full md:w-auto"
@@ -108,6 +149,15 @@ const ProviderOrdersPage = () => {
           <option value="PLACED">Placed</option>
           <option value="CANCELLED">Cancelled</option>
         </select>
+        <select
+          value={mark}
+          onChange={(e) => handleMark(e)}
+          className="p-2 border rounded-md w-full md:w-auto bg-green-500 text-white"
+        >
+          <option className="bg-white text-black" value="">--Select Mark For--</option>
+          <option className="bg-white text-black" value="MarkSeen">Mark Seen</option>
+          <option className="bg-white text-black" value="MarkDelivered">Mark Delivered</option>
+        </select>
       </div>
 
       {/* Orders Table */}
@@ -115,11 +165,14 @@ const ProviderOrdersPage = () => {
         <table className="min-w-full">
           <thead className="bg-gray-50">
             <tr>
-              <th className="text-left py-3 px-4">User Name</th>
-              <th className="text-left py-3 px-4">View Items</th>
-              <th className="text-left py-3 px-4">Date</th>
+              {(selectForSeen || selectForDelivered) && (
+                <th className="text-left py-3 px-4">Select</th>
+              )}
+              <th className="text-left py-3 px-4">Name</th>
               <th className="text-left py-3 px-4">Status</th>
               <th className="text-left py-3 px-4">Items</th>
+              <th className="text-left py-3 px-4">Type</th>
+              <th className="text-left py-3 px-4">Premium</th>
               <th className="text-left py-3 px-4"></th>
             </tr>
           </thead>
@@ -127,22 +180,25 @@ const ProviderOrdersPage = () => {
             {filteredOrders.length > 0 ? (
               filteredOrders.map((order) => (
                 <tr key={order.id} className="border-b">
+                  {(selectForSeen || selectForDelivered) && (
+                    <td className="py-3 px-4">
+                      <input
+                        type="checkbox"
+                        disabled={selectForSeen? order.status !== "PLACED"?true:false: selectForDelivered && (order.status !== "PLACED" && order.status !== "SEEN")?true:false}
+                        className="h-4 w-4 text-blue-600"
+                        checked={ selectForSeen?
+                          (order.status !== "PLACED"
+                            ? true
+                            : selectedOrders[order.id] || false):
+                            selectForDelivered && (order.status !== "PLACED" && order.status !== "SEEN"
+                            ? true
+                            : selectedOrders[order.id] || false)
+                        }
+                        onChange={() => handleCheckboxChange(order.id)}
+                      />
+                    </td>
+                  )}
                   <td className="py-3 px-4">{order.customer.user.name}</td>
-                  <td className="py-3 px-4">
-                    <button
-                      onClick={() => handleViewClick(order)}
-                      className="text-blue-500 hover:underline"
-                    >
-                      View
-                    </button>
-                  </td>
-                  <td className="py-3 px-4">
-                    {new Date(order.date).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </td>
                   <td className="py-3 px-4">
                     <span
                       className={`px-2 py-1 rounded-full text-sm font-semibold ${getStatusClass(
@@ -152,7 +208,22 @@ const ProviderOrdersPage = () => {
                       {order.status}
                     </span>
                   </td>
-                  <td className="py-3 px-4">{order.items.length} items</td>
+                  <td className="py-3 px-4">
+                    <div className="flex gap-1 sm:flex-row flex-col">
+                      {order.items.map((item) => (
+                        <span
+                          key={item}
+                          className="text-nowrap bg-amber-100 rounded-full px-4 text-amber-800 font-semibold"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                  <td className="py-3 px-4">{order.type}</td>
+                  <td className="py-3 px-4">
+                    {order.customer.premium ? "Premium" : "Regular"}
+                  </td>
                 </tr>
               ))
             ) : (
@@ -165,9 +236,12 @@ const ProviderOrdersPage = () => {
           </tbody>
         </table>
       </div>
-
-      {/* Render the modal */}
-      <OrderDetailsModal order={selectedOrder} onClose={handleCloseModal} />
+      {(selectForSeen || selectForDelivered) && <div className="w-full flex justify-end mt-4">
+        <div className="flex gap-2">
+        <button className="p-3 rounded-xl text-white bg-red-500" onClick={cancelSelect}>Cancel</button>
+        <button className="p-3 rounded-xl text-white bg-blue-500" onClick={markAs}>Mark As {selectForSeen?"Seen":"Delivered"}</button>
+        </div>
+      </div>}
     </div>
   );
 };
