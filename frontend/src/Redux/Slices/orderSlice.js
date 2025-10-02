@@ -167,6 +167,42 @@ export const updateOrder = createAsyncThunk(
   }
 )
 
+export const markOrdersSeen = createAsyncThunk(
+  "orders/ordersSeen",
+  async ({orderIds},{rejectWithValue})=>{
+    try {
+      const token = localStorage.getItem("token")
+      const orders = await axiosInstance.put("/order/markOrdersSeen", {
+        orderIds
+      },{ headers: { Authorization: `Bearer ${token}` } }
+    )
+      return orders.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to mark orders as seen"
+      );
+    }
+  }
+)
+
+export const markOrdersDelivered = createAsyncThunk(
+  "orders/ordersDelivered",
+  async ({orderIds},{rejectWithValue})=>{
+    try {
+      const token = localStorage.getItem("token")
+      const orders = await axiosInstance.put("/order/markOrdersDelivered", {
+        orderIds
+      },{ headers: { Authorization: `Bearer ${token}` } }
+    )
+      return orders.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to mark orders as delivered"
+      );
+    }
+  }
+)
+
 // --- The Slice Definition ---
 const ordersSlice = createSlice({
   name: "orders",
@@ -246,6 +282,29 @@ const ordersSlice = createSlice({
           (o) => o.id !== action.payload.orderId
         );
       })
+
+      .addCase(markOrdersSeen.fulfilled, (state, action)=>{
+        state.loading = false;
+        
+        state.providerOrders = state.providerOrders.map((order)=>{
+          if(action.payload.orderIds.includes(order.id)){
+            return {...order, status: "SEEN"}
+          }
+          return order
+        }
+        )
+      })
+
+      .addCase(markOrdersDelivered.fulfilled, (state, action)=>{
+        state.loading = false;
+        state.providerOrders = state.providerOrders.map((order)=>{
+          if(action.payload.orderIds.includes(order.id)){
+            return {...order, status: "DELIVERED"}
+          }
+          return order
+        } 
+      )
+    })
 
       // Common Pending/Rejected
       .addMatcher(

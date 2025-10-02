@@ -87,6 +87,7 @@ export const getAllUsers = asyncHandler(async (req, res) => {
       createdAt: true,
       customer: {
         select: {
+          id: true,
           premium: true,
           wallet: true,
         },
@@ -98,5 +99,24 @@ export const getAllUsers = asyncHandler(async (req, res) => {
     success: true,
     message: "Users fetched successfully",
     data: users,
+  });
+}); //done
+
+export const togglePremium = asyncHandler(async (req, res) => {
+  const { customerId } = req.params;
+  if (!customerId) throw new ResponseError("Customer ID is required", 401);
+
+  const customer = await prisma.customer.findUnique({
+    where: { id: customerId },
+  });
+  if (!customer) throw new ResponseError("Customer does not exist", 404);
+  const updatedCustomer = await prisma.customer.update({
+    where: { id: customerId },
+    data: { premium: !customer.premium },
+  });
+  res.status(200).json({
+    success: true,
+    message: "Customer premium status updated successfully",
+    data: updatedCustomer,
   });
 }); //done

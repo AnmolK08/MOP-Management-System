@@ -157,38 +157,7 @@ export const orderDelivered = asyncHandler(async (req, res) => {
     throw new ResponseError("Order not found", 404);
   }
 
-  const user = await prisma.customer.findUnique({
-    where: { id: order.customerId },
-  });
-
-  if (!user) {
-    throw new ResponseError("User not found", 404);
-  }
-
-  let totalAmt = 0;
-
-  if (user.premium) totalAmt = 54.0;
-  else totalAmt = 60.0;
-
-  let isPaid = order.paid;
-
-  if (user.wallet >= totalAmt) isPaid = true;
-
-  const updatedOrder = await prisma.order.update({
-    where: { id },
-    data: {
-      status: "DELIVERED",
-      paid: isPaid,
-      totalAmt,
-    },
-  });
-
-  user.wallet -= totalAmt;
-
-  await prisma.customer.update({
-    where: { id: user.id },
-    data: { wallet: user.wallet },
-  });
+  const updatedOrder = await deliveredAndPaid(id);
 
   res.status(200).json({
     success: true,
@@ -275,7 +244,7 @@ export const myOrders = asyncHandler(async(req, res)=>{
   const orders = await prisma.order.findMany({ where: { customerId: customer.id } });
   
   res.status(200).json({ success: true, data: orders });
-})
+}) //done
 
 export const getOrdersForToday = asyncHandler(async (req, res) => {
   const { date } = req.query;
@@ -302,3 +271,63 @@ export const getOrdersForToday = asyncHandler(async (req, res) => {
   });
   res.status(200).json({ success: true, data: orders });
 }); //done
+
+export const markOrdersSeen = asyncHandler(async (req, res)=>{
+  const {orderIds} = req.body;
+
+  if(!orderIds || orderIds.length===0)
+    throw new ResponseError("Please provide order ids", 400)
+
+  Promise.all(orderIds.map(async (id)=>{
+    await prisma.order.update({
+      where: { id },
+      data: { status: "SEEN" },
+    });
+  }))
+
+  res.status(200).json({ success: true, message: "Orders marked as seen", orderIds });
+}) //done
+
+export const markOrdersDelivered = asyncHandler(async (req, res)=>{
+  const {orderIds} = req.body;
+  if(!orderIds || orderIds.length===0)
+    throw new ResponseError("Please provide order ids", 400)
+  Promise.all(orderIds.map(async (id)=>{
+    await deliveredAndPaid(id)
+  }))
+
+  res.status(200).json({ success: true, message: "Orders marked as delivered", orderIds });
+}
+) //done
+
+const deliveredAndPaid = async (id)=>{
+  const order = await prisma.order.findUnique({ where: {id} });
+    if (!order) {
+      throw new ResponseError("Order not found", 404);
+    }
+    const user = await prisma.customer.findUnique({
+      where: { id: order.customerId },
+    });
+    if (!user) {
+      throw new ResponseError("User not found", 404);
+    }
+    let totalAmt = 0;
+    if (user.premium) totalAmt = 54.0;
+    else totalAmt = 60.0;
+    let isPaid = order.paid;
+    if (user.wallet >= totalAmt) isPaid = true;
+    const updatedOrder = await prisma.order.update({
+      where: { id },
+      data: {
+        status: "DELIVERED",
+        paid: isPaid,
+        totalAmt,
+      },
+    });
+    user.wallet -= totalAmt;
+    await prisma.customer.update({
+      where: { id: user.id },
+      data: { wallet: user.wallet },
+    });
+    return updatedOrder;
+}
