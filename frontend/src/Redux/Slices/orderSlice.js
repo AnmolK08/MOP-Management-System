@@ -207,7 +207,19 @@ export const markOrdersDelivered = createAsyncThunk(
 const ordersSlice = createSlice({
   name: "orders",
   initialState,
-  reducers: {},
+  reducers: {
+    updateProviderOrders : (state, action) => {
+      const {Id} = action.payload;
+      if(!Id) return;
+      const providerIndex = state.providerOrders.findIndex(
+        (o) => o.customerId === Id
+      );
+      console.log(providerIndex)
+      if (providerIndex !== -1)
+        state.providerOrders[providerIndex].customer.premium = !state.providerOrders[providerIndex].customer.premium;
+    }
+
+  },
   extraReducers: (builder) => {
     const updateOrderInState = (state, updatedOrder) => {
       const userIndex = state.userOrders.findIndex(
@@ -325,3 +337,4 @@ const ordersSlice = createSlice({
 });
 
 export default ordersSlice.reducer;
+export const { updateProviderOrders } = ordersSlice.actions;

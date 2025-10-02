@@ -3,11 +3,13 @@ import OrderDetailsModal from "../../Components/OrderDetailsModal";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProviderOrders, markOrdersDelivered, markOrdersSeen } from "../../Redux/Slices/orderSlice";
 import toast from "react-hot-toast";
+import { updateWallet } from "../../Redux/Slices/providerSlice";
 
 const ProviderOrdersPage = () => {
   const dispatch = useDispatch();
 
   const orders = useSelector((state) => state.orderSlice.providerOrders);
+  const users = useSelector((state) => state.providerSlice.users);
 
   useEffect(() => {
     if (!orders || orders.length === 0) {
@@ -102,6 +104,12 @@ const ProviderOrdersPage = () => {
           setSelectedOrders({})
           setSelectForDelivered(false)
           setMark("")
+
+            const customerIds = orders
+            .filter((o) => orderIds.includes(o.id))
+            .map((o) => o.customer.id);
+
+          if(users.length !==0) dispatch(updateWallet({customerIds}));
         } 
     })
   }
@@ -172,7 +180,7 @@ const ProviderOrdersPage = () => {
               <th className="text-left py-3 px-4">Status</th>
               <th className="text-left py-3 px-4">Items</th>
               <th className="text-left py-3 px-4">Type</th>
-              <th className="text-left py-3 px-4">Premium</th>
+              <th className="text-left py-3 px-4">Premium Status</th>
               <th className="text-left py-3 px-4"></th>
             </tr>
           </thead>
@@ -222,8 +230,16 @@ const ProviderOrdersPage = () => {
                   </td>
                   <td className="py-3 px-4">{order.type}</td>
                   <td className="py-3 px-4">
-                    {order.customer.premium ? "Premium" : "Regular"}
-                  </td>
+                  <span
+                    className={`px-2 py-1 text-sm font-semibold rounded-full ${
+                      order.customer.premium
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-gray-100 text-gray-800"
+                    }`}
+                  >
+                    {order.customer.premium ? "Premium" : "Normal"}
+                  </span>
+                </td>
                 </tr>
               ))
             ) : (

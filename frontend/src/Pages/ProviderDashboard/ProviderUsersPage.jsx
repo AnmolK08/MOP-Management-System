@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers, togglePremiumStatus } from "../../Redux/Slices/providerSlice";
 import { toast } from "react-hot-toast";
+import { updateProviderOrders } from "../../Redux/Slices/orderSlice";
 
 const ProviderUsersPage = () => {
 
   const dispatch = useDispatch();
 
   const users = useSelector((state) => state.providerSlice.users);
+  const {providerOrders} = useSelector((state)=> state.orderSlice);
 
   useEffect(() => {
     if (!users || users.length === 0) dispatch(getAllUsers());
@@ -27,6 +29,8 @@ const ProviderUsersPage = () => {
         toast.error(res.error.message || "Failed to toggle premium status", { id: toastId });
       } else {
         toast.success("Premium status toggled successfully", { id: toastId });
+        if(providerOrders.length !== 0)
+          dispatch(updateProviderOrders({Id : customerId}));
       }
     })
     .catch(() => {
@@ -40,8 +44,8 @@ const ProviderUsersPage = () => {
       .includes(searchTerm.toLowerCase());
     const matchesFilter =
       filter === "all" ||
-      (filter === "premium" && user.premium) ||
-      (filter === "not-premium" && !user.premium);
+      (filter === "premium" && user.customer.premium) ||
+      (filter === "normal" && !user.customer.premium);
     return matchesSearch && matchesFilter;
   });
 
@@ -64,7 +68,7 @@ const ProviderUsersPage = () => {
         >
           <option value="all">All Users</option>
           <option value="premium">Premium</option>
-          <option value="not-premium">Not Premium</option>
+          <option value="normal">Normal</option>
         </select>
       </div>
 

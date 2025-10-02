@@ -40,7 +40,18 @@ export const togglePremiumStatus = createAsyncThunk(
 const providerSlice = createSlice({
     name : "provider/users",
     initialState,
-    reducers:{},
+    reducers:{
+        updateWallet : (state, action) =>{
+            const {customerIds} = action.payload;
+            for(let user of state.users){
+                if(customerIds.includes(user.customer.id)){
+                    if(user.customer.premium)
+                    user.customer.wallet -= 54;
+                    else user.customer.wallet -= 60;
+                }
+            }
+        }
+    },
     extraReducers: (builder)=>{
         builder
         .addCase(getAllUsers.fulfilled, (state, action)=>{
@@ -70,3 +81,4 @@ const providerSlice = createSlice({
 })
 
 export default providerSlice.reducer;
+export const {updateWallet} = providerSlice.actions;

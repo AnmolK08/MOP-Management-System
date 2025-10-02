@@ -46,7 +46,7 @@ const ProviderDashboardPage = () => {
         />
         <StatCard
           title="Customer Attendance"
-          value={orders.length - orders.filter(order => order.status != "CANCELLED").length}
+          value={orders.length - orders.filter(order => order.status == "CANCELLED").length}
         />
         <StatCard
           title="Payments Received"
