@@ -17,6 +17,7 @@ const ProviderUsersPage = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
+  const [paidFilter , setPaidFilter] = useState("all");
 
   const togglePremium = (customerId) => {
     const toastId = toast.loading("Toggling premium status...");
@@ -46,7 +47,12 @@ const ProviderUsersPage = () => {
       filter === "all" ||
       (filter === "premium" && user.customer.premium) ||
       (filter === "normal" && !user.customer.premium);
-    return matchesSearch && matchesFilter;
+
+    const paidsFilter = 
+    paidFilter === "all" ||
+    (paidFilter === "paid" && user.customer.wallet >= 0) ||
+      (paidFilter === "not-paid" && user.customer.wallet < 0);
+    return matchesSearch && matchesFilter && paidsFilter;
   });
 
   return (
@@ -59,16 +65,25 @@ const ProviderUsersPage = () => {
           placeholder="Search by name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-2 border rounded-lg flex-grow"
+          className="p-2 border rounded-lg w-full md:w-auto flex-grow"
         />
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="p-2 border rounded-lg"
+          className="p-2 border rounded-lg w-full md:w-auto"
         >
-          <option value="all">All Users</option>
+          <option value="all">Premium Status</option>
           <option value="premium">Premium</option>
           <option value="normal">Normal</option>
+        </select>
+        <select
+          value={paidFilter}
+          onChange={(e) => setPaidFilter(e.target.value)}
+          className="p-2 border rounded-lg w-full md:w-auto"
+        >
+          <option value="all">Paid Status</option>
+          <option value="paid">Paid</option>
+          <option value="not-paid">Not Paid</option>
         </select>
       </div>
 
