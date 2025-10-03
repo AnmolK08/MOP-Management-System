@@ -159,7 +159,7 @@ const ProfilePage = () => {
                   disabled={loading}
                   className="w-full sm:w-auto px-6 py-2.5 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
                 >
-                  {loading ? "Updating..." : "Update Password"}
+                  {"Update Password"}
                 </button>
               </form>
             </div>

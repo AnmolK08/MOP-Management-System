@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers, togglePremiumStatus } from "../../Redux/Slices/providerSlice";
 import { toast } from "react-hot-toast";
+import { updateProviderOrders } from "../../Redux/Slices/orderSlice";
+import ConfirmationDialog from "../../Components/ConfirmationDialog";
 
 const ProviderUsersPage = () => {
-
   const dispatch = useDispatch();
-
   const users = useSelector((state) => state.providerSlice.users);
+  const {providerOrders} = useSelector((state)=> state.orderSlice);
 
   useEffect(() => {
     if (!users || users.length === 0) dispatch(getAllUsers());
@@ -15,23 +16,37 @@ const ProviderUsersPage = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
+  const [paidFilter, setPaidFilter] = useState("all");
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    userId: null,
+    userName: "",
+    isPremium: false
+  });
 
-  const togglePremium = (customerId) => {
+  const handleTogglePremium = (customerId) => {
     const toastId = toast.loading("Toggling premium status...");
-    if(!customerId)
+    if(!customerId) {
       toast.error("Customer ID is missing");
+      return;
+    }
 
     dispatch(togglePremiumStatus(customerId))
-    .then((res) => {
-      if (res.error) {
-        toast.error(res.error.message || "Failed to toggle premium status", { id: toastId });
-      } else {
-        toast.success("Premium status toggled successfully", { id: toastId });
-      }
-    })
-    .catch(() => {
-      toast.error("An unexpected error occurred", { id: toastId });
-    });
+      .then((res) => {
+        if (res.error) {
+          toast.error(res.error.message || "Failed to toggle premium status", { id: toastId });
+        } else {
+          toast.success("Premium status toggled successfully", { id: toastId });
+          if(providerOrders.length !== 0) {
+            dispatch(updateProviderOrders({Id : customerId}));
+          }
+          // Close the dialog
+          setConfirmDialog(prev => ({ ...prev, isOpen: false }));
+        }
+      })
+      .catch(() => {
+        toast.error("An unexpected error occurred", { id: toastId });
+      });
   };
 
   const filteredUsers = users.filter((user) => {
@@ -40,9 +55,14 @@ const ProviderUsersPage = () => {
       .includes(searchTerm.toLowerCase());
     const matchesFilter =
       filter === "all" ||
-      (filter === "premium" && user.premium) ||
-      (filter === "not-premium" && !user.premium);
-    return matchesSearch && matchesFilter;
+      (filter === "premium" && user.customer.premium) ||
+      (filter === "normal" && !user.customer.premium);
+
+    const paidsFilter = 
+    paidFilter === "all" ||
+    (paidFilter === "paid" && user.customer.wallet >= 0) ||
+      (paidFilter === "not-paid" && user.customer.wallet < 0);
+    return matchesSearch && matchesFilter && paidsFilter;
   });
 
   return (
@@ -55,16 +75,25 @@ const ProviderUsersPage = () => {
           placeholder="Search by name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-2 border rounded-lg flex-grow"
+          className="p-2 border rounded-lg w-full md:w-auto flex-grow"
         />
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="p-2 border rounded-lg"
+          className="p-2 border rounded-lg w-full md:w-auto"
         >
-          <option value="all">All Users</option>
+          <option value="all">Premium Status</option>
           <option value="premium">Premium</option>
-          <option value="not-premium">Not Premium</option>
+          <option value="normal">Normal</option>
+        </select>
+        <select
+          value={paidFilter}
+          onChange={(e) => setPaidFilter(e.target.value)}
+          className="p-2 border rounded-lg w-full md:w-auto"
+        >
+          <option value="all">Paid Status</option>
+          <option value="paid">Paid</option>
+          <option value="not-paid">Not Paid</option>
         </select>
       </div>
 
@@ -99,8 +128,13 @@ const ProviderUsersPage = () => {
                 <td className="p-3">{user.customer.wallet}</td>
                 <td className="p-3">
                   <button
-                    onClick={() => togglePremium(user.customer.id)}
-                    className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm"
+                    onClick={() => setConfirmDialog({
+                      isOpen: true,
+                      userId: user.customer.id,
+                      userName: user.name,
+                      isPremium: user.customer.premium
+                    })}
+                    className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-600 transition-colors"
                   >
                     Toggle Premium
                   </button>
@@ -110,6 +144,23 @@ const ProviderUsersPage = () => {
           </tbody>
         </table>
       </div>
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={() =>
+          setConfirmDialog((prev) => ({ ...prev, isOpen: false }))
+        }
+        onConfirm={() => handleTogglePremium(confirmDialog.userId)}
+        title="Toggle Premium Status"
+       message={
+  <>
+    Are you sure you want to{" "}
+    <strong>{confirmDialog.isPremium ? "remove" : "add"}</strong>{" "}
+    premium status for <strong>{confirmDialog.userName}</strong>?
+  </>
+}
+
+      />
     </div>
   );
 };
