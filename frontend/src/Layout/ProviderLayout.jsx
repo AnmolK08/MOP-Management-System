@@ -13,6 +13,8 @@ import { LogoIcon } from "../Components/SvgIcons"; // Assuming you have this ico
 import { userLogout } from "../Redux/Slices/authSlice";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
+import profileImg from "../assets/UserProfile.png";
+
 
 const ProviderLayout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -117,7 +119,7 @@ const ProviderLayout = () => {
                   className="flex items-center gap-2"
                 >
                   <img
-                    src="https://i.pravatar.cc/40?u=admin"
+                    src={profileImg}
                     alt="Admin"
                     className="w-8 h-8 rounded-full"
                   />{" "}

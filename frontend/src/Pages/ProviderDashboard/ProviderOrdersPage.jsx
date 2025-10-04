@@ -84,7 +84,7 @@ const ProviderOrdersPage = () => {
       dispatch(markOrdersSeen({orderIds}))
       .then((res)=>{
         if(res.error){
-          toast.error(res.error.message)
+          toast.error(res.payload || "Failed to mark orders as seen")
         }else{
           toast.success("Orders marked as seen")
           setSelectedOrders({})
@@ -98,7 +98,7 @@ const ProviderOrdersPage = () => {
       dispatch(markOrdersDelivered({orderIds}))
       .then((res)=>{
         if(res.error){
-          toast.error(res.error.message)
+          toast.error(res.payload ||"Failed to mark orders as delivered")
         }else{
           toast.success("Orders marked as delivered")
           setSelectedOrders({})
@@ -119,6 +119,7 @@ const ProviderOrdersPage = () => {
     setSelectedOrders({})
     setSelectForDelivered(false)
     setSelectForSeen(false)
+    setMark("")
   }
 
   return (
@@ -180,7 +181,7 @@ const ProviderOrdersPage = () => {
               <th className="text-left py-3 px-4">Status</th>
               <th className="text-left py-3 px-4">Items</th>
               <th className="text-left py-3 px-4">Type</th>
-              <th className="text-left py-3 px-4">Premium Status</th>
+              <th className="text-left py-3 px-4">Premium</th>
               <th className="text-left py-3 px-4"></th>
             </tr>
           </thead>

@@ -21,6 +21,8 @@ import { LogoIcon } from "../Components/SvgIcons";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { userLogout } from "../Redux/Slices/authSlice";
+import profileImg from "../assets/UserProfile.png";
+
 
 const DashboardLayout = () => {
   const [isProfileModalOpen, setProfileModalOpen] = useState(false);
@@ -68,7 +70,7 @@ const DashboardLayout = () => {
       {/* Overlay for mobile */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+          className="fixed inset-0 bg-white bg-opacity-50 z-20 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -150,7 +152,7 @@ const DashboardLayout = () => {
                   className="flex items-center gap-3 focus:outline-none"
                 >
                   <img
-                    src="https://i.pravatar.cc/40"
+                    src={profileImg}
                     alt="User"
                     className="w-8 h-8 rounded-full ring-2 ring-gray-200 hover:ring-gray-300 transition-all"
                   />
