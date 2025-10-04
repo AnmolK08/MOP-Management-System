@@ -9,12 +9,11 @@ import {
   RiCloseLine,
   RiNotification3Line,
 } from "react-icons/ri";
-import { LogoIcon } from "../Components/SvgIcons"; // Assuming you have this icon
+import { LogoIcon } from "../Components/SvgIcons";
 import { userLogout } from "../Redux/Slices/authSlice";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import profileImg from "../assets/UserProfile.png";
-
 
 const ProviderLayout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -49,23 +48,28 @@ const ProviderLayout = () => {
   const handleLogout = () => {
     const toastId = toast.loading("Logging Out");
     dispatch(userLogout());
-
     localStorage.removeItem("token");
     navigate("/login");
-    toast.success("Logged out", {
-      id: toastId,
-    });
+    toast.success("Logged out", { id: toastId });
   };
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
+      {/* Overlay for mobile view */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-white/30 backdrop-blur-sm z-20 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        ></div>
+      )}
+
       {/* Sidebar */}
       <aside
-        className={`fixed md:relative inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform ${
+        className={`fixed md:relative inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-200 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0`}
       >
-        <div className="flex items-center justify-between p-4 border-b">
+        <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-2">
             <div className="size-7 text-[#ec6d13]">
               <LogoIcon />
@@ -84,7 +88,7 @@ const ProviderLayout = () => {
                   to={item.path}
                   end={item.end}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-4 py-3 rounded-lg ${
+                    `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 ${
                       isActive
                         ? "bg-blue-50 text-blue-600"
                         : "text-gray-700 hover:bg-gray-100"
@@ -103,7 +107,7 @@ const ProviderLayout = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header className="bg-white border-b sticky top-0 z-10">
+        <header className="bg-white sticky top-0 z-10">
           <div className="flex items-center justify-between px-4 py-3">
             <button onClick={() => setSidebarOpen(true)} className="md:hidden">
               <RiMenuLine size={24} />
@@ -122,7 +126,7 @@ const ProviderLayout = () => {
                     src={profileImg}
                     alt="Admin"
                     className="w-8 h-8 rounded-full"
-                  />{" "}
+                  />
                   <span className="hidden sm:inline font-medium">Admin</span>
                 </button>
                 <div
@@ -136,9 +140,10 @@ const ProviderLayout = () => {
                   >
                     Profile
                   </NavLink>
-                  <button 
+                  <button
                     onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
+                    className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+                  >
                     Logout
                   </button>
                 </div>

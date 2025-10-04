@@ -70,7 +70,7 @@ const DashboardLayout = () => {
       {/* Overlay for mobile */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-white bg-opacity-50 z-20 md:hidden"
+          className="fixed inset-0 bg-white/30 backdrop-blur-sm z-20 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
