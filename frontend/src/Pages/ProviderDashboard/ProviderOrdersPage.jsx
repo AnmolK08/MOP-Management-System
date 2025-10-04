@@ -15,7 +15,7 @@ const ProviderOrdersPage = () => {
     if (!orders || orders.length === 0) {
       dispatch(fetchProviderOrders());
     }
-  }, [dispatch, orders]);
+  }, [dispatch]);
 
   const [filter, setFilter] = useState("All");
   const [type, setType] = useState("All");

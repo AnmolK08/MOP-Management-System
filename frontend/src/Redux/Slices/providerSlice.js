@@ -37,6 +37,21 @@ export const togglePremiumStatus = createAsyncThunk(
     }
 )
 
+export const deleteUser = createAsyncThunk(
+    "provider/deleteUser",
+    async(userId, {rejectWithValue})=>{
+        try {
+            const token = localStorage.getItem("token");
+            const res = await axiosInstance.delete(`/provider/deleteUser/${userId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+              });
+              return res.data.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || "Failed to delete user")
+        }
+    }
+)
+
 const providerSlice = createSlice({
     name : "provider/users",
     initialState,
@@ -62,6 +77,11 @@ const providerSlice = createSlice({
             state.loading = false;
             const updatedUser = action.payload;
             state.users = state.users.map(user => user.customer.id === updatedUser.id ? {...user, customer: updatedUser} : user);
+        })
+        .addCase(deleteUser.fulfilled, (state, action)=>{
+            state.loading = false;
+            const deletedUser = action.payload;
+            state.users = state.users.filter(user => user.id !== deletedUser.id);
         })
         .addMatcher(
         (action) => action.type.endsWith("/pending"),

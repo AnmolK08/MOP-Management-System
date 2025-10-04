@@ -16,6 +16,8 @@ import ProviderUsersPage from "./Pages/ProviderDashboard/ProviderUsersPage";
 import ProviderOrdersPage from "./Pages/ProviderDashboard/ProviderOrdersPage";
 import ProviderDashboardPage from "./Pages/ProviderDashboard/ProviderDashboardPage";
 import EmailVerificationPage from "./Pages/EmailVerificationPage";
+import ForgotPass from "./Components/ForgotPass";
+import ResetPass from "./Pages/ResetPass";
 
 const router = createBrowserRouter([
   {
@@ -26,7 +28,8 @@ const router = createBrowserRouter([
       { path: "login", element: <LoginPage /> },  
       { path: "signup", element: <SignupPage /> },  
       { path: "email-verification", element : <EmailVerificationPage/> },
-     
+      { path: "forgot-password", element : <ForgotPass/> },
+      { path: "reset-password", element : <ResetPass/> }
     ],
   },  
 

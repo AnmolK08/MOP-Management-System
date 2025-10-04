@@ -27,13 +27,13 @@ const ProviderDashboardPage = () => {
 
     const dispatch = useDispatch();
   
-    const orders = useSelector((state) => state.orderSlice.providerOrders);
+    const orders = useSelector((state) => state.orderSlice.providerOrders); 
 
     useEffect(() => {
       if (!orders || orders.length === 0) {
         dispatch(fetchProviderOrders());
       }
-    }, [dispatch, orders]);
+    }, [dispatch]);
 
   return (
     <div className="space-y-6">

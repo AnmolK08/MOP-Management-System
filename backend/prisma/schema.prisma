@@ -20,6 +20,7 @@ model User {
   password  String
   role      Role
   customer  Customer? 
+  token     String?
   notificationsSent     Notification[] @relation("SentNotifications")
   notificationsReceived Notification[] @relation("ReceivedNotifications")
   createdAt DateTime @default(now())
@@ -29,7 +30,7 @@ model User {
 model Customer {
   id          String   @id @default(uuid())
   userId      String   @unique
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   wallet      Float    @default(0)
   orders      order[]  @relation("CustomerOrders")
   premium     Boolean  @default(false)
@@ -40,7 +41,7 @@ model Customer {
 model order {
   id          String    @id @default(uuid())
   customerId  String
-  customer    Customer  @relation("CustomerOrders", fields: [customerId], references: [id])
+  customer    Customer  @relation("CustomerOrders", fields: [customerId], references: [id], onDelete: Cascade)
   items       String[]
   status      Status    @default(PLACED)
   type        Type
@@ -53,9 +54,9 @@ model order {
 
 model Notification {
   id        String   @id @default(uuid())
-  sender    User     @relation("SentNotifications", fields: [senderId], references: [id])
+  sender    User     @relation("SentNotifications", fields: [senderId], references: [id], onDelete: Cascade)
   senderId  String
-  receiver  User     @relation("ReceivedNotifications", fields: [receiverId], references: [id])
+  receiver  User     @relation("ReceivedNotifications", fields: [receiverId], references: [id], onDelete: Cascade)
   receiverId String
   message   String
 }

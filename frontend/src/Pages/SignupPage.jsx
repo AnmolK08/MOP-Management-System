@@ -7,7 +7,7 @@ export default function SignupPage() {
     <div className="flex items-center justify-center h-screen bg-gray-100 p-4">
           {/* Back button at top */}
           <div className="absolute top-4 left-4 z-10">
-            <BackButton />
+            <BackButton location={""}/>
           </div>
       <div className="relative w-full max-w-4xl">
         {/* Background shadow */}

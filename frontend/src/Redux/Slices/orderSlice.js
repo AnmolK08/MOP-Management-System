@@ -214,11 +214,19 @@ const ordersSlice = createSlice({
       const providerIndex = state.providerOrders.findIndex(
         (o) => o.customerId === Id
       );
-      console.log(providerIndex)
       if (providerIndex !== -1)
         state.providerOrders[providerIndex].customer.premium = !state.providerOrders[providerIndex].customer.premium;
+    },
+    deleteUserFromOrders : (state, action) => {
+      const {Id} = action.payload;
+      if(!Id) return;
+      state.providerOrders = state.providerOrders.filter(
+        (o) => o.id !== Id
+      );
+      state.userOrders = state.userOrders.filter(
+        (o) => o.id !== Id
+      );
     }
-
   },
   extraReducers: (builder) => {
     const updateOrderInState = (state, updatedOrder) => {
@@ -337,4 +345,4 @@ const ordersSlice = createSlice({
 });
 
 export default ordersSlice.reducer;
-export const { updateProviderOrders } = ordersSlice.actions;
+export const { updateProviderOrders, deleteUserFromOrders } = ordersSlice.actions;
