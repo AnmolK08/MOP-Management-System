@@ -246,7 +246,7 @@ const ProviderOrdersPage = () => {
             ) : (
               <tr>
                 <td colSpan="6" className="text-center py-4 text-gray-500">
-                  No matching orders found.
+                  No orders found.
                 </td>
               </tr>
             )}

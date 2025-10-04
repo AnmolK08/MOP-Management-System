@@ -1,23 +1,29 @@
 import React from 'react'
 import { axiosInstance } from '../../libs/axios';
+import toast from "react-hot-toast";
 
 function ForgotRight() {
 
     const handleForgetPass = async (e) => {
-        e.preventDefault();
-        const email = e.target.email.value;
-        try {
-            const res = await axiosInstance.post('/profile/forgetPass', { email });
-            if (res.status === 200) {
-                alert('Password reset link sent to your email.');
-            } else {
-                alert('Error sending password reset link. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error sending password reset link. Please try again.');
+    e.preventDefault();
+    const email = e.target.email.value;
+
+    const toastId = toast.loading("Sending password reset link...");
+
+    try {
+        const res = await axiosInstance.post("/profile/forgetPass", { email });
+
+        if (res.status === 200) {
+        toast.success("Password reset link sent to your email.", { id: toastId });
+        } else {
+        toast.error("Error sending password reset link. Please try again.", { id: toastId });
         }
+    } catch (error) {
+        console.error("Error:", error);
+        toast.error("Error sending password reset link. Please try again.", { id: toastId });
     }
+    };
+
     
 return (
     <div className="w-full bg-white p-8">

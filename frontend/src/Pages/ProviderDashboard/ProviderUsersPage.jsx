@@ -141,7 +141,8 @@ const ProviderUsersPage = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map((user) => (
+            {filteredUsers.length > 0 ? (
+            filteredUsers.map((user) => (
               <tr key={user.id} className="border-b">
                 <td className="p-3">{user.name}</td>
                 <td className="p-3">{user.email}</td>
@@ -188,7 +189,14 @@ const ProviderUsersPage = () => {
                   </button>
                 </td>
               </tr>
-            ))}
+            ))
+          ) : (
+              <tr>
+                <td colSpan="6" className="text-center py-4 text-gray-500">
+                  No users found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
