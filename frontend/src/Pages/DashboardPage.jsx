@@ -3,7 +3,14 @@ import { Link } from "react-router-dom";
 import OrderDialog from "../Components/OrderDialog"; // Import the dialog
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMenu } from "../Redux/Slices/menuSlice";
-import { cancelOrder, fetchUserOrders, placeOrder, updateOrder } from "../Redux/Slices/orderSlice";
+import {
+  cancelOrder,
+  fetchUserOrders,
+  placeOrder,
+  updateOrder,
+} from "../Redux/Slices/orderSlice";
+import { getProfileDetails } from "../Redux/Slices/profileSlice";
+import toast from "react-hot-toast";
 
 // Child components for better organization
 const MenuCard = ({ menu, onOrderNow }) => (
@@ -43,59 +50,71 @@ const MenuCard = ({ menu, onOrderNow }) => (
 const LatestOrderCard = ({ order, onEdit, onCancel }) => (
   <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
     <div className="flex justify-between w-full">
-      <h3 className="text-lg sm:text-xl font-semibold mb-4">Your Latest Order</h3>
+      <h3 className="text-lg sm:text-xl font-semibold mb-4">
+        Your Latest Order
+      </h3>
       <p>
-        <span className="text-gray-600">Date:</span> {new Date(order.date).toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "2-digit",
-          })}
+        <span className="text-gray-600">Date:</span>{" "}
+        {new Date(order.date).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "2-digit",
+        })}
       </p>
     </div>
     <div className="my-2 text-blue-700 font-bold">
       <span className="text-gray-600">Type:</span> {order.type}
     </div>
     <ul className="space-y-2 mb-6 flex-grow">
-        {order.items?.map((item, index) => (
-          <li key={index} className="flex items-center gap-2 text-gray-600">
-            <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-            {item}
-          </li>
-        ))}
-      </ul>
+      {order.items?.map((item, index) => (
+        <li key={index} className="flex items-center gap-2 text-gray-600">
+          <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+          {item}
+        </li>
+      ))}
+    </ul>
     <div className="flex justify-between items-center mt-4 text-sm">
       <p className="font-medium">
         Status: <span className="text-green-600">{order.status}</span>
       </p>
       <p className="font-medium">
-        Total: <span className="text-blue-600">₹{order?.total||"60"}</span>
+        Total: <span className="text-blue-600">₹{order?.total || "60"}</span>
       </p>
     </div>
-    {order.status=="PLACED" && <div className="flex gap-3 mt-4">
-      <button
-        onClick={onEdit}
-        className="flex-1 bg-yellow-400 text-white py-2 rounded-lg hover:bg-yellow-500"
-      >
-        Edit Order
-      </button>
-      <button
-        onClick={onCancel}
-        className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
-      >
-        Cancel Order
-      </button>
-    </div>}
+    {order.status == "PLACED" && (
+      <div className="flex gap-3 mt-4">
+        <button
+          onClick={onEdit}
+          className="flex-1 bg-yellow-400 text-white py-2 rounded-lg hover:bg-yellow-500"
+        >
+          Edit Order
+        </button>
+        <button
+          onClick={onCancel}
+          className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
+        >
+          Cancel Order
+        </button>
+      </div>
+    )}
   </div>
 );
 
 const DashboardPage = () => {
-  const { userOrders } = useSelector(state=>state.orderSlice)
+  const { userOrders, loading: userLoading } = useSelector(
+    (state) => state.orderSlice
+  );
   const [isOrderDialogOpen, setOrderDialogOpen] = useState(false);
-  const [latestOrder, setLatestOrder] = useState(userOrders[userOrders.length-1]);
+  const [latestOrder, setLatestOrder] = useState(
+    userOrders[userOrders.length - 1]
+  );
   const [editingOrder, setEditingOrder] = useState(null);
 
   const dispatch = useDispatch();
   const { menu, loading } = useSelector((state) => state.menuSlice);
+  const profileDetails = useSelector(
+    (state) => state.profileSlice.profileDetails
+  );
 
   useEffect(() => {
     const fetch = () => {
@@ -103,25 +122,48 @@ const DashboardPage = () => {
     };
 
     if (menu == null) fetch();
-  }, [menu]);
+  }, [menu, dispatch]);
 
-  useEffect(()=>{
-    dispatch(fetchUserOrders()).then((res)=>{      
-      setLatestOrder(res.payload[res.payload.length-1])
-    })
-  },[dispatch])
+  useEffect(() => {
+    if (userOrders.length === 0) dispatch(fetchUserOrders());
+    setLatestOrder(userOrders[userOrders.length - 1]);
+  }, [userOrders, dispatch]);
+
+  useEffect(() => {
+    if (!profileDetails) dispatch(getProfileDetails());
+  }, [profileDetails, dispatch]);
 
   const handlePlaceOrder = (orderData) => {
-    if(!editingOrder){
-    dispatch(placeOrder(orderData)).then((res)=>{
-      console.log(res);
-      setLatestOrder(res.payload)
-    })}else{
-      dispatch(updateOrder({orderData, orderId: latestOrder.id})).then((res)=>
-        setLatestOrder(res.payload)
-      )
+    if (!editingOrder) {
+      const toastId = toast.loading("Placing an order");
+      dispatch(placeOrder(orderData)).then((res) => {
+        if (res.meta.requestStatus === "rejected") {
+          toast.error(res.payload, {
+            id: toastId,
+          });
+        } else
+          toast.success("Order placed", {
+            id: toastId,
+          });
+        setLatestOrder(res.payload);
+      });
+    } else {
+      const toastId = toast.loading("Updating the order");
+      dispatch(updateOrder({ orderData, orderId: latestOrder.id })).then(
+        (res) => {
+          if (res.meta.requestStatus === "rejected") {
+            toast.error(res.payload, {
+              id: toastId,
+            });
+          } else
+            toast.success("Order updated", {
+              id: toastId,
+            });
+          setLatestOrder(res.payload);
+        }
+      );
     }
-    setEditingOrder(null); // Clear editing state
+    setEditingOrder(null);
     setOrderDialogOpen(false);
   };
 
@@ -131,10 +173,10 @@ const DashboardPage = () => {
   };
 
   const handleCancel = () => {
-    dispatch(cancelOrder(latestOrder.id)).then((res)=>{
-      setLatestOrder(res.payload)
-    })
-  }
+    dispatch(cancelOrder(latestOrder.id)).then((res) => {
+      setLatestOrder(res.payload);
+    });
+  };
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -154,9 +196,11 @@ const DashboardPage = () => {
               setOrderDialogOpen(true);
             }}
           />
-        ) : loading ? (<div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow flex justify-center items-center">
+        ) : loading ? (
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow flex justify-center items-center">
             <h1 className="text-gray-500">Loading Menu...</h1>
-          </div>) :(
+          </div>
+        ) : (
           <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow flex justify-center items-center">
             <h1 className="text-gray-500">Menu not uploaded yet!!</h1>
           </div>
@@ -167,6 +211,10 @@ const DashboardPage = () => {
             onEdit={handleOpenEdit}
             onCancel={handleCancel}
           />
+        ) : userLoading ? (
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow flex justify-center items-center">
+            <h1 className="text-gray-500">Loading Latest Order...</h1>
+          </div>
         ) : (
           <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm flex items-center justify-center text-gray-500">
             <p>Your latest order will appear here.</p>
@@ -180,11 +228,23 @@ const DashboardPage = () => {
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-blue-50 rounded-lg p-4">
             <p className="text-sm text-gray-600">Active Plan</p>
-            <p className="text-xl font-semibold text-blue-600">Monthly</p>
+            <p className="text-xl font-semibold text-blue-600">
+              {" "}
+              {profileDetails === null
+                ? "Loading..."
+                : profileDetails.customer?.premium
+                ? "Premium"
+                : "Normal"}
+            </p>
           </div>
           <div className="bg-green-50 rounded-lg p-4">
-            <p className="text-sm text-gray-600">Days Remaining</p>
-            <p className="text-xl font-semibold text-green-600">22</p>
+            <p className="text-sm text-gray-600">Wallet</p>
+            <p className="text-xl font-semibold text-green-600">
+              {" "}
+              {profileDetails === null
+                ? "Loading..."
+                : profileDetails.customer?.wallet || 0}
+            </p>
           </div>
         </div>
       </div>

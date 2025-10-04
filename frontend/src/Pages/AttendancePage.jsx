@@ -1,104 +1,165 @@
-import React, { useState } from "react";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css"; // default styles
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserOrders } from "../Redux/Slices/orderSlice";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
 
-// Example mock orders
-const ordersData = {
-  "2025-09-12": [{ type: "Lunch" }, { type: "Dinner" }],
-  "2025-09-13": [{ type: "Lunch" }],
-  "2025-09-14": [{ type: "Dinner" }],
+const useMediaQuery = (query) => {
+  const [matches, setMatches] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia(query).matches;
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const media = window.matchMedia(query);
+    const listener = () => setMatches(media.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, [query]);
+
+  return matches;
 };
 
 const AttendancePage = () => {
-  const [date, setDate] = useState(new Date());
+  const dispatch = useDispatch();
+  const allOrders = useSelector((state) => state.orderSlice.userOrders);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
-  // Helper to check orders for each date
-  const getOrderDots = (date) => {
-    const dateKey = date.toISOString().split("T")[0];
-    const orders = ordersData[dateKey] || [];
+  useEffect(() => {
+    if (!allOrders || allOrders.length === 0) {
+      dispatch(fetchUserOrders());
+    }
+  }, [dispatch]);
 
-    const lunchOrder = orders.find((o) => o.type === "Lunch");
-    const dinnerOrder = orders.find((o) => o.type === "Dinner");
+  const deliveredOrders = useMemo(() => {
+    return allOrders?.filter((order) => order.status === "DELIVERED") || [];
+  }, [allOrders]);
 
+  const events = useMemo(() => {
+    const groupedByDate = deliveredOrders.reduce((acc, order) => {
+      const dateKey = order.date.split("T")[0];
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(order.type);
+      return acc;
+    }, {});
+
+    return Object.entries(groupedByDate).map(([date, types]) => ({
+      id: date,
+      start: date,
+      display: "block",
+      backgroundColor: "transparent",
+      borderColor: "transparent",
+      extendedProps: { types },
+    }));
+  }, [deliveredOrders]);
+
+  const renderEventContent = (eventInfo) => {
+    const { types } = eventInfo.event.extendedProps;
     return (
-      <div className="flex justify-center gap-1 mt-1">
-        {/* Lunch Dot */}
-        <span
-          className={`w-2 h-2 ${
-            lunchOrder ? "bg-green-500" : "bg-gray-100"
-          }`}
-        ></span>
-        {/* Dinner Dot */}
-        <span
-          className={`w-2 h-2 ${
-            dinnerOrder ? "bg-green-500" : "bg-gray-100"
-          }`}
-        ></span>
+      <div className="flex justify-center items-center gap-1 py-1">
+        {types.map((type, index) => (
+          <div
+            key={index}
+            className={`w-3 h-3 rounded-full ${
+              type === "LUNCH" ? "bg-orange-500" : "bg-blue-600"
+            } border border-white`}
+            style={{ margin: "0 2px" }}
+          ></div>
+        ))}
       </div>
     );
   };
 
-  // Count totals for summary
-  const consumedDays = Object.values(ordersData).filter(
-    (orders) => orders.length > 0
-  ).length;
-  const totalLunch = Object.values(ordersData).filter((orders) =>
-    orders.some((o) => o.type === "Lunch")
-  ).length;
-  const totalDinner = Object.values(ordersData).filter((orders) =>
-    orders.some((o) => o.type === "Dinner")
-  ).length;
+  const { consumedDays, totalLunch, totalDinner } = useMemo(() => {
+    const groupedByDate = deliveredOrders.reduce((acc, o) => {
+      const dateKey = o.date.split("T")[0];
+      acc[dateKey] = true;
+      return acc;
+    }, {});
+
+    return {
+      consumedDays: Object.keys(groupedByDate).length,
+      totalLunch: deliveredOrders.filter((o) => o.type === "LUNCH").length,
+      totalDinner: deliveredOrders.filter((o) => o.type === "DINNER").length,
+    };
+  }, [deliveredOrders]);
 
   return (
-    <div>
-      <h2 className="text-3xl font-bold mb-6">Meal Attendance</h2>
+    <div className="px-4 py-4 md:px-6 md:py-6 max-w-7xl mx-auto">
+      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
+        Meal Attendance
+      </h2>
 
-      <div className="flex flex-col md:flex-row gap-6">
-        {/* Calendar */}
-        <div className="flex flex-col items-center justify-center bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-xl font-semibold mb-4 text-center">
-            {date.toLocaleString("default", { month: "long" })}{" "}
-            {date.getFullYear()}
-          </h3>
-
-          <Calendar
-            onChange={setDate}
-            value={date}
-            tileContent={({ date }) => getOrderDots(date)}
-            className="w-full border-0"
-          />
+      <div className="flex flex-col lg:flex-row gap-6">
+        <div className="bg-white rounded-xl shadow-sm p-6 w-full lg:w-1/3 xl:w-1/4">
+          <h3 className="text-lg font-semibold text-gray-800 mb-6">Summary</h3>
+          <div className="grid grid-cols-1 gap-4">
+            <SummaryCard title="Total Consumed Days" value={consumedDays} />
+            <SummaryCard title="Delivered Lunches" value={totalLunch} />
+            <SummaryCard title="Delivered Dinners" value={totalDinner} />
+          </div>
+          <Legend />
         </div>
 
-        {/* Summary */}
-        <div className="w-full md:w-1/3 bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-xl font-semibold mb-4">Summary</h3>
-          <div className="space-y-4">
-            <div className="flex justify-between">
-              <span>Total Days with Orders</span>
-              <span className="font-bold">{consumedDays}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Lunch Orders</span>
-              <span className="font-bold">{totalLunch}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Dinner Orders</span>
-              <span className="font-bold">{totalDinner}</span>
-            </div>
-            <hr className="my-4" />
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <div className="w-4 h-4 bg-green-500 mr-2"></div> Order Placed
-              </div>
-              <div className="flex items-center">
-                <div className="w-4 h-4 bg-gray-100 mr-2"></div> Order Missing
-              </div>
-            </div>
-          </div>
+        <div className="bg-white p-4 md:p-6 rounded-xl shadow-sm flex-1 min-h-[550px]">
+          <FullCalendar
+            plugins={[dayGridPlugin, interactionPlugin]}
+            initialView="dayGridMonth"
+            headerToolbar={{
+              left: "prev,next",
+              center: "title",
+              right: isMobile ? "" : "today",
+            }}
+            events={events}
+            eventContent={renderEventContent}
+            height="auto"
+            contentHeight="auto"
+            aspectRatio={isMobile ? 0.8 : 1.35}
+            firstDay={1}
+            fixedWeekCount={false}
+            dayMaxEventRows={1}
+            eventDisplay="block"
+            dayHeaderFormat={
+              isMobile ? { weekday: "narrow" } : { weekday: "short" }
+            }
+            eventClassNames={() => [
+              "!bg-transparent",
+              "border-0",
+              "outline-none",
+            ]}
+            dayCellClassNames={() => ["min-h-[40px]", "sm:min-h-[80px]"]}
+          />
         </div>
       </div>
     </div>
   );
 };
+
+const SummaryCard = ({ title, value }) => (
+  <div className="bg-gray-50 rounded-lg p-4">
+    <div className="text-sm text-gray-500">{title}</div>
+    <div className="text-2xl font-bold mt-1 text-gray-800">{value}</div>
+  </div>
+);
+
+const Legend = () => (
+  <div className="mt-6 pt-6 border-t border-gray-200">
+    <h4 className="text-sm font-medium text-gray-800 mb-3">Legend</h4>
+    <div className="flex flex-col sm:flex-row sm:gap-4 space-y-2 sm:space-y-0">
+      <div className="flex items-center">
+        <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+        <span className="ml-2 text-sm text-gray-600">Lunch</span>
+      </div>
+      <div className="flex items-center">
+        <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
+        <span className="ml-2 text-sm text-gray-600">Dinner</span>
+      </div>
+    </div>
+  </div>
+);
 
 export default AttendancePage;
