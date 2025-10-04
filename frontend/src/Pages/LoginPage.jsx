@@ -7,7 +7,7 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8">
           {/* Back button at top */}
           <div className="absolute top-4 left-4 z-10">
-            <BackButton />
+            <BackButton location={""}/>
           </div>
       <div className="relative w-full max-w-4xl">
         {/* Background shadow */}

@@ -20,6 +20,7 @@ model User {
   password  String
   role      Role
   customer  Customer? 
+  token     String?
   notificationsSent     Notification[] @relation("SentNotifications")
   notificationsReceived Notification[] @relation("ReceivedNotifications")
   createdAt DateTime @default(now())
