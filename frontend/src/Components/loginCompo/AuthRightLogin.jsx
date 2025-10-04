@@ -32,10 +32,20 @@ export default function AuthRight() {
     const toastId = toast.loading("Logging in...");
     
     try {
-      await dispatch(userLogin(credentials)).unwrap();
-      toast.success("Logged in successfully", { id: toastId });
-      navigate('/u');
-      
+      await dispatch(userLogin(credentials)).unwrap().then((res) => {
+        if(res.error){
+          toast.error(res.error || "Login failed", { id: toastId });
+        }else{
+          toast.success("Logged in successfully", { id: toastId });
+          
+          if(res.user.role === "PROVIDER"){
+            navigate("/a", { replace: true });
+          }
+          else{
+            navigate("/u", { replace: true });
+          }
+        }
+      });      
     } catch (error) {
       toast.error(error.message || "Login failed", { id: toastId });
     }

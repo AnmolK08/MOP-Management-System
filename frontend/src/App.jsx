@@ -18,6 +18,8 @@ import ProviderDashboardPage from "./Pages/ProviderDashboard/ProviderDashboardPa
 import EmailVerificationPage from "./Pages/EmailVerificationPage";
 import ForgotPass from "./Components/ForgotPass";
 import ResetPass from "./Pages/ResetPass";
+import CustomerProtector from "./Layout/CustomerProtector";
+import ProviderProtector from "./Layout/ProviderProtector";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +36,9 @@ const router = createBrowserRouter([
   },  
 
   {
+    element: <CustomerProtector />,
+    children: [
+    {
     path: "/u",
     element: <DashboardLayout />,
     children: [
@@ -44,9 +49,12 @@ const router = createBrowserRouter([
       { path: "profile" , element: <ProfilePage />},
       { path: "billing" , element: <BillingPage />}
     ],
-  },
+    },
+  ]},
 
   {
+    element: <ProviderProtector />,
+    children: [{
         path: "/a",
         element: <ProviderLayout />,
         children: [
@@ -56,6 +64,7 @@ const router = createBrowserRouter([
             { path: "profile", element: <ProfilePage /> }, 
         ],
     },
+  ]}
 ]);
 
 function App() {

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfileDetails, updateProfile } from "../Redux/Slices/profileSlice";
+import { updateProfile } from "../Redux/Slices/profileSlice";
 import profileImg from "../assets/UserProfile.png";
 import { toast } from "react-hot-toast";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
+import { fetchUser } from "../Redux/Slices/authSlice";
 
 const ProfilePage = () => {
   const [formData, setFormData] = useState({
@@ -18,12 +19,12 @@ const ProfilePage = () => {
   const [showConf, setShowConf] = useState(false);
 
   const dispatch = useDispatch();
-  const { profileDetails: user, loading } = useSelector(
-    (state) => state.profileSlice
+  const { user, loading } = useSelector(
+    (state) => state.authSlice
   );
 
   useEffect(() => {
-    if (!user) dispatch(getProfileDetails());
+    if (!user) dispatch(fetchUser());
   }, [dispatch, user]);
 
   const handleSubmit = (e) => {
