@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUsers, togglePremiumStatus } from "../../Redux/Slices/providerSlice";
+import { deleteUser, getAllUsers, togglePremiumStatus } from "../../Redux/Slices/providerSlice";
 import { toast } from "react-hot-toast";
-import { updateProviderOrders } from "../../Redux/Slices/orderSlice";
+import { deleteUserFromOrders, updateProviderOrders } from "../../Redux/Slices/orderSlice";
 import ConfirmationDialog from "../../Components/ConfirmationDialog";
+import { RiDeleteBin5Line } from "react-icons/ri";
 
 const ProviderUsersPage = () => {
   const dispatch = useDispatch();
@@ -65,6 +66,30 @@ const ProviderUsersPage = () => {
     return matchesSearch && matchesFilter && paidsFilter;
   });
 
+  const handleDeleteUser = (userId) => {
+    const toastId = toast.loading("Deleting user...");
+    if(!userId) {
+      toast.error("User ID is missing",{
+        id: toastId,
+      });
+      return;
+    }
+    dispatch(deleteUser(userId))
+      .then((res) => {
+        if (res.error) {
+          toast.error(res.error.message || "Failed to delete user", { id: toastId });
+        } else {
+          toast.success("User deleted successfully", { id: toastId });
+          if(providerOrders.length !== 0) {
+            dispatch(deleteUserFromOrders({Id : userId}));
+          }
+        }
+      })
+      .catch(() => {
+        toast.error("An unexpected error occurred", { id: toastId });
+      });
+  }
+
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm">
       <h2 className="text-2xl font-bold mb-4">Manage Users</h2>
@@ -107,6 +132,7 @@ const ProviderUsersPage = () => {
               <th className="text-left p-3">Premium Status</th>
               <th className="text-left p-3">Wallet</th>
               <th className="text-left p-3">Actions</th>
+              <th className="text-left p-3"></th>
             </tr>
           </thead>
           <tbody>
@@ -128,15 +154,26 @@ const ProviderUsersPage = () => {
                 <td className="p-3">{user.customer.wallet}</td>
                 <td className="p-3">
                   <button
-                    onClick={() => setConfirmDialog({
-                      isOpen: true,
-                      userId: user.customer.id,
-                      userName: user.name,
-                      isPremium: user.customer.premium
-                    })}
+                    onClick={() =>
+                      setConfirmDialog({
+                        isOpen: true,
+                        userId: user.customer.id,
+                        userName: user.name,
+                        isPremium: user.customer.premium,
+                      })
+                    }
                     className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-600 transition-colors"
                   >
                     Toggle Premium
+                  </button>
+                </td>
+                <td className="p-3">
+                  <button
+                    className="flex items-center justify-start cursor-pointer w-8 h-8 rounded-full hover:bg-red-100 transition-colors"
+                    title="Delete User"
+                    onClick={() => handleDeleteUser(user.id)}
+                  >
+                    <RiDeleteBin5Line color="red" size={20} />
                   </button>
                 </td>
               </tr>
@@ -144,7 +181,6 @@ const ProviderUsersPage = () => {
           </tbody>
         </table>
       </div>
-      {/* Confirmation Dialog */}
       <ConfirmationDialog
         isOpen={confirmDialog.isOpen}
         onClose={() =>

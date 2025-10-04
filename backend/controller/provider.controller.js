@@ -120,3 +120,24 @@ export const togglePremium = asyncHandler(async (req, res) => {
     data: updatedCustomer,
   });
 }); //done
+
+export const deleteUser = asyncHandler(async (req, res) => {
+
+  const { userId } = req.params;
+
+  if (!userId) 
+    throw new ResponseError("User ID is required", 401);
+
+  const user = await prisma.user.delete({ 
+    where: { 
+      id: userId 
+    } 
+  });
+
+  if (!user) 
+    throw new ResponseError("User does not exist", 404);
+  
+  res
+    .status(200)
+    .json({ success: true, message: "User deleted successfully", data: user });
+}); //done
