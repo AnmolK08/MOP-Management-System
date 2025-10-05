@@ -1,35 +1,44 @@
 import React from 'react'
 import { axiosInstance } from '../../libs/axios';
 import { useNavigate } from 'react-router-dom';
+import toast from "react-hot-toast";
 
 function ResetRight() {
 
     const navigate = useNavigate();
 
     const handleResetPass = async (e) => {
-        e.preventDefault();
-        const newPass = e.target.newPass.value;
-        const confPass = e.target.confPass.value;
-        const param = new URLSearchParams(window.location.search);
-        const token = param.get('token');        
+    e.preventDefault();
+    const newPass = e.target.newPass.value;
+    const confPass = e.target.confPass.value;
+    const param = new URLSearchParams(window.location.search);
+    const token = param.get("token");
 
-        if(newPass !== confPass){
-            alert("New password and confirmation password do not match");
-            return;
-        }        
-        try{
-            const response = await axiosInstance.post('/profile/resetPass', {
-                newPass,
-                confPass,
-                token
-            });
-            alert(response.data.message);
-            navigate('/login');
-        }catch(err){
-            console.error(err);
-            alert(err.response?.data?.message || "An error occurred. Please try again.");
-        }
+    if (newPass !== confPass) {
+        toast.error("New password and confirmation password do not match");
+        return;
     }
+
+    const toastId = toast.loading("Resetting your password...");
+
+    try {
+        const response = await axiosInstance.post("/profile/resetPass", {
+        newPass,
+        confPass,
+        token,
+        });
+        toast.success(response.data.message || "Password reset successfully!", {
+        id: toastId,
+        });
+        navigate("/login");
+    } catch (err) {
+        console.error(err);
+        toast.error(err.response?.data?.message || "An error occurred. Please try again.", {
+        id: toastId,
+        });
+    }
+    };
+
     
 return (
     <div className="w-full bg-white p-8">

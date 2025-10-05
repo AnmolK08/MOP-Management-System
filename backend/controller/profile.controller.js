@@ -78,10 +78,25 @@ export const forgetPass = asyncHandler(async(req, res)=>{
         },
     });
     const mailOptions = {
-        from: process.env.EMAIL,
-        to: user.email,
-        subject: 'Password Reset',
-        text: `Click the link to reset your password: ${resetLink}`,
+      from: process.env.EMAIL,
+      to: user.email,
+      subject: "Password Reset - Minipahadganj",
+      html: `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 10px;">
+            <h2 style="color: #ff7849; text-align: center;">Password Reset Request - Minipahadganj</h2>
+            <p>Hi there,</p>
+            <p>We received a request to reset your password for your <b>Minipahadganj</b> account.</p>
+            <p>If you made this request, please click the button below to set a new password:</p>
+            <div style="text-align: center; margin: 30px 0;">
+            <a href="${resetLink}" 
+                style="background-color: #ff7849; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+                Reset Password
+            </a>
+            </div>
+            <p style="margin-top: 30px;">This link will expire in <b>5 minutes</b> for your security.</p>
+            <p>Cheers,<br><b>The Mini Team</b></p>
+        </div>
+        `,
     };
     await transporter.sendMail(mailOptions);
 

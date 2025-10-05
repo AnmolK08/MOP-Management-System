@@ -2,20 +2,20 @@ import React, { useEffect } from "react";
 import MenuEditor from "../../Components/MenuEditor";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProviderOrders } from "../../Redux/Slices/orderSlice";
+import { getAllUsers } from "../../Redux/Slices/providerSlice";
 
 // A simple card for displaying stats
-const StatCard = ({ title, value, change }) => (
+const StatCard = ({ title, value }) => (
   <div className="bg-white p-6 rounded-xl shadow-sm flex items-center justify-between">
     <div>
       <p className="text-gray-500 text-sm">{title}</p>
-      <p className="text-3xl font-bold text-gray-800">{value}</p>
-      {change && (
+      {value && (
         <p
-          className={`text-sm font-medium ${
-            change.startsWith("+") ? "text-green-500" : "text-red-500"
+          className={`text-3xl font-bold ${
+            value >= 0 ? "text-gray-600" : "text-red-500"
           }`}
         >
-          {change}
+          {value}
         </p>
       )}
     </div>
@@ -26,13 +26,15 @@ const StatCard = ({ title, value, change }) => (
 const ProviderDashboardPage = () => {
 
     const dispatch = useDispatch();
-  
+    const users = useSelector((state) => state.providerSlice.users);
     const orders = useSelector((state) => state.orderSlice.providerOrders); 
+
 
     useEffect(() => {
       if (!orders || orders.length === 0) {
         dispatch(fetchProviderOrders());
       }
+      if (!users || users.length === 0) dispatch(getAllUsers());
     }, [dispatch]);
 
   return (
@@ -49,8 +51,8 @@ const ProviderDashboardPage = () => {
           value={orders.length - orders.filter(order => order.status == "CANCELLED").length}
         />
         <StatCard
-          title="Payments Received"
-          value="NA"
+          title="Payments Pending"
+          value={users.reduce((acc, user) => acc + (user.customer.wallet < 0 ? user.customer.wallet : 0), 0)}
         />
       </div>
 
