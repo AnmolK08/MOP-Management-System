@@ -9,11 +9,11 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 const ProviderUsersPage = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.providerSlice.users);
-  const {providerOrders} = useSelector((state)=> state.orderSlice);
+  const { providerOrders } = useSelector((state) => state.orderSlice);
 
   useEffect(() => {
     if (!users || users.length === 0) dispatch(getAllUsers());
-  }, [dispatch, users]);
+  }, [dispatch, users.length]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
@@ -22,12 +22,18 @@ const ProviderUsersPage = () => {
     isOpen: false,
     userId: null,
     userName: "",
-    isPremium: false
+    isPremium: false,
+  });
+
+  const [deleteDialog, setDeleteDialog] = useState({
+    isOpen: false,
+    userId: null,
+    userName: "",
   });
 
   const handleTogglePremium = (customerId) => {
     const toastId = toast.loading("Toggling premium status...");
-    if(!customerId) {
+    if (!customerId) {
       toast.error("Customer ID is missing");
       return;
     }
@@ -35,14 +41,15 @@ const ProviderUsersPage = () => {
     dispatch(togglePremiumStatus(customerId))
       .then((res) => {
         if (res.error) {
-          toast.error(res.error.message || "Failed to toggle premium status", { id: toastId });
+          toast.error(res.error.message || "Failed to toggle premium status", {
+            id: toastId,
+          });
         } else {
           toast.success("Premium status toggled successfully", { id: toastId });
-          if(providerOrders.length !== 0) {
-            dispatch(updateProviderOrders({Id : customerId}));
+          if (providerOrders.length !== 0) {
+            dispatch(updateProviderOrders({ Id: customerId }));
           }
-          // Close the dialog
-          setConfirmDialog(prev => ({ ...prev, isOpen: false }));
+          setConfirmDialog((prev) => ({ ...prev, isOpen: false }));
         }
       })
       .catch(() => {
@@ -59,9 +66,9 @@ const ProviderUsersPage = () => {
       (filter === "premium" && user.customer.premium) ||
       (filter === "normal" && !user.customer.premium);
 
-    const paidsFilter = 
-    paidFilter === "all" ||
-    (paidFilter === "paid" && user.customer.wallet >= 0) ||
+    const paidsFilter =
+      paidFilter === "all" ||
+      (paidFilter === "paid" && user.customer.wallet >= 0) ||
       (paidFilter === "not-paid" && user.customer.wallet < 0);
     return matchesSearch && matchesFilter && paidsFilter;
   });
@@ -93,7 +100,6 @@ const ProviderUsersPage = () => {
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm">
       <h2 className="text-2xl font-bold mb-4">Manage Users</h2>
-      {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-4">
         <input
           type="text"
@@ -122,21 +128,21 @@ const ProviderUsersPage = () => {
         </select>
       </div>
 
-      {/* Users Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full">
           <thead className="bg-gray-50">
             <tr>
               <th className="text-left p-3">Name</th>
               <th className="text-left p-3">Email</th>
-              <th className="text-left p-3">Premium Status</th>
+              <th className="text-left p-3">Premium</th>
               <th className="text-left p-3">Wallet</th>
               <th className="text-left p-3">Actions</th>
               <th className="text-left p-3"></th>
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map((user) => (
+            {filteredUsers.length > 0 ? (
+            filteredUsers.map((user) => (
               <tr key={user.id} className="border-b">
                 <td className="p-3">{user.name}</td>
                 <td className="p-3">{user.email}</td>
@@ -171,31 +177,58 @@ const ProviderUsersPage = () => {
                   <button
                     className="flex items-center justify-start cursor-pointer w-8 h-8 rounded-full hover:bg-red-100 transition-colors"
                     title="Delete User"
-                    onClick={() => handleDeleteUser(user.id)}
+                    onClick={() =>
+                      setDeleteDialog({
+                        isOpen: true,
+                        userId: user.id,
+                        userName: user.name,
+                      })
+                    }
                   >
                     <RiDeleteBin5Line color="red" size={20} />
                   </button>
                 </td>
               </tr>
-            ))}
+            ))
+          ) : (
+              <tr>
+                <td colSpan="6" className="text-center py-4 text-gray-500">
+                  No users found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
+
+      {/* 🔹 Confirmation for Premium Toggle */}
       <ConfirmationDialog
         isOpen={confirmDialog.isOpen}
-        onClose={() =>
-          setConfirmDialog((prev) => ({ ...prev, isOpen: false }))
-        }
+        onClose={() => setConfirmDialog((prev) => ({ ...prev, isOpen: false }))}
         onConfirm={() => handleTogglePremium(confirmDialog.userId)}
         title="Toggle Premium Status"
-       message={
-  <>
-    Are you sure you want to{" "}
-    <strong>{confirmDialog.isPremium ? "remove" : "add"}</strong>{" "}
-    premium status for <strong>{confirmDialog.userName}</strong>?
-  </>
-}
+        message={
+          <>
+            Are you sure you want to{" "}
+            <strong>{confirmDialog.isPremium ? "remove" : "add"}</strong>{" "}
+            premium status for <strong>{confirmDialog.userName}</strong>?
+          </>
+        }
+      />
 
+      {/* 🔹 Confirmation for Delete User */}
+      <ConfirmationDialog
+        isOpen={deleteDialog.isOpen}
+        onClose={() => setDeleteDialog((prev) => ({ ...prev, isOpen: false }))}
+        onConfirm={() => handleDeleteUser(deleteDialog.userId)}
+        title="Delete User"
+        message={
+          <>
+            Are you sure you want to delete{" "}
+            <strong>{deleteDialog.userName}</strong>? This action cannot be
+            undone.
+          </>
+        }
       />
     </div>
   );
