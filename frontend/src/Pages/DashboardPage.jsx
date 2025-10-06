@@ -17,7 +17,7 @@ const MenuCard = ({ menu, onOrderNow }) => (
     <div className="flex flex-col h-full">
       <div className="mb-4">
         <h3 className="text-lg sm:text-xl font-semibold mb-2">
-          Today's Menu ({menu.type})
+          Today's Menu [{menu.type}]
         </h3>
         <p className="text-sm text-gray-500">
           Date:{" "}
@@ -48,9 +48,9 @@ const MenuCard = ({ menu, onOrderNow }) => (
 
 const LatestOrderCard = ({ order, onEdit, onCancel }) => (
   <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-    <div className="flex justify-between w-full">
+    <div className="flex flex-col justify-between w-full">
       <h3 className="text-lg sm:text-xl font-semibold mb-4">
-        Your Latest Order
+        Your Latest Order{" "}[{order.type}]
       </h3>
       <p>
         <span className="text-gray-600">Date:</span>{" "}
@@ -61,9 +61,7 @@ const LatestOrderCard = ({ order, onEdit, onCancel }) => (
         })}
       </p>
     </div>
-    <div className="my-2 text-blue-700 font-bold">
-      <span className="text-gray-600">Type:</span> {order.type}
-    </div>
+
     <ul className="space-y-2 mb-6 flex-grow">
       {order.items?.map((item, index) => (
         <li key={index} className="flex items-center gap-2 text-gray-600">
@@ -75,9 +73,6 @@ const LatestOrderCard = ({ order, onEdit, onCancel }) => (
     <div className="flex justify-between items-center mt-4 text-sm">
       <p className="font-medium">
         Status: <span className="text-green-600">{order.status}</span>
-      </p>
-      <p className="font-medium">
-        Total: <span className="text-blue-600">₹{order?.total || "60"}</span>
       </p>
     </div>
     {order.status == "PLACED" && (
