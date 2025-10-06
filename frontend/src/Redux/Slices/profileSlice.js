@@ -7,21 +7,6 @@ const initialState ={
     error : null,
 }
 
-export const getProfileDetails = createAsyncThunk(
-    "profile/getDetails",
-    async(_, {rejectWithValue})=>{
-        try {
-            const token = localStorage.getItem("token");
-            const res = await axiosInstance.get("/fetch/fetchUser", {
-                headers: { Authorization: `Bearer ${token}` },
-              });
-              return res.data.data;
-        } catch (error) {
-            return rejectWithValue(error.response?.data?.message || "Failed to fetch profile details")
-        }
-    }
-)
-
 export const updateProfile = createAsyncThunk(
     "profile/updateDetails",
     async({oldPass ,newPass , confPass}, {rejectWithValue})=>{
@@ -43,18 +28,6 @@ const profileSlice = createSlice({
     reducers:{},
     extraReducers : (builder)=>{
         builder
-        .addCase(getProfileDetails.pending, (state)=>{
-            state.loading = true;   
-            state.error = null;
-        })
-        .addCase(getProfileDetails.fulfilled, (state, action)=>{
-            state.loading = false;
-            state.profileDetails = action.payload;
-        })
-        .addCase(getProfileDetails.rejected, (state, action)=>{
-            state.loading = false;
-            state.error = action.payload;
-        })
         .addCase(updateProfile.pending, (state)=>{
             state.loading = true;   
             state.error = null;

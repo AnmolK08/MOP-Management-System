@@ -9,7 +9,6 @@ import {
   placeOrder,
   updateOrder,
 } from "../Redux/Slices/orderSlice";
-import { getProfileDetails } from "../Redux/Slices/profileSlice";
 import toast from "react-hot-toast";
 
 // Child components for better organization
@@ -112,8 +111,8 @@ const DashboardPage = () => {
 
   const dispatch = useDispatch();
   const { menu, loading } = useSelector((state) => state.menuSlice);
-  const profileDetails = useSelector(
-    (state) => state.profileSlice.profileDetails
+  const user = useSelector(
+    (state) => state.authSlice.user
   );
 
   useEffect(() => {
@@ -127,11 +126,7 @@ const DashboardPage = () => {
   useEffect(() => {
     if (userOrders.length === 0) dispatch(fetchUserOrders());
     setLatestOrder(userOrders[userOrders.length - 1]);
-  }, [userOrders, dispatch]);
-
-  useEffect(() => {
-    if (!profileDetails) dispatch(getProfileDetails());
-  }, [profileDetails, dispatch]);
+  }, [userOrders.length, dispatch]);
 
   const handlePlaceOrder = (orderData) => {
     if (!editingOrder) {
@@ -230,9 +225,9 @@ const DashboardPage = () => {
             <p className="text-sm text-gray-600">Active Plan</p>
             <p className="text-xl font-semibold text-blue-600">
               {" "}
-              {profileDetails === null
+              {user === null
                 ? "Loading..."
-                : profileDetails.customer?.premium
+                : user.customer?.premium
                 ? "Premium"
                 : "Normal"}
             </p>
@@ -241,9 +236,9 @@ const DashboardPage = () => {
             <p className="text-sm text-gray-600">Wallet</p>
             <p className="text-xl font-semibold text-green-600">
               {" "}
-              {profileDetails === null
+              {user === null
                 ? "Loading..."
-                : profileDetails.customer?.wallet || 0}
+                : user.customer?.wallet || 0}
             </p>
           </div>
         </div>

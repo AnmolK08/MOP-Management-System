@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { axiosInstance } from '../../libs/axios';
 import { useNavigate } from 'react-router-dom';
 import toast from "react-hot-toast";
+import { Eye, EyeOff } from 'lucide-react';
 
 function ResetRight() {
+
+    const [showPass, setShowPass] = useState(false)
+    const [showConfPass, setShowConfPass] = useState(false)
 
     const navigate = useNavigate();
 
@@ -47,31 +51,39 @@ return (
             <p className="text-gray-700 text-center mb-4">
                 Enter your new password below.
             </p>
-            <div>
+            <div className='relative w-full'>
                 <label htmlFor="newPass" className="block text-sm font-medium text-orange-700 mb-1">
                     New Password
                 </label>
                 <input
-                    type="password"
+                    type={showPass ? "text" : "password"}
                     id="newPass"
                     name="newPass"
                     required
                     className="mt-1 p-2 w-full border border-orange-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#fff5f2]"
                     placeholder="Enter new password"
                 />
+                <div className="absolute right-5 bottom-2 text-gray-600" onClick={()=>setShowPass(!showPass)}>
+                    {!showPass?<EyeOff/>
+                    :<Eye/>}
+                </div>
             </div>
-            <div>
+            <div className='relative w-full'>
                 <label htmlFor="confPass" className="block text-sm font-medium text-orange-700 mb-1">
                     Confirm Password
                 </label>
                 <input
-                    type="password"
+                    type={showConfPass ? "text" : "password"}
                     id="confPass"
                     name="confPass"
                     required
                     className="mt-1 p-2 w-full border border-orange-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 bg-[#fff5f2]"
                     placeholder="Confirm new password"
                 />
+                <div className="absolute right-5 bottom-2 text-gray-600" onClick={()=>setShowConfPass(!showConfPass)}>
+                    {!showConfPass?<EyeOff/>
+                    :<Eye/>}
+                </div>
             </div>
             <button
                 type="submit"
