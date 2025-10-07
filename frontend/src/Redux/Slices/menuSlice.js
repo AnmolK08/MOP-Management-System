@@ -26,7 +26,7 @@ export const createMenu = createAsyncThunk(
   async (menuData, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axiosInstance.post("/provider/menuUpload",{ type: menuData.type , options: menuData.options }
+      const res = await axiosInstance.post("/provider/menuUpload",{ type: menuData.type , options: menuData.options , special: menuData.special }
         ,{
         headers: {
           Authorization: `Bearer ${token}`,
@@ -50,7 +50,8 @@ export const updateMenu = createAsyncThunk(
       const res = await axiosInstance.patch(`/provider/updateMenu/${menuId}`,
         { 
           type: updateData.type,
-          options: updateData.options
+          options: updateData.options,
+          special: updateData.special,
         },
         {
         headers: {

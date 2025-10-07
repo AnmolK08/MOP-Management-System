@@ -12,7 +12,6 @@ import {
   RiMenuLine,
   RiFileListLine,
   RiCalendarLine,
-  RiFileTextLine,
   RiNotification3Line,
   RiCloseLine,
   RiUserLine,
@@ -53,7 +52,6 @@ const DashboardLayout = () => {
     { path: "/u/menu", icon: RiMenuLine, label: "Menu" },
     { path: "/u/orders", icon: RiFileListLine, label: "Order History" },
     { path: "/u/attendance", icon: RiCalendarLine, label: "Attendance" },
-    { path: "/u/billing", icon: RiFileTextLine, label: "Billing" },
     { path: "/u/profile", icon: RiUserLine, label: "Profile Settings" },
   ];
 

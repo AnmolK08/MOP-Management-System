@@ -5,6 +5,8 @@ const MenuDialog = ({ isOpen, onClose, onSave, existingMenu }) => {
     const [options, setOptions] = useState([]);
     const [newOption, setNewOption] = useState('');
     const [type, setType] = useState('LUNCH');
+    const [special, setSpecial] = useState(false);
+
 
     useEffect(() => {
         // Populate form if we are editing an existing menu
@@ -33,7 +35,7 @@ const MenuDialog = ({ isOpen, onClose, onSave, existingMenu }) => {
 
 
     const handleSave = () => {
-        onSave({ options, type });
+        onSave({ options, type , special});
         onClose(); // Close the dialog after saving
     };
 
@@ -64,6 +66,14 @@ const MenuDialog = ({ isOpen, onClose, onSave, existingMenu }) => {
                         <select value={type} onChange={(e) => setType(e.target.value)} className="w-full p-2 border rounded-lg bg-gray-50">
                             <option>LUNCH</option>
                             <option>DINNER</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Food Type</label>
+                        <select value={special} onChange={(e) => setSpecial(e.target.value)} className="w-full p-2 border rounded-lg bg-gray-50">
+                            <option value={false}>REGULAR</option>
+                            <option value={true}>SPECIAL</option>
                         </select>
                     </div>
 

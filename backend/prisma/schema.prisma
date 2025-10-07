@@ -65,6 +65,7 @@ model menu {
   id        String   @id @default(uuid())
   options   String[]
   type      Type
+  special   Boolean @default(false)
   date      DateTime 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

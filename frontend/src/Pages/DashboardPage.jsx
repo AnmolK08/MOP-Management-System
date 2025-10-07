@@ -10,6 +10,7 @@ import {
   updateOrder,
 } from "../Redux/Slices/orderSlice";
 import toast from "react-hot-toast";
+import ConfirmationDialog from "../Components/ConfirmationDialog";
 
 // Child components for better organization
 const MenuCard = ({ menu, onOrderNow }) => (
@@ -17,7 +18,7 @@ const MenuCard = ({ menu, onOrderNow }) => (
     <div className="flex flex-col h-full">
       <div className="mb-4">
         <h3 className="text-lg sm:text-xl font-semibold mb-2">
-          Today's Menu ({menu.type})
+          Today's Menu [{menu.type}]
         </h3>
         <p className="text-sm text-gray-500">
           Date:{" "}
@@ -27,6 +28,7 @@ const MenuCard = ({ menu, onOrderNow }) => (
             year: "2-digit",
           })}
         </p>
+        {menu.special && <p className="text-sm text-red-500">Special Menu</p>}
       </div>
       <ul className="space-y-2 mb-6 flex-grow">
         {menu.options.map((option, index) => (
@@ -46,24 +48,25 @@ const MenuCard = ({ menu, onOrderNow }) => (
   </div>
 );
 
-const LatestOrderCard = ({ order, onEdit, onCancel }) => (
+const LatestOrderCard = ({ order, onEdit, onCancel }) => {
+   const [isOpen, setIsOpen] = useState(false);
+
+  return(
   <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-    <div className="flex justify-between w-full">
-      <h3 className="text-lg sm:text-xl font-semibold mb-4">
-        Your Latest Order
+    <div className="flex flex-col justify-between w-full gap-2 mb-4">
+      <h3 className="text-lg sm:text-xl font-semibold ">
+        Your Latest Order{" "}[{order.type}]
       </h3>
-      <p>
-        <span className="text-gray-600">Date:</span>{" "}
-        {new Date(order.date).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "2-digit",
-        })}
-      </p>
+      <p className="text-sm text-gray-500">
+          Date:{" "}
+          {new Date(order.date).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "2-digit",
+          })}
+        </p>
     </div>
-    <div className="my-2 text-blue-700 font-bold">
-      <span className="text-gray-600">Type:</span> {order.type}
-    </div>
+
     <ul className="space-y-2 mb-6 flex-grow">
       {order.items?.map((item, index) => (
         <li key={index} className="flex items-center gap-2 text-gray-600">
@@ -76,9 +79,6 @@ const LatestOrderCard = ({ order, onEdit, onCancel }) => (
       <p className="font-medium">
         Status: <span className="text-green-600">{order.status}</span>
       </p>
-      <p className="font-medium">
-        Total: <span className="text-blue-600">₹{order?.total || "60"}</span>
-      </p>
     </div>
     {order.status == "PLACED" && (
       <div className="flex gap-3 mt-4">
@@ -89,15 +89,23 @@ const LatestOrderCard = ({ order, onEdit, onCancel }) => (
           Edit Order
         </button>
         <button
-          onClick={onCancel}
+          onClick={() => setIsOpen(true)}
           className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
         >
           Cancel Order
         </button>
+
+        <ConfirmationDialog
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          onConfirm={onCancel}
+          title="Cancel Order"
+          message="Are you sure you want to cancel this order? This action cannot be undone."
+          />
       </div>
     )}
   </div>
-);
+);}
 
 const DashboardPage = () => {
   const { userOrders, loading: userLoading } = useSelector(
@@ -295,29 +303,6 @@ const DashboardPage = () => {
                 />
               </svg>
             </Link>
-          </div>
-          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-            <h4 className="font-semibold text-lg mb-2">Monthly Bill Summary</h4>
-            <p className="text-gray-600 text-sm mb-4">
-              View your current month's bill status.
-            </p>
-            <a
-              href="#"
-              className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium"
-            >
-              View Summary
-              <svg
-                className="w-4 h-4 ml-1"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </a>
           </div>
         </div>
       </section>

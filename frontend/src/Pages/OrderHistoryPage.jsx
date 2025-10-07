@@ -12,7 +12,7 @@ const OrderHistoryPage = () => {
     if (!orders || orders.length === 0) {
       dispatch(fetchUserOrders());
     }
-  }, [dispatch, orders]);
+  }, [dispatch, orders.length]);
 
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
@@ -29,10 +29,15 @@ const OrderHistoryPage = () => {
 
   const filteredOrders = orders
     .filter((order) => {
+      const formattedDate = new Date(order.date).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
       if (filter !== "All" && order.status !== filter) return false;
       if (search) {
         const searchLower = search.toLowerCase();
-        return order.date.toLowerCase().includes(searchLower);
+        return formattedDate.toLowerCase().includes(searchLower);
       }
       return true;
     })
@@ -120,7 +125,7 @@ const OrderHistoryPage = () => {
                       year: "numeric",
                     })}
                   </td>
-                  <td className="py-3 px-4">${order.totalAmt}</td>
+                  <td className="py-3 px-4">₹{order.totalAmt}</td>
                   <td className="py-3 px-4">
                     <span
                       className={`px-2 py-1 rounded-full text-sm font-semibold ${getStatusClass(
