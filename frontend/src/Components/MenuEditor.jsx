@@ -8,6 +8,7 @@ import {
 } from "../Redux/Slices/menuSlice"; // Adjust path
 import MenuDialog from "./MenuDialog";
 import toast from "react-hot-toast";
+import ConfirmationDialog from "./ConfirmationDialog";
 
 const MenuEditor = () => {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const MenuEditor = () => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [menuToEdit, setMenuToEdit] = useState(null);
+  const [isConformationDialogOpen, setIsConformationDialogOpen] = useState(false);
 
   // 2. Fetch the menu when the component loads
   useEffect(() => {
@@ -44,26 +46,60 @@ const MenuEditor = () => {
   };
 
   // 3. Dispatch deleteMenu action
-  const handleDeleteMenu = () => {
-    if (activeMenu?.id) {
-      dispatch(deleteMenu(activeMenu.id));
-      toast.success("Menu deleted successfully!");
-    }
-  };
+const handleDeleteMenu = () => {
+  if (!activeMenu?.id) return;
+
+  const toastId = toast.loading("Deleting menu...");
+
+  dispatch(deleteMenu(activeMenu.id))
+    .then((res) => {
+      if (res.meta.requestStatus === "rejected") {
+        toast.error(res.payload || "Failed to delete menu!", { id: toastId });
+      } else {
+        toast.success("Menu deleted successfully!", { id: toastId });
+      }
+    })
+    .catch((error) => {
+      console.error("Error deleting menu:", error);
+      toast.error("An unexpected error occurred!", { id: toastId });
+    });
+};
+
 
   // 4. Dispatch createMenu or updateMenu actions
-  const handleSaveMenu = (menuData) => {
-    if (menuToEdit?.id) {
-      // We are editing
-      dispatch(updateMenu({ menuId: menuToEdit.id, ...menuData }));
-      toast.success("Menu updated successfully!");
-    } else {
-      // We are creating
-      dispatch(createMenu(menuData));
-      toast.success("Menu created successfully!");
-    }
-    setIsDialogOpen(false); // Close dialog on save
-  };
+const handleSaveMenu = (menuData) => {
+  const toastId = toast.loading(
+    menuToEdit?.id ? "Updating menu..." : "Creating menu..."
+  );
+
+  const action = menuToEdit?.id
+    ? updateMenu({ menuId: menuToEdit.id, ...menuData })
+    : createMenu(menuData);
+
+  dispatch(action)
+    .then((res) => {
+      if (res.meta.requestStatus === "rejected") {
+        toast.error(res.payload || "Something went wrong!", {
+          id: toastId,
+        });
+      } else {
+        toast.success(
+          menuToEdit?.id
+            ? "Menu updated successfully!"
+            : "Menu created successfully!",
+          { id: toastId }
+        );
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      toast.error("An unexpected error occurred!", { id: toastId });
+    })
+    .finally(() => {
+      setIsDialogOpen(false);
+    });
+};
+
 
   // UI for loading state
   if (loading && !activeMenu) {
@@ -113,12 +149,21 @@ const MenuEditor = () => {
               Edit Menu
             </button>
             <button
-              onClick={handleDeleteMenu}
+              onClick={() => setIsConformationDialogOpen(true)}
               className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 font-semibold"
             >
               Delete Menu
             </button>
           </div>
+
+          {/* Delete Confirmation Dialog */}
+          <ConfirmationDialog
+            isOpen={isConformationDialogOpen}
+            onClose={() => setIsConformationDialogOpen(false)}
+            onConfirm={handleDeleteMenu}
+            title="Delete Menu"
+            message="Are you sure you want to delete today's menu? This action cannot be undone."
+          />
         </div>
       ) : (
         // Display when no menu is active

@@ -10,6 +10,7 @@ import {
   updateOrder,
 } from "../Redux/Slices/orderSlice";
 import toast from "react-hot-toast";
+import ConfirmationDialog from "../Components/ConfirmationDialog";
 
 // Child components for better organization
 const MenuCard = ({ menu, onOrderNow }) => (
@@ -46,20 +47,23 @@ const MenuCard = ({ menu, onOrderNow }) => (
   </div>
 );
 
-const LatestOrderCard = ({ order, onEdit, onCancel }) => (
+const LatestOrderCard = ({ order, onEdit, onCancel }) => {
+   const [isOpen, setIsOpen] = useState(false);
+
+  return(
   <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-    <div className="flex flex-col justify-between w-full">
-      <h3 className="text-lg sm:text-xl font-semibold mb-4">
+    <div className="flex flex-col justify-between w-full gap-2 mb-4">
+      <h3 className="text-lg sm:text-xl font-semibold ">
         Your Latest Order{" "}[{order.type}]
       </h3>
-      <p>
-        <span className="text-gray-600">Date:</span>{" "}
-        {new Date(order.date).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "2-digit",
-        })}
-      </p>
+      <p className="text-sm text-gray-500">
+          Date:{" "}
+          {new Date(order.date).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "2-digit",
+          })}
+        </p>
     </div>
 
     <ul className="space-y-2 mb-6 flex-grow">
@@ -84,15 +88,23 @@ const LatestOrderCard = ({ order, onEdit, onCancel }) => (
           Edit Order
         </button>
         <button
-          onClick={onCancel}
+          onClick={() => setIsOpen(true)}
           className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
         >
           Cancel Order
         </button>
+
+        <ConfirmationDialog
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          onConfirm={onCancel}
+          title="Cancel Order"
+          message="Are you sure you want to cancel this order? This action cannot be undone."
+          />
       </div>
     )}
   </div>
-);
+);}
 
 const DashboardPage = () => {
   const { userOrders, loading: userLoading } = useSelector(

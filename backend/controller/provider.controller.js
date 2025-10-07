@@ -3,8 +3,8 @@ import ResponseError from "../types/ResponseError.js";
 import prisma from "../config/db.js";
 
 export const menuUpload = asyncHandler(async (req, res) => {
-  const { type, options } = req.body;
-  if (!type || !options || options.length === 0) {
+  const { type, options , special} = req.body;
+  if (!type || !options || options.length === 0 || special === undefined) {
     throw new ResponseError("Please provide all required fields");
   }
 
@@ -12,6 +12,7 @@ export const menuUpload = asyncHandler(async (req, res) => {
     data: {
       type,
       options,
+      special : Boolean(special),
       date: new Date(),
     },
   });
@@ -35,9 +36,9 @@ export const deleteMenu = asyncHandler(async (req, res) => {
 
 export const updateMenu = asyncHandler(async (req, res) => {
   const { menuId } = req.params;
-  const { type, options } = req.body;
+  const { type, options , special} = req.body;
 
-  if (!menuId || !type || !options || options.length == 0)
+  if (!menuId || !type || !options || options.length == 0 || special === undefined)
     throw new ResponseError("All the fields are required", 401);
 
   const menu = await prisma.menu.update({
@@ -45,6 +46,7 @@ export const updateMenu = asyncHandler(async (req, res) => {
     data: {
       type,
       options,
+      special : Boolean(special),
     },
   });
 
