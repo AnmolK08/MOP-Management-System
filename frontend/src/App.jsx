@@ -47,7 +47,6 @@ const router = createBrowserRouter([
       { path: "orders", element: <OrderHistoryPage /> },
       { path: "attendance", element: <AttendancePage /> },
       { path: "profile" , element: <ProfilePage />},
-      { path: "billing" , element: <BillingPage />}
     ],
     },
   ]},
@@ -61,7 +60,9 @@ const router = createBrowserRouter([
             { index: true, element: <ProviderDashboardPage /> },
             { path: "orders", element: <ProviderOrdersPage /> },
             { path: "users", element: <ProviderUsersPage /> },
-            { path: "profile", element: <ProfilePage /> }, 
+            { path: "profile", element: <ProfilePage /> },
+            { path: "billing", element: <BillingPage /> },
+
         ],
     },
   ]}

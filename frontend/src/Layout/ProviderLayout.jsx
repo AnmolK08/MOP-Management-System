@@ -8,6 +8,7 @@ import {
   RiMenuLine,
   RiCloseLine,
   RiNotification3Line,
+  RiFileTextLine,
 } from "react-icons/ri";
 import { LogoIcon } from "../Components/SvgIcons";
 import { userLogout } from "../Redux/Slices/authSlice";
@@ -42,6 +43,7 @@ const ProviderLayout = () => {
     { path: "/a", icon: RiDashboardLine, label: "Dashboard", end: true },
     { path: "/a/orders", icon: RiFileListLine, label: "Today's Orders" },
     { path: "/a/users", icon: RiUserLine, label: "Users" },
+    { path: "/a/billing", icon: RiFileTextLine, label: "Billing" },
     { path: "/a/profile", icon: RiSettingsLine, label: "Profile Settings" },
   ];
 

@@ -28,6 +28,7 @@ const MenuCard = ({ menu, onOrderNow }) => (
             year: "2-digit",
           })}
         </p>
+        {menu.special && <p className="text-sm text-red-500">Special Menu</p>}
       </div>
       <ul className="space-y-2 mb-6 flex-grow">
         {menu.options.map((option, index) => (
@@ -302,29 +303,6 @@ const DashboardPage = () => {
                 />
               </svg>
             </Link>
-          </div>
-          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-            <h4 className="font-semibold text-lg mb-2">Monthly Bill Summary</h4>
-            <p className="text-gray-600 text-sm mb-4">
-              View your current month's bill status.
-            </p>
-            <a
-              href="#"
-              className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium"
-            >
-              View Summary
-              <svg
-                className="w-4 h-4 ml-1"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </a>
           </div>
         </div>
       </section>

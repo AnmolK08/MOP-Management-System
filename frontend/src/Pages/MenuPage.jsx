@@ -59,6 +59,8 @@ const MenuPage = () => {
                   {new Date(menu.date).toLocaleDateString()}
                 </span>
               </div>
+              {menu.special && <p className="text-sm text-red-500 pb-4">Special Menu</p>}
+
               <ul className="space-y-3 mb-6">
                 {menu.options.map((option, index) => (
                   <li
@@ -74,7 +76,7 @@ const MenuPage = () => {
                 onClick={() => setOrderDialogOpen(true)}
                 className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors font-medium"
               >
-                Place New Order
+                Order Now
               </button>
             </div>
           ) : (
