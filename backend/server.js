@@ -8,10 +8,9 @@ import orderRoutes from "./routes/order.route.js"
 import paymentRoutes from "./routes/payment.route.js"
 import fetchRoute from "./routes/fetch.route.js"
 import profileRoutes from "./routes/profile.route.js"
+import { app, server } from "./config/socket.js"
 
 config();
-
-const app = express();
 
 app.use(express.json());
 
@@ -32,6 +31,6 @@ app.use("/profile" , profileRoutes);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

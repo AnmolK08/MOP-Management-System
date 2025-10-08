@@ -3,12 +3,34 @@ import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import img from "../assets/Animation - 1751523503507.webm";
 import { fetchUser } from "../Redux/Slices/authSlice";
+import { getSocket, initSocket } from "../socket";
+
 
 function CustomerProtector() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.authSlice);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    
+    if(!user?.id) return
+    
+    initSocket({userId:user.id});
+    const socket = getSocket();
+
+    socket.on("connect", () => {
+      console.log("Connected:", socket.id);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [user?.id]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
