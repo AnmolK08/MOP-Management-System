@@ -15,6 +15,8 @@ import { userLogout } from "../Redux/Slices/authSlice";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import profileImg from "../assets/UserProfile.png";
+import { getSocket } from "../socket";
+import { updateOrdersInProvider } from "../Redux/Slices/orderSlice";
 
 const ProviderLayout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -28,6 +30,21 @@ const ProviderLayout = () => {
     setSidebarOpen(false);
     setIsDropdownOpen(false);
   }, [location]);
+
+  useEffect(() => {
+    const socket = getSocket();
+
+    socket.on("newOrder", (data) => {
+      console.log(data);
+      
+      toast.success(`${data.notification.message}`);
+      dispatch(updateOrdersInProvider(data.order));
+    }
+  )
+
+    return () => { socket.off("newOrder") }
+
+  },[dispatch]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

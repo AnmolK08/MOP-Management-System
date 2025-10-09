@@ -96,7 +96,11 @@ const initialState = {
 const menuSlice = createSlice({
   name: "menu",
   initialState,
-  reducers: {},
+  reducers: {
+    updateMenuState: (state, action) => {
+      state.menu = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchMenu.pending, (state) => {
@@ -157,3 +161,4 @@ const menuSlice = createSlice({
 });
 
 export default menuSlice.reducer;
+export const { updateMenuState } = menuSlice.actions;

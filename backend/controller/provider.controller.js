@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import ResponseError from "../types/ResponseError.js";
 import prisma from "../config/db.js";
+import { io } from "../config/socket.js";
 
 export const menuUpload = asyncHandler(async (req, res) => {
   const { type, options , special} = req.body;
@@ -17,6 +18,8 @@ export const menuUpload = asyncHandler(async (req, res) => {
     },
   });
 
+  io.emit("newMenu", menu);
+
   res
     .status(201)
     .json({ success: true, message: "Menu uploaded successfully", data: menu });
@@ -28,6 +31,10 @@ export const deleteMenu = asyncHandler(async (req, res) => {
     throw new ResponseError("Please provide menu id");
   }
   const menu = await prisma.menu.delete({ where: { id: id } });
+
+  if (!menu) throw new ResponseError("Menu does not exist", 404);
+
+  io.emit("deleteMenu", menu);
 
   res
     .status(200)
@@ -52,6 +59,8 @@ export const updateMenu = asyncHandler(async (req, res) => {
 
   if (!menu) throw new ResponseError("Menu does not exist", 404);
 
+  io.emit("updateMenu", menu);
+  
   res
     .status(201)
     .json({ success: true, message: "Menu uploaded successfully", data: menu });

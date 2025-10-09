@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import OrderDialog from "../Components/OrderDialog"; // Import the dialog
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMenu } from "../Redux/Slices/menuSlice";
+import { fetchMenu, updateMenuState } from "../Redux/Slices/menuSlice";
 import {
   cancelOrder,
   fetchUserOrders,
@@ -11,6 +11,7 @@ import {
 } from "../Redux/Slices/orderSlice";
 import toast from "react-hot-toast";
 import ConfirmationDialog from "../Components/ConfirmationDialog";
+import { getSocket } from "../socket";
 
 // Child components for better organization
 const MenuCard = ({ menu, onOrderNow }) => (
@@ -129,7 +130,47 @@ const DashboardPage = () => {
     };
 
     if (menu == null) fetch();
+
   }, [menu, dispatch]);
+
+  useEffect(() => {
+    const socket = getSocket();
+    if (!socket) return;
+    socket.on("newMenu", (newMenu) => {
+      toast.success("New menu uploaded");
+      dispatch(updateMenuState(newMenu));
+    });
+
+    return () => {
+      socket.off("newMenu");
+    };
+  }, [dispatch]);
+
+  useEffect(() => {
+    const socket = getSocket();
+    if (!socket) return;
+    socket.on("deleteMenu", () => {
+      toast.success("Menu has been deleted");
+      dispatch(updateMenuState(null));
+    });
+
+    return () => {
+      socket.off("deleteMenu");
+    };
+  }, [dispatch]);
+
+  useEffect(() => {
+    const socket = getSocket();
+    if (!socket) return;
+    socket.on("updateMenu", (updatedMenu) => {
+      toast.success("Menu has been updated");
+      dispatch(updateMenuState(updatedMenu));
+    });
+
+    return () => {
+      socket.off("updateMenu");
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (userOrders.length === 0) dispatch(fetchUserOrders());
