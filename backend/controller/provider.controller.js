@@ -35,7 +35,7 @@ export const deleteMenu = asyncHandler(async (req, res) => {
   if (!menu) throw new ResponseError("Menu does not exist", 404);
 
   io.emit("deleteMenu", menu);
-  
+
   res
     .status(200)
     .json({ success: true, message: "Menu deleted successfully", data: menu });
@@ -59,6 +59,8 @@ export const updateMenu = asyncHandler(async (req, res) => {
 
   if (!menu) throw new ResponseError("Menu does not exist", 404);
 
+  io.emit("updateMenu", menu);
+  
   res
     .status(201)
     .json({ success: true, message: "Menu uploaded successfully", data: menu });

@@ -160,6 +160,19 @@ const DashboardPage = () => {
   }, [dispatch]);
 
   useEffect(() => {
+    const socket = getSocket();
+    if (!socket) return;
+    socket.on("updateMenu", (updatedMenu) => {
+      toast.success("Menu has been updated");
+      dispatch(updateMenuState(updatedMenu));
+    });
+
+    return () => {
+      socket.off("updateMenu");
+    };
+  }, [dispatch]);
+
+  useEffect(() => {
     if (userOrders.length === 0) dispatch(fetchUserOrders());
     setLatestOrder(userOrders[userOrders.length - 1]);
   }, [userOrders.length, dispatch]);

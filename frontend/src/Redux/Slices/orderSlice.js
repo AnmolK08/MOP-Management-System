@@ -226,6 +226,9 @@ const ordersSlice = createSlice({
       state.userOrders = state.userOrders.filter(
         (o) => o.id !== Id
       );
+    },
+    updateOrdersInProvider : (state, action) => {
+      state.providerOrders.push(action.payload);
     }
   },
   extraReducers: (builder) => {
@@ -345,4 +348,4 @@ const ordersSlice = createSlice({
 });
 
 export default ordersSlice.reducer;
-export const { updateProviderOrders, deleteUserFromOrders } = ordersSlice.actions;
+export const { updateProviderOrders, deleteUserFromOrders, updateOrdersInProvider } = ordersSlice.actions;

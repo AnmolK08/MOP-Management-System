@@ -1,6 +1,8 @@
 import asyncHandler from "express-async-handler";
 import ResponseError from "../types/ResponseError.js";
 import prisma from "../config/db.js";
+import {getRecieverSocketId, io} from "../config/socket.js";
+import { createNotification } from "./notifications.controller.js";
 
 export const placeOrder = asyncHandler(async (req, res) => {
   const { items, type } = req.body;
@@ -46,8 +48,40 @@ export const placeOrder = asyncHandler(async (req, res) => {
       type,
       status: "PLACED",
       date: new Date(),
-    },
+    },include: {
+      customer: {
+        include: {
+          user: {  
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    }
   });
+
+  if(!order){
+    throw new ResponseError("Failed to place order", 500);
+  }
+
+  const providerId = await prisma.user.findMany({
+    where: { role: "PROVIDER" },
+    select: { id: true }
+  })
+
+  Promise.all(providerId.map(async ({id}) =>{
+    const socketId = await getRecieverSocketId(id);
+    const notification = await createNotification({
+      senderId: req.userId,
+      receiverId: id,
+      message: `New order placed by ${user.name}`,
+    })
+
+    if(socketId && notification){
+      io.to(socketId).emit("newOrder", {order, notification});
+    }
+  }))
 
   res
     .status(201)
@@ -86,7 +120,7 @@ export const cancelOrder = asyncHandler(async (req, res) => {
     });
   }
   throw new ResponseError("Order cannot be cancelled", 400);
-}); //done
+}); //done1
 
 export const getAllOrders = asyncHandler(async (_, res) => {
   const orders = await prisma.order.findMany({
@@ -228,7 +262,7 @@ export const updateOrder = asyncHandler(async (req, res)=>{
     }
   })
   res.status(200).json({success:true, message:"Updated Order.", data:updatedOrder})
-}) //done
+}) //done1
 
 export const myOrders = asyncHandler(async(req, res)=>{
   const userId = req.userId
@@ -298,7 +332,7 @@ export const markOrdersDelivered = asyncHandler(async (req, res)=>{
 
   res.status(200).json({ success: true, message: "Orders marked as delivered", orderIds });
 }
-) //done
+) //done1
 
 const deliveredAndPaid = async (id)=>{
   const order = await prisma.order.findUnique({ where: {id} });
