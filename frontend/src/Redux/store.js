@@ -4,11 +4,13 @@ import orderSlice from './Slices/orderSlice';
 import menuSlice from './Slices/menuSlice';
 import providerSlice from './Slices/providerSlice';
 import profileSlice from './Slices/profileSlice';
+import notificationSlice from './Slices/notificationSlice';
 
 const store = configureStore({
     reducer : {
         authSlice : authSlice,
         orderSlice : orderSlice,
+        notificationSlice : notificationSlice,
         menuSlice : menuSlice,
         providerSlice : providerSlice,
         profileSlice : profileSlice,

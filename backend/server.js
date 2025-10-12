@@ -8,6 +8,7 @@ import orderRoutes from "./routes/order.route.js"
 import paymentRoutes from "./routes/payment.route.js"
 import fetchRoute from "./routes/fetch.route.js"
 import profileRoutes from "./routes/profile.route.js"
+import notificationRoutes from "./routes/notification.route.js"
 import { app, server } from "./config/socket.js"
 
 config();
@@ -27,6 +28,7 @@ app.use("/order", orderRoutes)
 app.use("/payment", paymentRoutes)
 app.use("/fetch", fetchRoute)
 app.use("/profile" , profileRoutes);
+app.use("/notifications", notificationRoutes);
 
 app.use(errorHandler);
 
