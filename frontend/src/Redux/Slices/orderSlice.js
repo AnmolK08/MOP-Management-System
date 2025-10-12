@@ -5,6 +5,7 @@ import { axiosInstance } from "../../libs/axios";
 const initialState = {
   userOrders: [],
   providerOrders: [],
+  allOrders : [],
   loading: false,
   error: null,
 };
@@ -85,6 +86,23 @@ export const fetchProviderOrders = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch provider orders"
+      );
+    }
+  }
+);
+
+export const fetchProviderAllOrders = createAsyncThunk(
+  "orders/fetchProviderAllOrders",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axiosInstance.get("/order/getAllOrders", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch all provider orders"
       );
     }
   }
@@ -328,6 +346,11 @@ const ordersSlice = createSlice({
         } 
       )
     })
+
+      .addCase(fetchProviderAllOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allOrders = action.payload;
+      })
 
       // Common Pending/Rejected
       .addMatcher(
