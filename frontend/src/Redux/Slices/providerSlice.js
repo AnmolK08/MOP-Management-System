@@ -7,6 +7,21 @@ const initialState = {
     error: null,
 }
 
+export const addAmtInWallet = createAsyncThunk(
+    "provider/addAmtInWallet",
+    async({customerId, amount}, {rejectWithValue})=>{
+        try {
+            const token = localStorage.getItem("token");
+            const res = await axiosInstance.post(`/payment/addAmount/${customerId}`, {amount}, {
+                headers: { Authorization: `Bearer ${token}` },
+              });
+              return res.data.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || "Failed to add amount in wallet")
+        }
+    }
+)
+
 export const getAllUsers = createAsyncThunk(
     "provider/users",
     async(_, {rejectWithValue})=>{
