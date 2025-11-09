@@ -1,7 +1,8 @@
 import asyncHandler from "express-async-handler";
 import ResponseError from "../types/ResponseError.js";
 import prisma from "../config/db.js";
-import { io } from "../config/socket.js";
+import { getRecieverSocketId, io } from "../config/socket.js";
+import { createNotification } from "./notifications.controller.js";
 
 export const menuUpload = asyncHandler(async (req, res) => {
   const { type, options , special} = req.body;
@@ -19,6 +20,25 @@ export const menuUpload = asyncHandler(async (req, res) => {
   });
 
   io.emit("newMenu", menu);
+
+  // Send notifications to all customers
+  const customers = await prisma.user.findMany({
+    where: { role: "CUSTOMER" },
+    select: { id: true }
+  });
+
+  Promise.all(customers.map(async ({ id }) => {
+    const socketId = await getRecieverSocketId(id);
+    const notification = await createNotification({
+      senderId: req.userId,
+      receiverId: id,
+      message: `New ${type} menu has been uploaded! Check it out.`,
+    });
+
+    if (socketId && notification) {
+      io.to(socketId).emit("newNotification", notification);
+    }
+  }));
 
   res
     .status(201)
@@ -61,9 +81,28 @@ export const updateMenu = asyncHandler(async (req, res) => {
 
   io.emit("updateMenu", menu);
   
+  // Send notifications to all customers
+  const customers = await prisma.user.findMany({
+    where: { role: "CUSTOMER" },
+    select: { id: true }
+  });
+
+  Promise.all(customers.map(async ({ id }) => {
+    const socketId = await getRecieverSocketId(id);
+    const notification = await createNotification({
+      senderId: req.userId,
+      receiverId: id,
+      message: `${type} menu has been updated! Check the latest changes.`,
+    });
+
+    if (socketId && notification) {
+      io.to(socketId).emit("newNotification", notification);
+    }
+  }));
+  
   res
     .status(201)
-    .json({ success: true, message: "Menu uploaded successfully", data: menu });
+    .json({ success: true, message: "Menu updated successfully", data: menu });
 }); //done
 
 export const getLatestMenu = asyncHandler(async (req, res) => {
@@ -121,10 +160,30 @@ export const togglePremium = asyncHandler(async (req, res) => {
     where: { id: customerId },
   });
   if (!customer) throw new ResponseError("Customer does not exist", 404);
+  
+  const newPremiumStatus = !customer.premium;
+  
   const updatedCustomer = await prisma.customer.update({
     where: { id: customerId },
-    data: { premium: !customer.premium },
+    data: { premium: newPremiumStatus },
   });
+
+  // Send notification to the customer
+  const socketId = await getRecieverSocketId(customer.userId);
+  const notificationMessage = newPremiumStatus 
+    ? "Congratulations! Your premium membership has been activated. Enjoy exclusive benefits!"
+    : "Your premium membership has been deactivated.";
+
+  const notification = await createNotification({
+    senderId: req.userId,
+    receiverId: customer.userId,
+    message: notificationMessage,
+  });
+
+  if (socketId && notification) {
+    io.to(socketId).emit("newNotification", notification);
+  }
+
   res.status(200).json({
     success: true,
     message: "Customer premium status updated successfully",
