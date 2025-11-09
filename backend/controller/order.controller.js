@@ -75,7 +75,7 @@ export const placeOrder = asyncHandler(async (req, res) => {
     const notification = await createNotification({
       senderId: req.userId,
       receiverId: id,
-      message: `New order placed by ${user.name}`,
+      message: `New ${type} order placed by ${order.customer.user.name}`,
     })
 
     if(socketId && notification){
@@ -112,7 +112,38 @@ export const cancelOrder = asyncHandler(async (req, res) => {
     const updatedOrder = await prisma.order.update({
       where: { id },
       data: { status: "CANCELLED" },
+      include: {
+        customer: {
+          include: {
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
     });
+
+    // Notify providers about cancellation
+    const providers = await prisma.user.findMany({
+      where: { role: "PROVIDER" },
+      select: { id: true }
+    });
+
+    Promise.all(providers.map(async ({ id }) => {
+      const socketId = await getRecieverSocketId(id);
+      const notification = await createNotification({
+        senderId: req.userId,
+        receiverId: id,
+        message: `${updatedOrder.customer.user.name} cancelled the ${updatedOrder.type} order.`,
+      });
+
+      if (socketId && notification) {
+        io.to(socketId).emit("newNotification", notification);
+      }
+    }));
+
     return res.status(200).json({
       success: true,
       message: "Order cancelled successfully",
@@ -259,8 +290,40 @@ export const updateOrder = asyncHandler(async (req, res)=>{
     },
     data:{
       items
-    }
+    },
+    include: {
+      customer: {
+        include: {
+          user: {
+            select: {
+              name: true,
+              id: true,
+            },
+          },
+        },
+      },
+    },
   })
+
+  // Notify providers about order update
+  const providers = await prisma.user.findMany({
+    where: { role: "PROVIDER" },
+    select: { id: true }
+  });
+
+  Promise.all(providers.map(async ({ id }) => {
+    const socketId = await getRecieverSocketId(id);
+    const notification = await createNotification({
+      senderId: req.userId,
+      receiverId: id,
+      message: `${updatedOrder.customer.user.name} updated their ${updatedOrder.type} order.`,
+    });
+
+    if (socketId && notification) {
+      io.to(socketId).emit("newNotification", notification);
+    }
+  }));
+
   res.status(200).json({success:true, message:"Updated Order.", data:updatedOrder})
 }) //done1
 
@@ -312,12 +375,42 @@ export const markOrdersSeen = asyncHandler(async (req, res)=>{
   if(!orderIds || orderIds.length===0)
     throw new ResponseError("Please provide order ids", 400)
 
+  // Get orders with customer info before updating
+  const orders = await prisma.order.findMany({
+    where: { id: { in: orderIds } },
+    include: {
+      customer: {
+        include: {
+          user: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
   Promise.all(orderIds.map(async (id)=>{
     await prisma.order.update({
       where: { id },
       data: { status: "SEEN" },
     });
   }))
+
+  // Notify customers their orders were seen
+  Promise.all(orders.map(async (order) => {
+    const socketId = await getRecieverSocketId(order.customer.user.id);
+    const notification = await createNotification({
+      senderId: req.userId,
+      receiverId: order.customer.user.id,
+      message: `Your ${order.type} order has been seen by the provider.`,
+    });
+
+    if (socketId && notification) {
+      io.to(socketId).emit("newNotification", notification);
+    }
+  }));
 
   res.status(200).json({ success: true, message: "Orders marked as seen", orderIds });
 }) //done
@@ -326,9 +419,40 @@ export const markOrdersDelivered = asyncHandler(async (req, res)=>{
   const {orderIds} = req.body;
   if(!orderIds || orderIds.length===0)
     throw new ResponseError("Please provide order ids", 400)
+
+  // Get orders with customer info before updating
+  const orders = await prisma.order.findMany({
+    where: { id: { in: orderIds } },
+    include: {
+      customer: {
+        include: {
+          user: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
   Promise.all(orderIds.map(async (id)=>{
     await deliveredAndPaid(id)
   }))
+
+  // Notify customers their orders were delivered
+  Promise.all(orders.map(async (order) => {
+    const socketId = await getRecieverSocketId(order.customer.user.id);
+    const notification = await createNotification({
+      senderId: req.userId,
+      receiverId: order.customer.user.id,
+      message: `Your ${order.type} order has been delivered! Enjoy your meal.`,
+    });
+
+    if (socketId && notification) {
+      io.to(socketId).emit("newNotification", notification);
+    }
+  }));
 
   res.status(200).json({ success: true, message: "Orders marked as delivered", orderIds });
 }

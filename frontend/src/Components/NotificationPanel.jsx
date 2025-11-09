@@ -46,6 +46,10 @@ const NotificationPanel = ({
     }
   };
 
+  const sortedNotifications = [...notifications].sort((a, b) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+
   return (
     <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden animate-slideDown">
       {/* Header */}
@@ -86,7 +90,7 @@ const NotificationPanel = ({
           </div>
         ) : (
           <ul className="divide-y divide-gray-100">
-            {notifications.map((notif, index) => (
+            {sortedNotifications.map((notif, index) => (
               <li
                 key={notif.id || index}
                 className="group px-4 py-3 hover:bg-gray-50 transition-colors duration-150 relative"
