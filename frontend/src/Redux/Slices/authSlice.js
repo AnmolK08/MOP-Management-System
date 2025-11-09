@@ -117,9 +117,13 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(userLogout.fulfilled, (state) => {
-        state.user = null;
-        state.token = null;
+      .addCase(userLogout.fulfilled, () => {
+        return {
+          user: null,
+          token: null,
+          loading: false,
+          error: null,
+        };
       })
       .addCase(userLogout.rejected, (state, action) => {
         state.error = action.payload;

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../libs/axios";
+import { userLogout } from "./authSlice";
 
 export const fetchMenu = createAsyncThunk(
   "provider/fetchMenu",
@@ -156,7 +157,10 @@ const menuSlice = createSlice({
       .addCase(deleteMenu.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+
+      // Reset state on logout
+      .addCase(userLogout.fulfilled, () => initialState);
   },
 });
 

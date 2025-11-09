@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../libs/axios";
+import { userLogout } from "./authSlice";
 
 // --- State Structure ---
 const initialState = {
@@ -379,6 +380,9 @@ const ordersSlice = createSlice({
         state.loading = false;
         state.allOrders = action.payload;
       })
+
+      // Reset state on logout
+      .addCase(userLogout.fulfilled, () => initialState)
 
       // Common Pending/Rejected
       .addMatcher(

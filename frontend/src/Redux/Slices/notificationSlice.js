@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { axiosInstance } from "../../libs/axios";
+import { userLogout } from "./authSlice";
 
 const initialState = {
     notifications : [],
@@ -85,6 +86,10 @@ const notificationSlice = createSlice({
                 state.notifications = [];
                 state.error = null;
             })
+
+            // Reset state on logout
+            .addCase(userLogout.fulfilled, () => initialState)
+
             .addMatcher(
             (action) => action.type.endsWith("/pending"),
             (state) => {
