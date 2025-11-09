@@ -12,7 +12,7 @@ export const getAllNotifications = createAsyncThunk(
     async (_, {rejectWithValue}) => {
         try {
             const token = localStorage.getItem("token");
-            const response = await axiosInstance.get(`/notifications/`, {
+            const response = await axiosInstance.get(`/notifications/getAll`, {
                 headers: { Authorization: `Bearer ${token}` },
               });
               return response.data;

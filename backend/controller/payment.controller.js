@@ -62,7 +62,7 @@ export const amountAdded = asyncHandler(async(req, res)=>{
     });
 
     if (socketId && notification) {
-        io.to(socketId).emit("newNotification", notification);
+        io.to(socketId).emit("updateWalletNotification", {notification , wallet: customer.wallet});
     }
 
     res.status(200).json({message: "Amount added successfully", wallet: customer.wallet})

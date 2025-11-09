@@ -140,7 +140,7 @@ export const cancelOrder = asyncHandler(async (req, res) => {
       });
 
       if (socketId && notification) {
-        io.to(socketId).emit("newNotification", notification);
+        io.to(socketId).emit("cancelOrder", {updatedOrder, notification});
       }
     }));
 
@@ -320,7 +320,7 @@ export const updateOrder = asyncHandler(async (req, res)=>{
     });
 
     if (socketId && notification) {
-      io.to(socketId).emit("newNotification", notification);
+      io.to(socketId).emit("updateOrderNotification", {notification, updatedOrder});
     }
   }));
 
@@ -408,7 +408,7 @@ export const markOrdersSeen = asyncHandler(async (req, res)=>{
     });
 
     if (socketId && notification) {
-      io.to(socketId).emit("newNotification", notification);
+      io.to(socketId).emit("orderSeenNotification", notification);
     }
   }));
 
@@ -450,7 +450,7 @@ export const markOrdersDelivered = asyncHandler(async (req, res)=>{
     });
 
     if (socketId && notification) {
-      io.to(socketId).emit("newNotification", notification);
+      io.to(socketId).emit("orderDeliveredNotification", notification);
     }
   }));
 

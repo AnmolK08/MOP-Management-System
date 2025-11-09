@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import profileImg from "../assets/UserProfile.png";
 import { getSocket } from "../socket";
-import { updateOrdersInProvider } from "../Redux/Slices/orderSlice";
+import { updateOrdersInProvider, updateCancelStatus, addOrdersInProvider } from "../Redux/Slices/orderSlice";
 import { addNotification, clearAllNotifications, deleteNotification, getAllNotifications } from "../Redux/Slices/notificationSlice";
 
 const ProviderLayout = () => {
@@ -88,7 +88,7 @@ const ProviderLayout = () => {
       
       // Update orders
       if (data.order) {
-        dispatch(updateOrdersInProvider(data.order));
+        dispatch(addOrdersInProvider(data.order));
       }
       
       // Add notification to store - handle both data structures
@@ -96,8 +96,22 @@ const ProviderLayout = () => {
       dispatch(addNotification(notification));
     });
 
+    socket.on("cancelOrder" , ({updatedOrder , notification})=>{
+        toast.success(notification.message);
+        dispatch(addNotification(notification));
+        dispatch(updateCancelStatus({Id: updatedOrder.id}));
+    })
+
+    socket.on("updateOrderNotification" , ({notification , updatedOrder})=>{
+        toast.success(notification.message);
+        dispatch(addNotification(notification));
+        dispatch(updateOrdersInProvider(updatedOrder));
+    })
+
     return () => {
       socket.off("newOrder");
+      socket.off("cancelOrder");
+      socket.off("updateOrderNotification");
     };
   }, [dispatch]);
 
@@ -206,7 +220,9 @@ const ProviderLayout = () => {
                 >
                   <RiNotification3Line size={24} className="text-gray-700" />
                   {notifications.length > 0 && (
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                    <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1.5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+                      {notifications.length > 99 ? '99+' : notifications.length}
+                    </span>
                   )}
                 </button>
 

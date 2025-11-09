@@ -5,13 +5,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchMenu, updateMenuState } from "../Redux/Slices/menuSlice";
 import {
   cancelOrder,
+  deliveredUserLatestOrder,
   fetchUserOrders,
   placeOrder,
+  seenUserLatestOrder,
   updateOrder,
 } from "../Redux/Slices/orderSlice";
 import toast from "react-hot-toast";
 import ConfirmationDialog from "../Components/ConfirmationDialog";
 import { getSocket } from "../socket";
+import { addNotification } from "../Redux/Slices/notificationSlice";
+import { updateUserPlan, updateUserWallet } from "../Redux/Slices/authSlice";
 
 // Child components for better organization
 const MenuCard = ({ menu, onOrderNow }) => (
@@ -136,39 +140,50 @@ const DashboardPage = () => {
   useEffect(() => {
     const socket = getSocket();
     if (!socket) return;
-    socket.on("newMenu", (newMenu) => {
-      toast.success("New menu uploaded");
-      dispatch(updateMenuState(newMenu));
+
+    socket.on("updateWalletNotification", ({notification , wallet}) => {
+      toast.success(notification.message);
+      dispatch(addNotification(notification));
+      dispatch(updateUserWallet(wallet));
+    });
+
+    socket.on("userPlanNotification", ({notification , premium}) => {
+      toast.success(notification.message);
+      dispatch(addNotification(notification));
+      dispatch(updateUserPlan(premium));
+    });
+
+    socket.on("newMenuNotification", ({notification , menu}) => {
+      toast.success(notification.message);
+      dispatch(addNotification(notification));
+      dispatch(updateMenuState(menu));
+    });
+
+    socket.on("updateMenuNotification", ({notification , menu}) => {
+      toast.success(notification.message);
+      dispatch(addNotification(notification));
+      dispatch(updateMenuState(menu));
+    });
+
+    socket.on("orderSeenNotification", (notification) => {
+      toast.success(notification.message);
+      dispatch(addNotification(notification));
+      dispatch(seenUserLatestOrder());
+    });
+
+    socket.on("orderDeliveredNotification", (notification) => {
+      toast.success(notification.message);
+      dispatch(addNotification(notification));
+      dispatch(deliveredUserLatestOrder());
     });
 
     return () => {
-      socket.off("newMenu");
-    };
-  }, [dispatch]);
-
-  useEffect(() => {
-    const socket = getSocket();
-    if (!socket) return;
-    socket.on("deleteMenu", () => {
-      toast.success("Menu has been deleted");
-      dispatch(updateMenuState(null));
-    });
-
-    return () => {
-      socket.off("deleteMenu");
-    };
-  }, [dispatch]);
-
-  useEffect(() => {
-    const socket = getSocket();
-    if (!socket) return;
-    socket.on("updateMenu", (updatedMenu) => {
-      toast.success("Menu has been updated");
-      dispatch(updateMenuState(updatedMenu));
-    });
-
-    return () => {
-      socket.off("updateMenu");
+      socket.off("updateWalletNotification");
+      socket.off("userPlanNotification");
+      socket.off("newMenuNotification");
+      socket.off("updateMenuNotification");
+      socket.off("orderSeenNotification");
+      socket.off("orderDeliveredNotification");
     };
   }, [dispatch]);
 
@@ -218,6 +233,7 @@ const DashboardPage = () => {
 
   const handleCancel = () => {
     dispatch(cancelOrder(latestOrder.id)).then((res) => {
+      toast.success("Order cancelled");
       setLatestOrder(res.payload);
     });
   };

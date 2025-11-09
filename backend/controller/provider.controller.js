@@ -36,7 +36,7 @@ export const menuUpload = asyncHandler(async (req, res) => {
     });
 
     if (socketId && notification) {
-      io.to(socketId).emit("newNotification", notification);
+      io.to(socketId).emit("newMenuNotification", {notification , menu});
     }
   }));
 
@@ -78,9 +78,7 @@ export const updateMenu = asyncHandler(async (req, res) => {
   });
 
   if (!menu) throw new ResponseError("Menu does not exist", 404);
-
-  io.emit("updateMenu", menu);
-  
+    
   // Send notifications to all customers
   const customers = await prisma.user.findMany({
     where: { role: "CUSTOMER" },
@@ -96,7 +94,7 @@ export const updateMenu = asyncHandler(async (req, res) => {
     });
 
     if (socketId && notification) {
-      io.to(socketId).emit("newNotification", notification);
+      io.to(socketId).emit("updateMenuNotification", {notification , menu});
     }
   }));
   
@@ -181,7 +179,7 @@ export const togglePremium = asyncHandler(async (req, res) => {
   });
 
   if (socketId && notification) {
-    io.to(socketId).emit("newNotification", notification);
+    io.to(socketId).emit("userPlanNotification", {notification , premium: newPremiumStatus});
   }
 
   res.status(200).json({
