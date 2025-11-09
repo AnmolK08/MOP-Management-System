@@ -9,8 +9,8 @@ import {
   RiCloseLine,
   RiNotification3Line,
   RiFileTextLine,
-  RiCloseCircleLine,
 } from "react-icons/ri";
+import NotificationPanel from "../Components/NotificationPanel";
 import { LogoIcon } from "../Components/SvgIcons";
 import { userLogout } from "../Redux/Slices/authSlice";
 import toast from "react-hot-toast";
@@ -83,9 +83,17 @@ const ProviderLayout = () => {
     const socket = getSocket();
 
     socket.on("newOrder", (data) => {
-      toast.success(`${data.notification.message}`);
-      dispatch(updateOrdersInProvider(data.order));
-      dispatch(addNotification(data));
+      // Show toast notification
+      toast.success(`${data.notification?.message || data.message || 'New order received'}`);
+      
+      // Update orders
+      if (data.order) {
+        dispatch(updateOrdersInProvider(data.order));
+      }
+      
+      // Add notification to store - handle both data structures
+      const notification = data.notification || data;
+      dispatch(addNotification(notification));
     });
 
     return () => {
@@ -193,62 +201,22 @@ const ProviderLayout = () => {
               <div className="relative" ref={notifRef}>
                 <button
                   onClick={() => setIsNotifPanelOpen(!isNotifPanelOpen)}
-                  className="relative p-2"
+                  className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  aria-label="Toggle notifications"
                 >
-                  <RiNotification3Line size={24} />
+                  <RiNotification3Line size={24} className="text-gray-700" />
                   {notifications.length > 0 && (
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
                   )}
                 </button>
 
-                {/* Notification Panel */}
-                {isNotifPanelOpen && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white border rounded-lg shadow-lg z-50">
-                    <div className="flex items-center justify-between px-4 py-2 border-b bg-gray-50">
-                      <h3 className="font-semibold text-gray-700">
-                        Notifications
-                      </h3>
-                      <button
-                        onClick={clearAllNotificationsHandler}
-                        className="text-sm text-red-500 hover:underline"
-                      >
-                        Clear All
-                      </button>
-                    </div>
-
-                    {notifications.length === 0 ? (
-                      <p className="text-center text-gray-500 py-4">
-                        No new notifications
-                      </p>
-                    ) : (
-                      <ul className="max-h-64 overflow-y-auto divide-y">
-                        {notifications.map((notif) => (
-                          <li
-                            key={notif.id}
-                            className="flex justify-between items-start px-4 py-2 hover:bg-gray-50"
-                          >
-                            <div>
-                              <p className="text-sm text-gray-700">
-                                {notif.message}
-                              </p>
-                              <p className="text-xs text-gray-400 mt-1">
-                                {notif.time}
-                              </p>
-                            </div>
-                            <button
-                              onClick={() =>
-                                deleteNotificationHandler(notif.id)
-                              }
-                              className="text-gray-400 hover:text-red-500"
-                            >
-                              <RiCloseCircleLine size={16} />
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                )}
+                {/* Enhanced Notification Panel */}
+                <NotificationPanel
+                  notifications={notifications}
+                  onDelete={deleteNotificationHandler}
+                  onClearAll={clearAllNotificationsHandler}
+                  isOpen={isNotifPanelOpen}
+                />
               </div>
 
               {/* Profile Dropdown */}

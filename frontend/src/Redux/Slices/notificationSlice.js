@@ -9,7 +9,7 @@ const initialState = {
 
 export const getAllNotifications = createAsyncThunk(
     'notifications/getAllNotifications',
-    async (id, {rejectWithValue}) => {
+    async (_, {rejectWithValue}) => {
         try {
             const token = localStorage.getItem("token");
             const response = await axiosInstance.get(`/notifications/`, {
@@ -43,7 +43,7 @@ export const deleteNotification = createAsyncThunk(
 
 export const clearAllNotifications = createAsyncThunk(
     'notifications/clearAllNotifications',
-    async (id, {rejectWithValue}) => {
+    async (_, {rejectWithValue}) => {
         try {
             const token = localStorage.getItem("token");
             const response = await axiosInstance.delete(`/notifications/clearAll`, {
