@@ -134,11 +134,11 @@ const BillingPage = () => {
 
       {/* User Actions */}
       {selectedUser && (
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-gray-50 p-4 rounded-md shadow mb-6">
-          <div className="flex flex-row md:flex-row md:items-center gap-6">
-            <div>
+        <div className="bg-gray-50 p-4 rounded-md shadow mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex-1">
               <h3 className="font-semibold text-lg">{selectedUser.name}</h3>
-            <p className="text-gray-600">{selectedUser.email}</p>
+              <p className="text-gray-600 text-sm">{selectedUser.email}</p>
             </div>
              
             {/* <button
@@ -152,21 +152,17 @@ const BillingPage = () => {
               {selectedUser.customer.premium ? "Remove Premium" : "Add Premium"}
             </button> */}
           
-          </div>
-         
-          <div className="flex items-center gap-4">
-            
-            <div className="flex gap-2 items-center">
+            <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center w-full sm:w-auto">
               <input
                 type="number"
                 placeholder="Amount"
                 value={walletAmount}
                 onChange={(e) => setWalletAmount(e.target.value)}
-                className="p-2 border rounded-md w-32"
+                className="p-2 border rounded-md w-full sm:w-32"
               />
               <button
                 onClick={handleAddWalletClick}
-                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors"
+                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors whitespace-nowrap"
               >
                 Add To Wallet
               </button>

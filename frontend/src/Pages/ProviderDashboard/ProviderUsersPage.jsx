@@ -106,12 +106,12 @@ const ProviderUsersPage = () => {
           placeholder="Search by name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-2 border rounded-lg w-full md:w-auto flex-grow"
+          className="p-2 border rounded-md w-full sm:flex-1"
         />
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="p-2 border rounded-lg w-full md:w-auto"
+          className="p-2 border rounded-md w-full sm:w-auto"
         >
           <option value="all">Premium Status</option>
           <option value="premium">Premium</option>
@@ -120,7 +120,7 @@ const ProviderUsersPage = () => {
         <select
           value={paidFilter}
           onChange={(e) => setPaidFilter(e.target.value)}
-          className="p-2 border rounded-lg w-full md:w-auto"
+          className="p-2 border rounded-md w-full sm:w-auto"
         >
           <option value="all">Paid Status</option>
           <option value="paid">Paid</option>
@@ -128,7 +128,7 @@ const ProviderUsersPage = () => {
         </select>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="bg-white rounded-lg shadow overflow-x-auto">
         <table className="min-w-full">
           <thead className="bg-gray-50">
             <tr>
