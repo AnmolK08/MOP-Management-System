@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../libs/axios";
+import { userLogout } from "./authSlice";
 
 // --- State Structure ---
 const initialState = {
@@ -245,8 +246,36 @@ const ordersSlice = createSlice({
         (o) => o.id !== Id
       );
     },
-    updateOrdersInProvider : (state, action) => {
+    addOrdersInProvider : (state, action) => {
       state.providerOrders.push(action.payload);
+    },
+    updateCancelStatus : (state, action) => {
+      const {Id} = action.payload;
+      if(!Id) return;
+      const providerIndex = state.providerOrders.findIndex(
+        (o) => o.id === Id
+      );
+      if (providerIndex !== -1)
+        state.providerOrders[providerIndex].status = "CANCELLED";
+    },
+    updateOrdersInProvider : (state, action) => {
+      const Id = action.payload.id;
+      if(!Id) return;
+      const providerIndex = state.providerOrders.findIndex(
+        (o) => o.id === Id
+      );
+      if (providerIndex !== -1)
+        state.providerOrders[providerIndex] = action.payload;
+    },
+    seenUserLatestOrder : (state)=>{
+      if (state.userOrders.length > 0) {
+        state.userOrders[state.userOrders.length - 1].status = "SEEN";
+      }
+    },
+    deliveredUserLatestOrder : (state)=>{
+      if (state.userOrders.length > 0) {
+        state.userOrders[state.userOrders.length - 1].status = "DELIVERED";
+      }
     }
   },
   extraReducers: (builder) => {
@@ -352,6 +381,9 @@ const ordersSlice = createSlice({
         state.allOrders = action.payload;
       })
 
+      // Reset state on logout
+      .addCase(userLogout.fulfilled, () => initialState)
+
       // Common Pending/Rejected
       .addMatcher(
         (action) => action.type.endsWith("/pending"),
@@ -371,4 +403,4 @@ const ordersSlice = createSlice({
 });
 
 export default ordersSlice.reducer;
-export const { updateProviderOrders, deleteUserFromOrders, updateOrdersInProvider } = ordersSlice.actions;
+export const { updateProviderOrders, deleteUserFromOrders, updateOrdersInProvider , addOrdersInProvider , updateCancelStatus , seenUserLatestOrder , deliveredUserLatestOrder} = ordersSlice.actions;

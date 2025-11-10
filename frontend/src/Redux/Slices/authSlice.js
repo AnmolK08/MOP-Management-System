@@ -79,6 +79,12 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     authRefresh: () => initialState,
+    updateUserWallet: (state, action) => {
+      state.user.customer.wallet = action.payload;
+    },
+    updateUserPlan: (state, action) => {
+      state.user.customer.premium = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -111,9 +117,13 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(userLogout.fulfilled, (state) => {
-        state.user = null;
-        state.token = null;
+      .addCase(userLogout.fulfilled, () => {
+        return {
+          user: null,
+          token: null,
+          loading: false,
+          error: null,
+        };
       })
       .addCase(userLogout.rejected, (state, action) => {
         state.error = action.payload;
@@ -134,5 +144,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { authRefresh } = authSlice.actions;
+export const { authRefresh, updateUserWallet , updateUserPlan} = authSlice.actions;
 export default authSlice.reducer;

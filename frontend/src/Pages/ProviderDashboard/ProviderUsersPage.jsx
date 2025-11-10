@@ -175,7 +175,7 @@ const ProviderUsersPage = () => {
                 </td>
                 <td className="p-3">
                   <button
-                    className="flex items-center justify-start cursor-pointer w-8 h-8 rounded-full hover:bg-red-100 transition-colors"
+                    className="flex items-center justify-center cursor-pointer w-8 h-8 rounded-full hover:bg-red-100 transition-colors"
                     title="Delete User"
                     onClick={() =>
                       setDeleteDialog({

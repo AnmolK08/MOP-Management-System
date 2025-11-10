@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../libs/axios";
+import { userLogout } from "./authSlice";
 
 const initialState = {
     users: [],
@@ -98,6 +99,10 @@ const providerSlice = createSlice({
             const deletedUser = action.payload;
             state.users = state.users.filter(user => user.id !== deletedUser.id);
         })
+
+        // Reset state on logout
+        .addCase(userLogout.fulfilled, () => initialState)
+
         .addMatcher(
         (action) => action.type.endsWith("/pending"),
         (state) => {

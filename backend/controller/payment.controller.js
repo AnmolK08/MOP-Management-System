@@ -1,10 +1,13 @@
 import asyncHandler from "express-async-handler"
 import prisma from "../config/db.js"
 import ResponseError from "../types/ResponseError.js";
+import { getRecieverSocketId, io } from "../config/socket.js";
+import { createNotification } from "./notifications.controller.js";
 
 export const amountAdded = asyncHandler(async(req, res)=>{
     const {userId} = req.params;
     let {amount} = req.body
+    const originalAmount = amount; // Store original amount for notification
 
     const customer = await prisma.customer.findUnique({
         where:{
@@ -49,6 +52,18 @@ export const amountAdded = asyncHandler(async(req, res)=>{
             wallet: customer.wallet
         }
     })
+
+    // Notify customer about amount added
+    const socketId = await getRecieverSocketId(customer.userId);
+    const notification = await createNotification({
+        senderId: req.userId,
+        receiverId: customer.userId,
+        message: `₹${originalAmount} have been added to your account. Current wallet balance: ₹${customer.wallet}`,
+    });
+
+    if (socketId && notification) {
+        io.to(socketId).emit("updateWalletNotification", {notification , wallet: customer.wallet});
+    }
 
     res.status(200).json({message: "Amount added successfully", wallet: customer.wallet})
 })

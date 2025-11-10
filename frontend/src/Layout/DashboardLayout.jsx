@@ -7,6 +7,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import EditProfileModal from "../Components/EditProfileModal";
+import NotificationPanel from "../Components/NotificationPanel";
 import {
   RiDashboardLine,
   RiMenuLine,
@@ -15,7 +16,6 @@ import {
   RiNotification3Line,
   RiCloseLine,
   RiUserLine,
-  RiCloseCircleLine,
 } from "react-icons/ri";
 import { LogoIcon } from "../Components/SvgIcons";
 import toast from "react-hot-toast";
@@ -199,60 +199,24 @@ const DashboardLayout = () => {
               <div className="relative" ref={notifRef}>
                 <button
                   onClick={() => setIsNotifPanelOpen(!isNotifPanelOpen)}
-                  className="relative p-2 hover:bg-gray-100 rounded-full"
+                  className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  aria-label="Toggle notifications"
                 >
-                  <RiNotification3Line size={22} />
+                  <RiNotification3Line size={22} className="text-gray-700" />
                   {notifications.length > 0 && (
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1.5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+                      {notifications.length > 99 ? '99+' : notifications.length}
+                    </span>
                   )}
                 </button>
 
-                {/* Notification Panel */}
-                {isNotifPanelOpen && (
-                  <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-white border rounded-lg shadow-xl z-50">
-                    <div className="flex justify-between items-center px-4 py-2 border-b bg-gray-50">
-                      <h3 className="font-semibold text-gray-700 text-sm">
-                        Notifications
-                      </h3>
-                      <button
-                        onClick={clearAllNotificationsHandler}
-                        className="text-xs text-red-500 hover:underline"
-                      >
-                        Clear All
-                      </button>
-                    </div>
-
-                    {notifications.length === 0 ? (
-                      <p className="text-center text-gray-500 py-4 text-sm">
-                        No new notifications
-                      </p>
-                    ) : (
-                      <ul className="max-h-64 overflow-y-auto divide-y">
-                        {notifications.map((notif) => (
-                          <li
-                            key={notif.id}
-                            className="flex justify-between items-start px-4 py-2 hover:bg-gray-50"
-                          >
-                            <div>
-                              <p className="text-sm text-gray-700">
-                                {notif.message}
-                              </p>
-                              <p className="text-xs text-gray-400 mt-1">
-                                {notif.time}
-                              </p>
-                            </div>
-                            <button
-                              onClick={() => deleteNotificationHandler(notif.id)}
-                              className="text-gray-400 hover:text-red-500"
-                            >
-                              <RiCloseCircleLine size={16} />
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                )}
+                {/* Enhanced Notification Panel */}
+                <NotificationPanel
+                  notifications={notifications}
+                  onDelete={deleteNotificationHandler}
+                  onClearAll={clearAllNotificationsHandler}
+                  isOpen={isNotifPanelOpen}
+                />
               </div>
 
               {/* Profile Dropdown */}

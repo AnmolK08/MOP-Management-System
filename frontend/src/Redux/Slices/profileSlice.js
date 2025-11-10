@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../libs/axios";
+import { userLogout } from "./authSlice";
 
 const initialState ={
     profileDetails : null,
@@ -39,6 +40,9 @@ const profileSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         })
+
+        // Reset state on logout
+        .addCase(userLogout.fulfilled, () => initialState)
     }
 }) 
 

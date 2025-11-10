@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { axiosInstance } from "../../libs/axios";
+import { userLogout } from "./authSlice";
 
 const initialState = {
     notifications : [],
@@ -9,10 +10,10 @@ const initialState = {
 
 export const getAllNotifications = createAsyncThunk(
     'notifications/getAllNotifications',
-    async (id, {rejectWithValue}) => {
+    async (_, {rejectWithValue}) => {
         try {
             const token = localStorage.getItem("token");
-            const response = await axiosInstance.get(`/notifications/`, {
+            const response = await axiosInstance.get(`/notifications/getAll`, {
                 headers: { Authorization: `Bearer ${token}` },
               });
               return response.data;
@@ -43,7 +44,7 @@ export const deleteNotification = createAsyncThunk(
 
 export const clearAllNotifications = createAsyncThunk(
     'notifications/clearAllNotifications',
-    async (id, {rejectWithValue}) => {
+    async (_, {rejectWithValue}) => {
         try {
             const token = localStorage.getItem("token");
             const response = await axiosInstance.delete(`/notifications/clearAll`, {
@@ -85,6 +86,10 @@ const notificationSlice = createSlice({
                 state.notifications = [];
                 state.error = null;
             })
+
+            // Reset state on logout
+            .addCase(userLogout.fulfilled, () => initialState)
+
             .addMatcher(
             (action) => action.type.endsWith("/pending"),
             (state) => {
