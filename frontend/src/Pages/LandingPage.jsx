@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../Components/Header';
 import Hero from '../Components/Hero';
 import Menu from '../Components/Menu';
 import Plans from '../Components/Plans';
 import Contact from '../Components/Contact';
 import Footer from '../Components/Footer';
+import LoadingScreen from '../Components/LoadingScreen';
 
 function LandingPage() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  if (isLoading) {
+    return <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />;
+  }
+
   return (
-    <div className="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden" style={{ fontFamily: '"Work Sans", sans-serif' }}>
+    <div className="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden">
       <div className="layout-container flex h-full grow flex-col">
         <Header />
         <main className="flex flex-1 justify-center py-8 xs:py-12 sm:py-16 px-2 xs:px-4 sm:px-6 lg:px-8">

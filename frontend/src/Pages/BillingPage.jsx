@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { fetchProviderAllOrders, updateProviderOrders } from "../Redux/Slices/orderSlice";
 import { addAmtInWallet, getAllUsers, togglePremiumStatus } from "../Redux/Slices/providerSlice";
+import ConfirmationDialog from "../Components/ConfirmationDialog";
 
 
 const BillingPage = () => {
@@ -14,6 +15,7 @@ const BillingPage = () => {
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [walletAmount, setWalletAmount] = useState("");
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
   useEffect(() => {
     if (!orders?.length) dispatch(fetchProviderAllOrders());
@@ -62,11 +64,17 @@ const BillingPage = () => {
   //     });
   // };
 
-  const handleAddWallet = () => {
+  const handleAddWalletClick = () => {
     if (!selectedUser) return toast.error("Select a user first!");
     if (!walletAmount || isNaN(walletAmount))
       return toast.error("Enter valid amount");
+    if (Number(walletAmount) <= 0)
+      return toast.error("Amount must be greater than zero");
+    
+    setIsConfirmDialogOpen(true);
+  };
 
+  const handleAddWallet = () => {
     const toastId = toast.loading("Adding wallet amount...");
     dispatch(addAmtInWallet({ customerId: selectedUser.customer.id, amount: Number(walletAmount) }))
       .then((res) => {
@@ -126,11 +134,11 @@ const BillingPage = () => {
 
       {/* User Actions */}
       {selectedUser && (
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-gray-50 p-4 rounded-md shadow mb-6">
-          <div className="flex flex-row md:flex-row md:items-center gap-6">
-            <div>
+        <div className="bg-gray-50 p-4 rounded-md shadow mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex-1">
               <h3 className="font-semibold text-lg">{selectedUser.name}</h3>
-            <p className="text-gray-600">{selectedUser.email}</p>
+              <p className="text-gray-600 text-sm">{selectedUser.email}</p>
             </div>
              
             {/* <button
@@ -144,23 +152,19 @@ const BillingPage = () => {
               {selectedUser.customer.premium ? "Remove Premium" : "Add Premium"}
             </button> */}
           
-          </div>
-         
-          <div className="flex items-center gap-4">
-            
-            <div className="flex gap-2 items-center">
+            <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center w-full sm:w-auto">
               <input
                 type="number"
                 placeholder="Amount"
                 value={walletAmount}
                 onChange={(e) => setWalletAmount(e.target.value)}
-                className="p-2 border rounded-md w-32"
+                className="p-2 border rounded-md w-full sm:w-32"
               />
               <button
-                onClick={handleAddWallet}
-                className="bg-green-500 text-white px-4 py-2 rounded-md"
+                onClick={handleAddWalletClick}
+                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors whitespace-nowrap"
               >
-                Add Wallet
+                Add To Wallet
               </button>
             </div>
           </div>
@@ -225,6 +229,15 @@ const BillingPage = () => {
           </table>
         </div>
       )}
+
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={isConfirmDialogOpen}
+        onClose={() => setIsConfirmDialogOpen(false)}
+        onConfirm={handleAddWallet}
+        title="Add Wallet Amount"
+        message={`Are you sure you want to add ₹${walletAmount} to ${selectedUser?.name}'s wallet?`}
+      />
     </div>
   );
 };

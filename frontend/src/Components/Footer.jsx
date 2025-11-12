@@ -3,42 +3,97 @@ import { FacebookIcon, InstagramIcon, LogoIcon, TwitterIcon } from './SvgIcons';
 
 const Footer = () => {
     return (
-        <footer className="bg-stone-100 px-5 py-16 text-center">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div className="flex flex-col items-center md:items-start text-center md:text-left">
-                    <div className="flex items-center gap-4 text-[#181411]">
-                        <div className="size-6 text-[#ec6d13]">
-                           <LogoIcon />
+        <footer className="relative bg-gradient-to-br from-orange-300 via-gray-100 to-gray-200 px-6 sm:px-8 lg:px-12 py-20 sm:py-24 overflow-hidden">
+            {/* Headline */}
+            <div className="max-w-7xl mx-auto mb-16 sm:mb-20">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight max-w-3xl">
+                    Let's deliver your next delicious meal together.
+                </h2>
+            </div>
+
+            {/* Main Footer Content */}
+            <div className="max-w-7xl mx-auto">
+                {/* Grid Layout */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 pb-12 border-b border-gray-300">
+                    {/* PRIMARY Section */}
+                    <div>
+                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 pb-2 border-b border-gray-300">
+                            PRIMARY
+                        </h3>
+                        <nav className="flex flex-col gap-2">
+                            <a href="/" className="text-gray-900 hover:text-[#ec6d13] transition-colors text-base font-medium">Home</a>
+                            <a href="#menu" className="text-gray-900 hover:text-[#ec6d13] transition-colors text-base font-medium">Today's Menu</a>
+                            <a href="#plans" className="text-gray-900 hover:text-[#ec6d13] transition-colors text-base font-medium">Plans</a>
+                            <a href="#contact" className="text-gray-900 hover:text-[#ec6d13] transition-colors text-base font-medium">Contact</a>
+                        </nav>
+                    </div>
+
+                    {/* GO DEEPER Section */}
+                    <div>
+                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 pb-2 border-b border-gray-300">
+                            GO DEEPER
+                        </h3>
+                        <nav className="flex flex-col gap-2">
+                            <a href="#" className="text-gray-900 hover:text-[#ec6d13] transition-colors text-base font-medium">About Us</a>
+                            <a href="#" className="text-gray-900 hover:text-[#ec6d13] transition-colors text-base font-medium">Our Story</a>
+                            <a href="#" className="text-gray-900 hover:text-[#ec6d13] transition-colors text-base font-medium">Nutrition</a>
+                        </nav>
+                    </div>
+
+                    {/* SOCIAL Section */}
+                    <div>
+                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 pb-2 border-b border-gray-300">
+                            SOCIAL
+                        </h3>
+                        <nav className="flex flex-col gap-2">
+                            <a href="#" className="text-gray-900 hover:text-[#ec6d13] transition-colors text-base font-medium">Instagram</a>
+                            <a href="#" className="text-gray-900 hover:text-[#ec6d13] transition-colors text-base font-medium">Facebook</a>
+                            <a href="#" className="text-gray-900 hover:text-[#ec6d13] transition-colors text-base font-medium">Twitter</a>
+                        </nav>
+                    </div>
+
+                    {/* WANT TO ORDER? Section */}
+                    <div>
+                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 pb-2 border-b border-gray-300">
+                            WANT TO ORDER?
+                        </h3>
+                        <a href="mailto:minnipahadganjrestaurant@gmail.com" className="text-gray-900 hover:text-[#ec6d13] transition-colors text-base font-medium">
+                            minnipahadganjrestaurant@gmail.com
+                        </a>
+                    </div>
+                </div>
+
+                {/* Bottom Section */}
+                <div className="pt-8 space-y-6">
+                    {/* Address and Phone - First Row */}
+                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm pb-6 border-b border-gray-300">
+                        <div className="flex-1">
+                            <p className="text-gray-500 uppercase text-xs mb-1">LOCATION</p>
+                            <p className="text-gray-900 font-medium text-sm leading-relaxed">
+                                NEAR PAKWAAN RESTAURANT<br />
+                                MURADNAGAR GHAZIABAD, UP
+                            </p>
                         </div>
-                        <h2 className="text-[#181411] text-xl font-bold leading-tight">Minipahadganj</h2>
+                        <div>
+                            <p className="text-gray-500 uppercase text-xs mb-1">PHONE</p>
+                            <p className="text-gray-900 font-medium">+91 9990651919</p>
+                        </div>
                     </div>
-                    <p className="text-stone-600 text-base leading-relaxed mt-4 max-w-xs">Home-style meals, delivered with love. Fresh ingredients, healthy recipes, and the taste of home.</p>
-                </div>
-                <div className="flex flex-col items-center md:items-start">
-                    <h3 className="text-stone-900 text-lg font-semibold mb-4">Quick Links</h3>
-                    <div className="flex flex-col gap-3">
-                        <a className="text-stone-600 hover:text-[#ec6d13] text-base font-normal leading-normal transition-colors" href="/">Home</a>
-                        <a className="text-stone-600 hover:text-[#ec6d13] text-base font-normal leading-normal transition-colors" href="#menu">Menu</a>
-                        <a className="text-stone-600 hover:text-[#ec6d13] text-base font-normal leading-normal transition-colors" href="#plans">Plans</a>
-                        <a className="text-stone-600 hover:text-[#ec6d13] text-base font-normal leading-normal transition-colors" href="#contact">Contact</a>
-                    </div>
-                </div>
-                <div className="flex flex-col items-center md:items-start">
-                    <h3 className="text-stone-900 text-lg font-semibold mb-4">Contact Info</h3>
-                    <div className="flex flex-col gap-3 text-center md:text-left">
-                        <p className="text-stone-600 text-base leading-normal">Near Pakwaan Restaurant , Muradnagar Ghaziabad Uttar Pradesh</p>
-                        <p className="text-stone-600 text-base leading-normal">Email: minnipahadganjrestaurant@gmail.com</p>
-                        <p className="text-stone-600 text-base leading-normal">Phone: +91 9990651919</p>
+                    
+                    {/* Copyright - Second Row */}
+                    <div>
+                        <p className="text-sm text-gray-600">
+                            &copy; COPYRIGHT 2025 MINIPAHADGANJ ALL RIGHT RESERVED
+                        </p>
                     </div>
                 </div>
             </div>
-            <div className="mt-12 pt-8 border-t border-stone-200 flex flex-col sm:flex-row justify-between items-center gap-6">
-                <p className="text-stone-500 text-base font-normal leading-normal">© 2025 Minipahadganj. All rights reserved.</p>
-                <div className="flex justify-center gap-6">
-                    <a className="text-stone-500 hover:text-[#ec6d13] transition-colors" href="#"><InstagramIcon /></a>
-                    <a className="text-stone-500 hover:text-[#ec6d13] transition-colors" href="#"><FacebookIcon /></a>
-                    <a className="text-stone-500 hover:text-[#ec6d13] transition-colors" href="#"><TwitterIcon /></a>
-                </div>
+
+            {/* Large Brand Text at Bottom - Made Responsive */}
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 left-auto bottom-auto -rotate-90 origin-right pointer-events-none opacity-10 sm:rotate-0 sm:origin-bottom-right sm:bottom-0 sm:right-0 sm:top-auto sm:left-auto sm:translate-y-0">
+                <h1 className="text-[6rem] xs:text-[7rem] sm:text-[7rem] md:text-[8rem] lg:text-[11rem] xl:text-[14.5rem] font-black text-gray-900 leading-none whitespace-nowrap -mr-4 sm:-mr-8">
+                    Minipahadganj
+                </h1>
             </div>
         </footer>
     );

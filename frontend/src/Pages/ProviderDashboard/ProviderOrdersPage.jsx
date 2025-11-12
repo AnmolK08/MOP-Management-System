@@ -129,8 +129,8 @@ const ProviderOrdersPage = () => {
         All orders for the lastest Menu and their current status.
       </p>
 
-      {/* Filters & Search */}
-      <div className="flex flex-col md:flex-row flex-wrap items-stretch md:items-center justify-start mb-4 gap-4">
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-4">
         <input
           type="text"
           placeholder="Search by User name"
@@ -141,7 +141,7 @@ const ProviderOrdersPage = () => {
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
-          className="p-2 border rounded-md w-full md:w-auto"
+          className="p-2 border rounded-md w-full sm:w-auto flex-1 sm:flex-initial"
         >
           <option value="All">All Type</option>
           <option value="LUNCH">Lunch</option>
@@ -150,7 +150,7 @@ const ProviderOrdersPage = () => {
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="p-2 border rounded-md w-full md:w-auto"
+          className="p-2 border rounded-md w-full sm:w-auto flex-1 sm:flex-initial"
         >
           <option value="All">All Status</option>
           <option value="DELIVERED">Delivered</option>
@@ -161,7 +161,7 @@ const ProviderOrdersPage = () => {
         <select
           value={mark}
           onChange={(e) => handleMark(e)}
-          className="p-2 border rounded-md w-full md:w-auto bg-green-500 text-white"
+          className="p-2 border rounded-md w-full sm:w-auto flex-1 sm:flex-initial bg-green-500 text-white font-medium"
         >
           <option className="bg-white text-black" value="">--Select Mark For--</option>
           <option className="bg-white text-black" value="MarkSeen">Mark Seen</option>

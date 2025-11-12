@@ -1,6 +1,6 @@
 import React from 'react'
 import chef1 from '../assets/chef1.jpg';
-import chef2 from '../assets/chef2.jpg';
+import chef2 from '../assets/chef2.png';
 
 const ContactCard = ({ imageUrl, name, title, email , phone}) => (
   <div className="flex flex-col items-center gap-4 p-6">

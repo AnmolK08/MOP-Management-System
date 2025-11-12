@@ -204,7 +204,7 @@ const DashboardLayout = () => {
                 >
                   <RiNotification3Line size={22} className="text-gray-700" />
                   {notifications.length > 0 && (
-                    <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1.5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+                    <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1.5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
                       {notifications.length > 99 ? '99+' : notifications.length}
                     </span>
                   )}
