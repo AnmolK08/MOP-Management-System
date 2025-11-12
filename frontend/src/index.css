@@ -1,7 +1,25 @@
 @import "tailwindcss";
 
+/* Font Configuration */
+:root {
+  --font-primary: 'Inter Tight', sans-serif;
+}
+
 *{
     scroll-behavior: smooth;
+}
+
+/* Apply Inter Tight as the default font */
+body {
+  font-family: var(--font-primary);
+}
+
+/* Apply Inter Tight to all headings with appropriate weights */
+h1, h2, h3, h4, h5, h6,
+.heading-font {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 /* Custom scrollbar for notification panel */
