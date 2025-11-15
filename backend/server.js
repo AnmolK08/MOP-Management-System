@@ -14,11 +14,11 @@ import { app, server } from "./config/socket.js"
 config();
 
 app.use(express.json());
-const CLIENT_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+const CLIENT_URL = process.env.FRONTEND_URL;
 
 app.use(
   cors({
-    origin: CLIENT_URL,
+    origin: ['http://localhost:5173', CLIENT_URL],
     credentials: true,
   })
 );
