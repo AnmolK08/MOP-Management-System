@@ -86,6 +86,12 @@ const Footer = () => {
                             &copy; COPYRIGHT 2025 MINIPAHADGANJ ALL RIGHT RESERVED
                         </p>
                     </div>
+
+                    <div>
+                        <p className="text-sm text-gray-600">
+                            MADE WITH ❤️ BY THE MINI TEAM
+                        </p>
+                    </div>
                 </div>
             </div>
 

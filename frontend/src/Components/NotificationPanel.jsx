@@ -122,7 +122,7 @@ const NotificationPanel = ({
                   {/* Delete Button */}
                   <button
                     onClick={() => onDelete(notif.id)}
-                    className="flex-shrink-0 text-gray-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                    className="flex-shrink-0 text-gray-300 hover:text-red-500 transition-colors opacity-100 group-hover:opacity-100 focus:opacity-100"
                     aria-label="Delete notification"
                   >
                     <RiCloseCircleLine size={18} />
