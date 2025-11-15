@@ -65,7 +65,7 @@ export const register = asyncHandler(async (req, res) => {
     }
   );
 
-  const verificationLink = `http://localhost:8080/auth/verify-email?token=${token}`;
+  const verificationLink = `https://mop-management-system.onrender.com/auth/verify-email?token=${token}`;
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
