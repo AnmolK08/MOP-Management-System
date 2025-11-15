@@ -11,6 +11,5 @@ coverage
 .idea
 .vscode
 *.local
-.env.*
 *.swp
 /generated/prisma
