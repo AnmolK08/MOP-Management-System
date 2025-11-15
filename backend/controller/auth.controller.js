@@ -133,7 +133,8 @@ export const verifyEmail = asyncHandler(async (req, res) => {
     },
   });
 
-  const redirectUrl = `http://localhost:5173/login?verified=true`;
+  const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+  const redirectUrl = `${FRONTEND_URL}/login?verified=true`;
   res.redirect(redirectUrl);
 
   res.json({
