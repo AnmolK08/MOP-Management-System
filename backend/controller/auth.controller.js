@@ -4,6 +4,7 @@ import prisma from "../config/db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import { sendMail } from "../utils/sendemail.js";
 
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -67,21 +68,20 @@ export const register = asyncHandler(async (req, res) => {
 
   const verificationLink = `https://mop-management-system.onrender.com/auth/verify-email?token=${token}`;
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL,
-      pass: process.env.EMAIL_PASS,
-    },
-    debug: true,
-    logger: true,
-  });
+  // const transporter = nodemailer.createTransport({
+  //   service: "gmail",
+  //   auth: {
+  //     user: process.env.EMAIL,
+  //     pass: process.env.EMAIL_PASS,
+  //   },
+  //   debug: true,
+  //   logger: true,
+  // });
 
-await transporter.sendMail({
-  from: process.env.EMAIL,
-  to: email,
-  subject: "Verify your email - Minipahadganj",
-  html: `
+await sendMail(
+  email,
+   "Verify your email - Minipahadganj",
+  `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 10px;">
       <h2 style="color: #ff7849; text-align: center;">Welcome to Minipahadganj</h2>
       <p>Hi there,</p>
@@ -97,7 +97,7 @@ await transporter.sendMail({
       <p>Cheers,<br><b>The Mini Team</b></p>
     </div>
   `
-});
+);
 
 
   res.status(200).json({ success: true, message: "Email sent successful" });
