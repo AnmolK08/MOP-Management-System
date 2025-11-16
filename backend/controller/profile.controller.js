@@ -76,6 +76,8 @@ export const forgetPass = asyncHandler(async(req, res)=>{
             user: process.env.EMAIL,
             pass: process.env.EMAIL_PASS,
         },
+        debug: true,
+        logger: true,
     });
     const mailOptions = {
       from: process.env.EMAIL,

@@ -73,6 +73,8 @@ export const register = asyncHandler(async (req, res) => {
       user: process.env.EMAIL,
       pass: process.env.EMAIL_PASS,
     },
+    debug: true,
+    logger: true,
   });
 
 await transporter.sendMail({
