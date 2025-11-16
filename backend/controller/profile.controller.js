@@ -3,8 +3,7 @@ import ResponseError from "../types/ResponseError.js";
 import prisma from "../config/db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer";
-import { sendMail } from "../utils/sendemail.js";
+import { sendMail } from "../utils/Brevoemail.js";
 
 export const editPass = asyncHandler(async (req, res) => {
   const { oldPass, newPass, confPass } = req.body;
