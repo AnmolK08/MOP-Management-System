@@ -10,7 +10,7 @@ import fetchRoute from "./routes/fetch.route.js"
 import profileRoutes from "./routes/profile.route.js"
 import notificationRoutes from "./routes/notification.route.js"
 import { app, server } from "./config/socket.js"
-
+import { connectDB } from "./config/db.js";
 config();
 
 app.use(express.json());
@@ -34,6 +34,17 @@ app.use("/notifications", notificationRoutes);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 8080;
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+
+const startServer = async () => {
+  try {
+    await connectDB();
+    server.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server due to database connection error.");
+    process.exit(1);
+  }
+};
+
+startServer();

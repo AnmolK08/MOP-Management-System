@@ -7,6 +7,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import EditProfileModal from "../Components/EditProfileModal";
+import ScrollToTop from "../Components/ScrollToTop";
 import NotificationPanel from "../Components/NotificationPanel";
 import {
   RiDashboardLine,
@@ -42,6 +43,19 @@ const DashboardLayout = () => {
   useEffect(() => {
     if (!notifications || notifications.length === 0) dispatch(getAllNotifications());
   }, [dispatch]);
+
+  // Prevent background scroll on mobile when sidebar is open
+  useEffect(() => {
+    if (isSidebarOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isSidebarOpen]);
 
   const deleteNotificationHandler = (id) => {
     if(!id) toast.error("Invalid Notification ID");
@@ -128,8 +142,9 @@ const DashboardLayout = () => {
   ];
 
   return (
-    <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-gray-100">
+    <div className="flex flex-col md:flex-row h-screen  bg-gray-100">
       {/* Overlay for mobile */}
+      <ScrollToTop />
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/30 backdrop-blur-sm z-20 md:hidden"
@@ -158,28 +173,34 @@ const DashboardLayout = () => {
           </button>
         </div>
 
-        <nav className="p-4">
-          <ul className="space-y-2">
-            {navItems.map((item) => (
-              <li key={item.path}>
-                <NavLink
-                  to={item.path}
-                  end={item.end}
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-4 py-3 rounded-lg text-sm sm:text-base transition-all duration-200 ${
-                      isActive
-                        ? "bg-blue-50 text-blue-600 font-semibold"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`
-                  }
-                >
-                  <item.icon size={20} />
-                  <span>{item.label}</span>
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="flex flex-col h-[calc(100%-64px)]">
+          <nav className="p-4 flex-1 overflow-y-auto">
+            <ul className="space-y-2">
+              {navItems.map((item) => (
+                <li key={item.path}>
+                  <NavLink
+                    to={item.path}
+                    end={item.end}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-4 py-3 rounded-lg text-sm sm:text-base transition-all duration-200 ${
+                        isActive
+                          ? "bg-blue-50 text-blue-600 font-semibold"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`
+                    }
+                  >
+                    <item.icon size={20} />
+                    <span>{item.label}</span>
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="px-4 py-3  text-[10px] sm:text-xs text-gray-400 text-center">
+            MADE WITH ❤️ BY THE MINI TEAM
+          </div>
+        </div>
       </aside>
 
       {/* Main Content */}
@@ -193,6 +214,19 @@ const DashboardLayout = () => {
             >
               <RiMenuLine size={24} />
             </button>
+
+            {/* Header Logo linking to dashboard (mobile only) */}
+            <Link
+              to="/u"
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="ml-3 flex md:hidden items-center justify-center w-9 h-9  bg-white  "
+            >
+            <div className="size-6 text-[#ec6d13]">
+              <LogoIcon />
+            </div>
+            </Link>
 
             <div className="flex items-center gap-4 ml-auto">
               {/* Notification Section */}
@@ -258,7 +292,7 @@ const DashboardLayout = () => {
         </header>
 
         {/* Main Area */}
-        <main className="flex-1 overflow-y-auto bg-gray-50 p-4 md:p-6">
+        <main className="flex-1 bg-gray-50 p-4 md:p-6">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>

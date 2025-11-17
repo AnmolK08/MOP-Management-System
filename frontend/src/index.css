@@ -7,6 +7,10 @@
 
 *{
     scroll-behavior: smooth;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 /* Apply Inter Tight as the default font */

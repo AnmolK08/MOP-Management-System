@@ -1,7 +1,18 @@
 import React from 'react'
 import { FacebookIcon, InstagramIcon, LogoIcon, TwitterIcon } from './SvgIcons';
+import toast from 'react-hot-toast';
 
 const Footer = () => {
+    const copyToClipboard = (value) => {
+        if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(value)
+                .then(() => {
+                    toast.success('Copied to clipboard');
+                })
+                .catch(() => {});
+        }
+    };
+
     return (
         <footer className="relative bg-gradient-to-br from-orange-300 via-gray-100 to-gray-200 px-6 sm:px-8 lg:px-12 py-20 sm:py-24 overflow-hidden">
             {/* Headline */}
@@ -57,9 +68,14 @@ const Footer = () => {
                         <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 pb-2 border-b border-gray-300">
                             WANT TO ORDER?
                         </h3>
-                        <a href="mailto:minnipahadganjrestaurant@gmail.com" className="text-gray-900 hover:text-[#ec6d13] transition-colors text-base font-medium">
-                            minnipahadganjrestaurant@gmail.com
-                        </a>
+                        <button
+                            type="button"
+                            onClick={() => copyToClipboard('minnipahadganjrestaurant@gmail.com')}
+                            className="inline-flex items-center gap-2 text-gray-900 hover:text-[#ec6d13] transition-colors text-base font-medium text-left"
+                        >
+                            <span>minnipahadganjrestaurant@gmail.com</span>
+                            <span className="text-xs opacity-70">📋</span>
+                        </button>
                     </div>
                 </div>
 
@@ -76,7 +92,14 @@ const Footer = () => {
                         </div>
                         <div>
                             <p className="text-gray-500 uppercase text-xs mb-1">PHONE</p>
-                            <p className="text-gray-900 font-medium">+91 9990651919</p>
+                            <button
+                                type="button"
+                                onClick={() => copyToClipboard('+91 9990651919')}
+                                className="inline-flex items-center gap-2 text-gray-900 font-medium hover:text-[#ec6d13] transition-colors"
+                            >
+                                <span>+91 9990651919</span>
+                                <span className="text-xs opacity-70">📋</span>
+                            </button>
                         </div>
                     </div>
                     
@@ -87,10 +110,20 @@ const Footer = () => {
                         </p>
                     </div>
 
-                    <div>
+                    <div className="space-y-1">
                         <p className="text-sm text-gray-600">
                             MADE WITH ❤️ BY THE MINI TEAM
                         </p>
+                        <button
+                            type="button"
+                            onClick={() => copyToClipboard('theminiteam7@gmail.com')}
+                            className="inline-flex items-center gap-2 text-xs text-gray-500 hover:text-[#ec6d13] transition-colors"
+                        >
+                            <span>
+                                DEV &amp; CONTACT: <span className="font-medium">theminiteam7@gmail.com</span>
+                            </span>
+                            <span className="text-[0.65rem] opacity-70">📋</span>
+                        </button>
                     </div>
                 </div>
             </div>

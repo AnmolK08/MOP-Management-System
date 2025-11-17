@@ -51,7 +51,7 @@ const NotificationPanel = ({
   });
 
   return (
-    <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden animate-slideDown">
+    <div className="absolute -right-10 lg:-right-0 mt-2 w-80 sm:w-96 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden animate-slideDown">
       {/* Header */}
       <div className="flex justify-between items-center px-4 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
         <div className="flex items-center gap-2">

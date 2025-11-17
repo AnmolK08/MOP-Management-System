@@ -8,8 +8,9 @@ import { Eye, EyeOff } from "lucide-react";
 export default function AuthRightRegister() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [showPass, setShowPass] = useState(false)
-  const [disable, setDisable] = useState(false)
+  const [showPass, setShowPass] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [disable, setDisable] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -105,35 +106,55 @@ export default function AuthRightRegister() {
             required
           />
           <div className="w-full relative">
-          <input
-            id="password"
-            name="password"
-            type={showPass?"text":"password"}
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full rounded-lg border border-[#ffd9c7] bg-[#fff5f2] h-11 pl-4 text-base 
-                       focus:border-[#e36335] focus:ring-2 focus:ring-[#ff9770] outline-none
-                       placeholder:text-gray-400 transition"
-            required
-          />
-          <div className="absolute right-5 top-3 text-gray-600" onClick={()=>setShowPass(!showPass)}>
-            {!showPass?<EyeOff/>
-            :<Eye/>}
+            <input
+              id="password"
+              name="password"
+              type={showPass ? "text" : "password"}
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full rounded-lg border border-[#ffd9c7] bg-[#fff5f2] h-11 pl-4 pr-10 text-base 
+                         focus:border-[#e36335] focus:ring-2 focus:ring-[#ff9770] outline-none
+                         placeholder:text-gray-400 transition"
+              required
+            />
+            {formData.password && (
+              <button
+                type="button"
+                aria-label={showPass ? "Hide password" : "Show password"}
+                onClick={() => setShowPass(!showPass)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800"
+              >
+                {showPass ? <Eye /> : <EyeOff />}
+              </button>
+            )}
           </div>
+
+          <div className="w-full relative mt-3">
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type={showConfirm ? "text" : "password"}
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className="w-full rounded-lg border border-[#ffd9c7] bg-[#fff5f2] h-11 pl-4 pr-10 text-base 
+                         focus:border-[#b95835] focus:ring-2 focus:ring-[#ff9770] outline-none
+                         placeholder:text-gray-400 transition"
+              required
+            />
+            {formData.confirmPassword && (
+              <button
+                type="button"
+                aria-label={showConfirm ? "Hide confirm password" : "Show confirm password"}
+                onClick={() => setShowConfirm(!showConfirm)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800"
+              >
+                {showConfirm ? <Eye /> : <EyeOff />}
+              </button>
+            )}
           </div>
-          <input
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className="w-full rounded-lg border border-[#ffd9c7] bg-[#fff5f2] h-11 pl-4 text-base 
-                       focus:border-[#b95835] focus:ring-2 focus:ring-[#ff9770] outline-none
-                       placeholder:text-gray-400 transition"
-            required
-          />
+
 
 
           {/* Submit */}

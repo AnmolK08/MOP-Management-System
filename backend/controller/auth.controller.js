@@ -81,20 +81,149 @@ await sendMail(
   email,
    "Verify your email - Minipahadganj",
   `
-    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 10px;">
-      <h2 style="color: #ff7849; text-align: center;">Welcome to Minipahadganj</h2>
-      <p>Hi there,</p>
-      <p>Thanks for signing up! Please verify your email address to activate your account.</p>
-      <div style="text-align: center; margin: 30px 0;">
-        <a href="${verificationLink}" 
-           style="background-color: #ff7849; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
-          Verify Email
-        </a>
+    <!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="x-apple-disable-message-reformatting">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Verify your email</title>
+  </head>
+  <body style="margin:0; padding:0; background-color:#f6f6f6;">
+    <center style="width:100%; background-color:#f6f6f6;">
+      <!-- Preheader (hidden) -->
+      <div style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden;">
+        Confirm your email to unlock personalized menus, offers, and faster ordering at Minipahadganj.
       </div>
-      <p>If the button above doesn’t work, copy and paste the link below into your browser:</p>
-      <p style="margin-top: 30px;">This link will expire in <b>5 minutes</b> for your security.</p>
-      <p>Cheers,<br><b>The Mini Team</b></p>
-    </div>
+
+      <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td align="center" style="padding:28px 12px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="width:600px; max-width:100%;">
+              <!-- Brand -->
+              <tr>
+                <td align="center" style="padding-bottom:16px;">
+                  <a href="https://minipahadganj.example" style="text-decoration:none;">
+                    <span style="display:inline-block; font-family:Arial, sans-serif; font-size:13px; letter-spacing:2px; color:#ff7849; text-transform:uppercase;">
+                      Minipahadganj
+                    </span>
+                  </a>
+                </td>
+              </tr>
+
+              <!-- Card -->
+              <tr>
+                <td style="background:#ffffff; border:1px solid #eaeaea; border-radius:12px; overflow:hidden;">
+                  <!-- Hero -->
+                  <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop"
+                       alt="Fresh, vibrant plates from our kitchen"
+                       width="600"
+                       style="display:block; width:100%; height:auto; border:0;">
+
+                  <!-- Content -->
+                  <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                      <td style="padding:24px 28px 8px 28px;">
+                        <h2 style="margin:0 0 8px 0; font-family:Arial, sans-serif; font-size:24px; line-height:1.3; color:#1f2937;">
+                          Welcome to Minipahadganj, {{customerName}}!
+                        </h2>
+                        <p style="margin:0; font-family:Arial, sans-serif; font-size:16px; line-height:1.6; color:#4b5563;">
+                          Verify your email to start exploring this week’s seasonal specials, chef’s picks, and exclusive member‑only offers. One tap, and you’re in.
+                        </p>
+                      </td>
+                    </tr>
+
+                    <!-- CTA -->
+                    <tr>
+                      <td align="center" style="padding:22px 28px;">
+                        <a href="{{verificationLink}}"
+                           style="background-color:#ff7849; color:#ffffff; font-family:Arial, sans-serif; font-weight:bold; font-size:16px; line-height:1; text-decoration:none; padding:14px 26px; border-radius:8px; display:inline-block;">
+                          Verify Email
+                        </a>
+                      </td>
+                    </tr>
+
+                    <!-- Secondary info -->
+                    <tr>
+                      <td style="padding:0 28px 8px 28px;">
+                        <p style="margin:0; font-family:Arial, sans-serif; font-size:14px; line-height:1.7; color:#6b7280;">
+                          If the button doesn’t work, copy and paste this link into your browser:
+                        </p>
+                        <p style="margin:8px 0 0 0; font-family:Arial, sans-serif; font-size:13px; line-height:1.6; color:#2563eb; word-break:break-all;">
+                          {{verificationLink}}
+                        </p>
+                      </td>
+                    </tr>
+
+                    <!-- Expiry and security -->
+                    <tr>
+                      <td style="padding:16px 28px 0 28px;">
+                        <p style="margin:0; font-family:Arial, sans-serif; font-size:13px; line-height:1.6; color:#6b7280;">
+                          For your security, this link will expire in <b style="color:#111827;">5 minutes</b>. If you didn’t create an account, you can safely ignore this email.
+                        </p>
+                      </td>
+                    </tr>
+
+                    <!-- Divider -->
+                    <tr>
+                      <td style="padding:24px 28px 0 28px;">
+                        <hr style="border:0; border-top:1px solid #eeeeee; margin:0;">
+                      </td>
+                    </tr>
+
+                    <!-- Foodie footer/brand voice -->
+                    <tr>
+                      <td style="padding:18px 28px 8px 28px;">
+                        <p style="margin:0; font-family:Arial, sans-serif; font-size:14px; line-height:1.7; color:#4b5563;">
+                          Pro tip: Look out for our mid‑week chef’s specials and weekend comfort bowls—crafted fresh, with seasonal produce and homestyle flavors.
+                        </p>
+                      </td>
+                    </tr>
+
+                    <!-- Signature -->
+                    <tr>
+                      <td style="padding:6px 28px 28px 28px;">
+                        <p style="margin:0; font-family:Arial, sans-serif; font-size:14px; line-height:1.7; color:#4b5563;">
+                          Warmly,<br>
+                          <b style="color:#111827;">The Mini Team</b>
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <!-- Legal/footer -->
+              <tr>
+                <td align="center" style="padding:16px 10px 0 10px;">
+                  <p style="margin:0; font-family:Arial, sans-serif; font-size:12px; line-height:1.7; color:#9ca3af;">
+                    Need help? Email us at <a href="mailto:{{supportEmail}}" style="color:#ff7849; text-decoration:none;">{{supportEmail}}</a>
+                  </p>
+                  <p style="margin:6px 0 0 0; font-family:Arial, sans-serif; font-size:12px; line-height:1.7; color:#9ca3af;">
+                    {{restaurantAddress}}
+                  </p>
+                  <p style="margin:6px 0 0 0; font-family:Arial, sans-serif; font-size:12px; line-height:1.7; color:#9ca3af;">
+                    You received this email because you signed up at Minipahadganj. If this wasn’t you, please ignore this message.
+                  </p>
+                </td>
+              </tr>
+
+              <tr>
+                <td align="center" style="padding:10px 0 30px 0;">
+                  <a href="https://minipahadganj.example/preferences" style="font-family:Arial, sans-serif; font-size:12px; color:#9ca3af; text-decoration:underline;">
+                    Email preferences
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+    </center>
+  </body>
+</html>
+
   `
 );
 

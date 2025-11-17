@@ -11,6 +11,7 @@ import {
   RiFileTextLine,
 } from "react-icons/ri";
 import NotificationPanel from "../Components/NotificationPanel";
+import ScrollToTop from "../Components/ScrollToTop";
 import { LogoIcon } from "../Components/SvgIcons";
 import { userLogout } from "../Redux/Slices/authSlice";
 import toast from "react-hot-toast";
@@ -152,6 +153,7 @@ const ProviderLayout = () => {
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
+      <ScrollToTop />
       {/* Overlay for mobile view */}
       {isSidebarOpen && (
         <div
@@ -177,28 +179,34 @@ const ProviderLayout = () => {
             <RiCloseLine size={24} />
           </button>
         </div>
-        <nav className="p-4">
-          <ul className="space-y-2">
-            {navItems.map((item) => (
-              <li key={item.path}>
-                <NavLink
-                  to={item.path}
-                  end={item.end}
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 ${
-                      isActive
-                        ? "bg-blue-50 text-blue-600"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`
-                  }
-                >
-                  <item.icon size={20} />
-                  <span className="font-medium">{item.label}</span>
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="flex flex-col h-[calc(100%-64px)]">
+          <nav className="p-4 flex-1 overflow-y-auto">
+            <ul className="space-y-2">
+              {navItems.map((item) => (
+                <li key={item.path}>
+                  <NavLink
+                    to={item.path}
+                    end={item.end}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 ${
+                        isActive
+                          ? "bg-blue-50 text-blue-600"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`
+                    }
+                  >
+                    <item.icon size={20} />
+                    <span className="font-medium">{item.label}</span>
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="px-4 py-3 text-[10px] sm:text-xs text-gray-400 text-center">
+            MADE WITH ❤️ BY THE MINI TEAM
+          </div>
+        </div>
       </aside>
 
       {/* Main Content */}

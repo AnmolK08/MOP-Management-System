@@ -13,6 +13,9 @@ const MenuPage = () => {
   const { menu } = useSelector((state) => state.menuSlice);
 
   const dispatch = useDispatch();
+  useEffect(()=>{
+    window.scrollTo({top:0, behavior:"smooth"})
+  },[])
 
   useEffect(() => {
     if (menu === null) {

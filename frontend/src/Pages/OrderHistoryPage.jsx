@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import OrderDetailsModal from "../Components/OrderDetailsModal";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserOrders } from "../Redux/Slices/orderSlice";
@@ -16,8 +16,10 @@ const OrderHistoryPage = () => {
 
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
+  const [searchDate, setSearchDate] = useState("");
   const [sortBy, setSortBy] = useState("dateDesc");
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const dateInputRef = useRef(null);
 
   const handleViewClick = (order) => {
     setSelectedOrder(order);
@@ -74,13 +76,55 @@ const OrderHistoryPage = () => {
 
       {/* Filters & Search */}
       <div className="flex flex-wrap items-center justify-between mb-4 gap-4">
-        <input
-          type="text"
-          placeholder="Search by date"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="p-2 border rounded-md w-full md:w-auto flex-grow"
-        />
+        <div className="flex items-center border rounded-md w-full md:w-auto overflow-hidden">
+          <button
+            type="button"
+            onClick={() => {
+              if (dateInputRef.current) {
+                // Try to open the native date picker where supported
+                if (typeof dateInputRef.current.showPicker === "function") {
+                  dateInputRef.current.showPicker();
+                } else {
+                  dateInputRef.current.focus();
+                }
+              }
+            }}
+            className="px-3 py-2 bg-gray-50 border-r flex items-center justify-center text-gray-600"
+          >
+            <span role="img" aria-label="Open calendar">
+              📅
+            </span>
+          </button>
+          <input
+            type="text"
+            placeholder="Search by date.."
+            value={search}
+            readOnly
+            className="p-2 flex-grow outline-none bg-white cursor-default"
+          />
+          {/* Hidden native date input that drives the calendar */}
+          <input
+            ref={dateInputRef}
+            type="date"
+            value={searchDate}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSearchDate(value);
+              if (value) {
+                const dateObj = new Date(value);
+                const formatted = dateObj.toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                });
+                setSearch(formatted);
+              } else {
+                setSearch("");
+              }
+            }}
+            className="absolute w-0 h-0 opacity-0 pointer-events-none"
+          />
+        </div>
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
@@ -100,6 +144,18 @@ const OrderHistoryPage = () => {
           <option value="PLACED">Placed</option>
           <option value="CANCELLED">Cancelled</option>
         </select>
+        <button
+          type="button"
+          onClick={() => {
+            setSearch("");
+            setSearchDate("");
+            setFilter("All");
+            setSortBy("dateDesc");
+          }}
+          className="px-4 py-2 rounded-md border bg-gray-100 text-gray-700 hover:bg-gray-200 text-sm"
+        >
+          Reset
+        </button>
       </div>
 
       {/* Orders Table */}
