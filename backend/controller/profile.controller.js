@@ -114,6 +114,10 @@ export const forgetPass = asyncHandler(async (req, res) => {
             </a>
             </div>
             <p style="margin-top: 30px;">This link will expire in <b>5 minutes</b> for your security.</p>
+            <p style="margin-top: 8px; font-size: 14px; color: #555;">
+                If you notice any error or discrepancy, please contact the undersigned at
+                <a href="mailto:theminiteam7@gmail.com" style="color:#ff7849; text-decoration:none;">theminiteam7@gmail.com</a>.
+            </p>
             <p>Cheers,<br><b>The Mini Team</b></p>
         </div>
         `

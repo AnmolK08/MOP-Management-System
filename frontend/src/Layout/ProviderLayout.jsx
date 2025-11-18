@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate, Link } from "react-router-dom";
 import {
   RiDashboardLine,
   RiFileListLine,
@@ -217,6 +217,19 @@ const ProviderLayout = () => {
             <button onClick={() => setSidebarOpen(true)} className="md:hidden">
               <RiMenuLine size={24} />
             </button>
+
+            {/* Header Logo linking to dashboard (mobile only) */}
+            <Link
+              to="/a"
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="ml-3 flex md:hidden items-center justify-center w-9 h-9 bg-white"
+            >
+              <div className="size-6 text-[#ec6d13]">
+                <LogoIcon />
+              </div>
+            </Link>
 
             <div className="flex items-center ml-auto gap-4">
               {/* Notifications */}

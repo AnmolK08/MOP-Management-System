@@ -26,6 +26,16 @@ export default function AuthRight() {
     password: "",
   });
 
+  const [rememberMe, setRememberMe] = useState(false);
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("rememberedEmail");
+    if (storedEmail) {
+      setCredentials((prev) => ({ ...prev, email: storedEmail }));
+      setRememberMe(true);
+    }
+  }, []);
+
   const handleSubmit = async(e) => {
     e.preventDefault();
     setDisable(true)
@@ -37,6 +47,11 @@ export default function AuthRight() {
           toast.error(res.error || "Login failed", { id: toastId });
         }else{
           toast.success("Logged in successfully", { id: toastId });
+          if (rememberMe) {
+            localStorage.setItem("rememberedEmail", credentials.email);
+          } else {
+            localStorage.removeItem("rememberedEmail");
+          }
           
           if(res.user.role === "PROVIDER"){
             navigate("/a", { replace: true });
@@ -127,6 +142,8 @@ export default function AuthRight() {
                 name="remember-me"
                 type="checkbox"
                 className="h-4 w-4 rounded border-[#ff9770] text-[#ff9770] focus:ring-[#ff9770]"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
               />
               <span className="ml-2 text-gray-900">Remember me</span>
             </label>
