@@ -54,15 +54,15 @@ const MenuCard = ({ menu, onOrderNow }) => (
 );
 
 const LatestOrderCard = ({ order, onEdit, onCancel }) => {
-   const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  return(
-  <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-    <div className="flex flex-col justify-between w-full gap-2 mb-4">
-      <h3 className="text-lg sm:text-xl font-semibold ">
-        Your Latest Order{" "}[{order.type}]
-      </h3>
-      <p className="text-sm text-gray-500">
+  return (
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
+      <div className="flex flex-col justify-between w-full gap-2 mb-4">
+        <h3 className="text-lg sm:text-xl font-semibold ">
+          Your Latest Order{" "}[{order.type}]
+        </h3>
+        <p className="text-sm text-gray-500">
           Date:{" "}
           {new Date(order.date).toLocaleDateString("en-GB", {
             day: "2-digit",
@@ -70,47 +70,48 @@ const LatestOrderCard = ({ order, onEdit, onCancel }) => {
             year: "2-digit",
           })}
         </p>
-    </div>
-
-    <ul className="space-y-2 mb-6 flex-grow">
-      {order.items?.map((item, index) => (
-        <li key={index} className="flex items-center gap-2 text-gray-600">
-          <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-          {item}
-        </li>
-      ))}
-    </ul>
-    <div className="flex justify-between items-center mt-4 text-sm">
-      <p className="font-medium">
-        Status: <span className="text-green-600">{order.status}</span>
-      </p>
-    </div>
-    {order.status == "PLACED" && (
-      <div className="flex gap-3 mt-4">
-        <button
-          onClick={onEdit}
-          className="flex-1 bg-yellow-400 text-white py-2 rounded-lg hover:bg-yellow-500"
-        >
-          Edit Order
-        </button>
-        <button
-          onClick={() => setIsOpen(true)}
-          className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
-        >
-          Cancel Order
-        </button>
-
-        <ConfirmationDialog
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          onConfirm={onCancel}
-          title="Cancel Order"
-          message="Are you sure you want to cancel this order? This action cannot be undone."
-          />
       </div>
-    )}
-  </div>
-);}
+
+      <ul className="space-y-2 mb-6 flex-grow">
+        {order.items?.map((item, index) => (
+          <li key={index} className="flex items-center gap-2 text-gray-600">
+            <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+            {item}
+          </li>
+        ))}
+      </ul>
+      <div className="flex justify-between items-center mt-4 text-sm">
+        <p className="font-medium">
+          Status: <span className="text-green-600">{order.status}</span>
+        </p>
+      </div>
+      {order.status == "PLACED" && (
+        <div className="flex gap-3 mt-4">
+          <button
+            onClick={onEdit}
+            className="flex-1 bg-yellow-400 text-white py-2 rounded-lg hover:bg-yellow-500"
+          >
+            Edit Order
+          </button>
+          <button
+            onClick={() => setIsOpen(true)}
+            className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
+          >
+            Cancel Order
+          </button>
+
+          <ConfirmationDialog
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+            onConfirm={onCancel}
+            title="Cancel Order"
+            message="Are you sure you want to cancel this order? This action cannot be undone."
+          />
+        </div>
+      )}
+    </div>
+  );
+}
 
 const DashboardPage = () => {
   const { userOrders, loading: userLoading } = useSelector(
@@ -141,25 +142,25 @@ const DashboardPage = () => {
     const socket = getSocket();
     if (!socket) return;
 
-    socket.on("updateWalletNotification", ({notification , wallet}) => {
+    socket.on("updateWalletNotification", ({ notification, wallet }) => {
       toast.success(notification.message);
       dispatch(addNotification(notification));
       dispatch(updateUserWallet(wallet));
     });
 
-    socket.on("userPlanNotification", ({notification , premium}) => {
+    socket.on("userPlanNotification", ({ notification, premium }) => {
       toast.success(notification.message);
       dispatch(addNotification(notification));
       dispatch(updateUserPlan(premium));
     });
 
-    socket.on("newMenuNotification", ({notification , menu}) => {
+    socket.on("newMenuNotification", ({ notification, menu }) => {
       toast.success(notification.message);
       dispatch(addNotification(notification));
       dispatch(updateMenuState(menu));
     });
 
-    socket.on("updateMenuNotification", ({notification , menu}) => {
+    socket.on("updateMenuNotification", ({ notification, menu }) => {
       toast.success(notification.message);
       dispatch(addNotification(notification));
       dispatch(updateMenuState(menu));
@@ -200,11 +201,12 @@ const DashboardPage = () => {
           toast.error(res.payload, {
             id: toastId,
           });
-        } else
+        } else {
           toast.success("Order placed", {
             id: toastId,
           });
-        setLatestOrder(res.payload);
+          setLatestOrder(res.payload);
+        }
       });
     } else {
       const toastId = toast.loading("Updating the order");
@@ -214,11 +216,12 @@ const DashboardPage = () => {
             toast.error(res.payload, {
               id: toastId,
             });
-          } else
+          } else {
             toast.success("Order updated", {
               id: toastId,
             });
-          setLatestOrder(res.payload);
+            setLatestOrder(res.payload);
+          }
         }
       );
     }
@@ -293,8 +296,8 @@ const DashboardPage = () => {
               {user === null
                 ? "Loading..."
                 : user.customer?.premium
-                ? "Premium"
-                : "Normal"}
+                  ? "Premium"
+                  : "Normal"}
             </p>
           </div>
           <div className="bg-green-50 rounded-lg p-4">

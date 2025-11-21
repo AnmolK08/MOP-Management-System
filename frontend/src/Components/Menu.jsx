@@ -44,38 +44,38 @@ const Menu = () => {
   const menuData = {
     Monday: [
       { imageUrl: monday1, title: "Breakfast: Sabji Paratha", description: "Stuffed parathas filled with spiced vegetables, served hot with curd and pickle." },
-      { imageUrl: monday2, title: "Lunch: Seetafal Daal Makhani", description: "A rich and creamy lentil curry, slow-cooked with butter and spices for that comforting homestyle taste." },
-      { imageUrl: monday3, title: "Dinner: Rajma Alu Tamatar", description: "Hearty kidney beans with potatoes in a tangy tomato gravy — a true North Indian classic." },
+      { imageUrl: monday2, title: "Lunch: Seetafal, Daal Makhani", description: "A rich and creamy lentil curry, slow-cooked with butter and spices for that comforting homestyle taste." },
+      { imageUrl: monday3, title: "Dinner: Rajma Alu, Tamatar", description: "Hearty kidney beans with potatoes in a tangy tomato gravy — a true North Indian classic." },
     ],
     Tuesday: [
       { imageUrl: tues1, title: "Breakfast: Poha", description: "Light and fluffy poha tossed with onions, peas, and a dash of lemon for freshness." },
-      { imageUrl: tues2, title: "Lunch: Mix Veg Dal Fry", description: "A homely lentil curry cooked with seasonal vegetables and tempered with garlic and ghee." },
-      { imageUrl: tues3, title: "Dinner: Soya Chaap Chole", description: "Soya chaap simmered in a spicy chickpea curry — protein-packed and flavorful." },
+      { imageUrl: tues2, title: "Lunch: Mix Veg, Dal Fry", description: "A homely lentil curry cooked with seasonal vegetables and tempered with garlic and ghee." },
+      { imageUrl: tues3, title: "Dinner: Soya Chaap, Chole", description: "Soya chaap simmered in a spicy chickpea curry — protein-packed and flavorful." },
     ],
     Wednesday: [
       { imageUrl: wed1, title: "Breakfast: Alu Kachori Sabji", description: "Crispy fried bread stuffed with spiced potato filling, served with tangy chutney." },
-      { imageUrl: wed2, title: "Lunch: Alu Tamatar Sabji Dal", description: "Simple yet comforting — potato-tomato curry paired with a bowl of hot dal." },
-      { imageUrl: wed3, title: "Dinner: Alu Zeera Dal Fry", description: "A wholesome dinner combo of cumin-flavored potato curry with dal fry." },
+      { imageUrl: wed2, title: "Lunch: Alu Tamatar Sabji, Dal", description: "Simple yet comforting — potato-tomato curry paired with a bowl of hot dal." },
+      { imageUrl: wed3, title: "Dinner: Alu Zeera, Dal Fry", description: "A wholesome dinner combo of cumin-flavored potato curry with dal fry." },
     ],
     Thursday: [
       { imageUrl: thur1, title: "Breakfast: Sabji Paratha", description: "Soft parathas stuffed with veggies, perfect for a filling breakfast." },
-      { imageUrl: thur2, title: "Lunch: Dal Alu Gobi", description: "Comforting dal served with potato-cauliflower curry — a homestyle favorite." },
-      { imageUrl: thur3, title: "Dinner: Baigan Bharta Chole", description: "Smoky roasted eggplant mash paired with spicy chickpeas for a flavorful dinner." },
+      { imageUrl: thur2, title: "Lunch: Dal, Alu Gobi", description: "Comforting dal served with potato-cauliflower curry — a homestyle favorite." },
+      { imageUrl: thur3, title: "Dinner: Baigan, Bharta Chole", description: "Smoky roasted eggplant mash paired with spicy chickpeas for a flavorful dinner." },
     ],
     Friday: [
       { imageUrl: fri1, title: "Breakfast: Aloo Paratha", description: "Golden parathas stuffed with spiced potatoes, best enjoyed with butter and pickle." },
-      { imageUrl: fri2, title: "Lunch: Khadi Alu Shimla", description: "A tangy yogurt-based curry with potatoes and capsicum, light yet satisfying." },
-      { imageUrl: fri3, title: "Dinner: Shahi Paneer Alu Sabji", description: "Experience a truly royal and indulgent North Indian curry. This dish features soft paneer and tender potatoes in a rich, creamy, and aromatic gravy made with tomatoes, onions, cashews, and a blend of exquisite spices." },
+      { imageUrl: fri2, title: "Lunch: Khadi, Alu Shimla", description: "A tangy yogurt-based curry with potatoes and capsicum, light yet satisfying." },
+      { imageUrl: fri3, title: "Dinner: Shahi Paneer, Alu Sabji", description: "Experience a truly royal and indulgent North Indian curry. This dish features soft paneer and tender potatoes in a rich, creamy, and aromatic gravy made with tomatoes, onions, cashews, and a blend of exquisite spices." },
     ],
     Saturday: [
       { imageUrl: sat1, title: "Breakfast: Macroni", description: "Masala macaroni cooked desi-style with onions, capsicum, and Indian spices." },
       { imageUrl: sat2, title: "Lunch: Chole Bhature", description: "Fluffy bhature served with spicy chickpea curry — an indulgent weekend treat." },
-      { imageUrl: sat3, title: "Dinner: Rajma Alu SoyaBean", description: "A nutritious mix of kidney beans, potatoes, and soy chunks in a spicy curry." },
+      { imageUrl: sat3, title: "Dinner: Rajma, Alu SoyaBean", description: "A nutritious mix of kidney beans, potatoes, and soy chunks in a spicy curry." },
     ],
     Sunday: [
       { imageUrl: sunday1, title: "Breakfast: Sandwich", description: "Simple and tasty sandwiches stuffed with veggies, chutneys, and cheese." },
       { imageUrl: sunday2, title: "Lunch: Veg Biryani", description: "Fragrant rice layered with vegetables and spices, served with raita." },
-      { imageUrl: sunday3, title: "Dinner: Masala Bhindi Chole", description: "Okra stir-fried with spices and paired with a rich chickpea curry." },
+      { imageUrl: sunday3, title: "Dinner: Masala Bhindi, Chole", description: "Okra stir-fried with spices and paired with a rich chickpea curry." },
     ],
   };
 

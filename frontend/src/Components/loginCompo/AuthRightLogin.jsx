@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
-import {userLogin} from '../../Redux/Slices/authSlice';
+import { userLogin } from '../../Redux/Slices/authSlice';
 import { Eye, EyeOff } from "lucide-react";
 
 export default function AuthRight() {
@@ -36,35 +36,33 @@ export default function AuthRight() {
     }
   }, []);
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setDisable(true)
     const toastId = toast.loading("Logging in...");
-    
+
     try {
       await dispatch(userLogin(credentials)).unwrap().then((res) => {
-        if(res.error){
-          toast.error(res.error || "Login failed", { id: toastId });
-        }else{
-          toast.success("Logged in successfully", { id: toastId });
-          if (rememberMe) {
-            localStorage.setItem("rememberedEmail", credentials.email);
-          } else {
-            localStorage.removeItem("rememberedEmail");
-          }
-          
-          if(res.user.role === "PROVIDER"){
-            navigate("/a", { replace: true });
-          }
-          else{
-            navigate("/u", { replace: true });
-          }
+        toast.success("Logged in successfully", { id: toastId });
+        if (rememberMe) {
+          localStorage.setItem("rememberedEmail", credentials.email);
+        } else {
+          localStorage.removeItem("rememberedEmail");
         }
-      });      
+
+        if (res.user.role === "PROVIDER") {
+          navigate("/a", { replace: true });
+        }
+        else {
+          navigate("/u", { replace: true });
+        }
+      });
     } catch (error) {
-      toast.error(error.message || "Login failed", { id: toastId });
+      console.error("Login error:", error);
+      const errorMessage = typeof error === 'string' ? error : (error?.message || "Login failed");
+      toast.error(errorMessage, { id: toastId });
     }
-    finally{
+    finally {
       setDisable(false)
     }
   };
@@ -115,23 +113,23 @@ export default function AuthRight() {
           />
 
           {/* Password */}
-          <div className="w-full relative"> 
-          <input
-            id="password"
-            name="password"
-            type={showPass?"text":"password"}
-            placeholder="Password"
-            value={credentials.password}
-            onChange={handleChange}
-            className="w-full rounded-lg border border-[#ffd9c7] bg-[#fff5f2] h-11 sm:h-12 pl-3 sm:pl-4 text-sm sm:text-base
+          <div className="w-full relative">
+            <input
+              id="password"
+              name="password"
+              type={showPass ? "text" : "password"}
+              placeholder="Password"
+              value={credentials.password}
+              onChange={handleChange}
+              className="w-full rounded-lg border border-[#ffd9c7] bg-[#fff5f2] h-11 sm:h-12 pl-3 sm:pl-4 text-sm sm:text-base
                        focus:border-[#ff9770] focus:ring-2 focus:ring-[#ff9770] outline-none
                        placeholder:text-gray-400 transition"
-            required
-          />
-          <div className="absolute right-5 top-3 text-gray-600" onClick={()=>setShowPass(!showPass)}>
-            {!showPass?<EyeOff/>
-            :<Eye/>}
-          </div>
+              required
+            />
+            <div className="absolute right-5 top-3 text-gray-600" onClick={() => setShowPass(!showPass)}>
+              {!showPass ? <EyeOff />
+                : <Eye />}
+            </div>
           </div>
 
           {/* Remember + Forgot */}
@@ -161,7 +159,7 @@ export default function AuthRight() {
             type="submit"
             className={`w-full py-2.5 sm:py-3 px-4 rounded-lg shadow-sm text-sm sm:text-base font-bold text-white 
                        bg-[#ff9770] hover:bg-[#ff7849] focus:ring-2 focus:ring-offset-2 focus:ring-[#ffcdb2] 
-                       transition duration-150 ease-in-out ${disable?"pointer-events-none":""}`}
+                       transition duration-150 ease-in-out ${disable ? "pointer-events-none" : ""}`}
           >
             Login
           </button>

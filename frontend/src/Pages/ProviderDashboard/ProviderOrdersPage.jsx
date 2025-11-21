@@ -21,6 +21,7 @@ const ProviderOrdersPage = () => {
   const [type, setType] = useState("All");
   const [search, setSearch] = useState("");
   const [mark, setMark] = useState("")
+  const [loading, setLoading] = useState(false);
 
   const filteredOrders = orders
     .filter((order) => {
@@ -62,60 +63,69 @@ const ProviderOrdersPage = () => {
     }));
   };
 
-  const handleMark = (e) =>{
+  const handleMark = (e) => {
     e.preventDefault()
     setMark(e.target.value)
-    if(e.target.value=="MarkSeen"){
+    if (e.target.value == "MarkSeen") {
       setSelectForSeen(true)
       setSelectForDelivered(false)
-    }else if(e.target.value=="MarkDelivered"){
+    } else if (e.target.value == "MarkDelivered") {
       setSelectForSeen(false)
       setSelectForDelivered(true)
-    }else{
+    } else {
       setSelectForSeen(false)
       setSelectForDelivered(false)
     }
     setSelectedOrders({})
   }
 
-  const markAs=()=>{
-    if(selectForSeen){
+  const markAs = () => {
+    if (loading) return;
+    setLoading(true);
+    const toastId = toast.loading("Processing...");
+
+    if (selectForSeen) {
       const orderIds = Object.keys(selectedOrders).filter((key) => selectedOrders[key]);
-      dispatch(markOrdersSeen({orderIds}))
-      .then((res)=>{
-        if(res.error){
-          toast.error(res.payload || "Failed to mark orders as seen")
-        }else{
-          toast.success("Orders marked as seen")
-          setSelectedOrders({})
-          setSelectForSeen(false)
-          setMark("")
-        }
-      })
-  }
-  else if(selectForDelivered){
+      dispatch(markOrdersSeen({ orderIds }))
+        .then((res) => {
+          if (res.error) {
+            toast.error(res.payload || "Failed to mark orders as seen", { id: toastId })
+          } else {
+            toast.success("Orders marked as seen", { id: toastId })
+            setSelectedOrders({})
+            setSelectForSeen(false)
+            setMark("")
+          }
+        })
+        .finally(() => setLoading(false));
+    }
+    else if (selectForDelivered) {
       const orderIds = Object.keys(selectedOrders).filter((key) => selectedOrders[key]);
-      dispatch(markOrdersDelivered({orderIds}))
-      .then((res)=>{
-        if(res.error){
-          toast.error(res.payload ||"Failed to mark orders as delivered")
-        }else{
-          toast.success("Orders marked as delivered")
-          setSelectedOrders({})
-          setSelectForDelivered(false)
-          setMark("")
+      dispatch(markOrdersDelivered({ orderIds }))
+        .then((res) => {
+          if (res.error) {
+            toast.error(res.payload || "Failed to mark orders as delivered", { id: toastId })
+          } else {
+            toast.success("Orders marked as delivered", { id: toastId })
+            setSelectedOrders({})
+            setSelectForDelivered(false)
+            setMark("")
 
             const customerIds = orders
-            .filter((o) => orderIds.includes(o.id))
-            .map((o) => o.customer.id);
+              .filter((o) => orderIds.includes(o.id))
+              .map((o) => o.customer.id);
 
-          if(users.length !==0) dispatch(updateWallet({customerIds}));
-        } 
-    })
+            if (users.length !== 0) dispatch(updateWallet({ customerIds }));
+          }
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+      toast.dismiss(toastId);
+    }
   }
-}
 
-  const cancelSelect = ()=>{
+  const cancelSelect = () => {
     setSelectedOrders({})
     setSelectForDelivered(false)
     setSelectForSeen(false)
@@ -193,13 +203,13 @@ const ProviderOrdersPage = () => {
                     <td className="py-3 px-4">
                       <input
                         type="checkbox"
-                        disabled={selectForSeen? order.status !== "PLACED"?true:false: selectForDelivered && (order.status !== "PLACED" && order.status !== "SEEN")?true:false}
+                        disabled={selectForSeen ? order.status !== "PLACED" ? true : false : selectForDelivered && (order.status !== "PLACED" && order.status !== "SEEN") ? true : false}
                         className="h-4 w-4 text-blue-600"
-                        checked={ selectForSeen?
+                        checked={selectForSeen ?
                           (order.status !== "PLACED"
                             ? true
-                            : selectedOrders[order.id] || false):
-                            selectForDelivered && (order.status !== "PLACED" && order.status !== "SEEN"
+                            : selectedOrders[order.id] || false) :
+                          selectForDelivered && (order.status !== "PLACED" && order.status !== "SEEN"
                             ? true
                             : selectedOrders[order.id] || false)
                         }
@@ -231,16 +241,15 @@ const ProviderOrdersPage = () => {
                   </td>
                   <td className="py-3 px-4">{order.type}</td>
                   <td className="py-3 px-4">
-                  <span
-                    className={`px-2 py-1 text-sm font-semibold rounded-full ${
-                      order.customer.premium
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    {order.customer.premium ? "Premium" : "Normal"}
-                  </span>
-                </td>
+                    <span
+                      className={`px-2 py-1 text-sm font-semibold rounded-full ${order.customer.premium
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-gray-100 text-gray-800"
+                        }`}
+                    >
+                      {order.customer.premium ? "Premium" : "Normal"}
+                    </span>
+                  </td>
                 </tr>
               ))
             ) : (
@@ -255,8 +264,8 @@ const ProviderOrdersPage = () => {
       </div>
       {(selectForSeen || selectForDelivered) && <div className="w-full flex justify-end mt-4">
         <div className="flex gap-2">
-        <button className="p-3 rounded-xl text-white bg-red-500" onClick={cancelSelect}>Cancel</button>
-        <button className="p-3 rounded-xl text-white bg-blue-500" onClick={markAs}>Mark As {selectForSeen?"Seen":"Delivered"}</button>
+          <button className="p-3 rounded-xl text-white bg-red-500" onClick={cancelSelect}>Cancel</button>
+          <button className={`p-3 rounded-xl text-white bg-blue-500 ${loading ? "opacity-50 cursor-not-allowed" : ""}`} onClick={markAs} disabled={loading}>Mark As {selectForSeen ? "Seen" : "Delivered"}</button>
         </div>
       </div>}
     </div>
