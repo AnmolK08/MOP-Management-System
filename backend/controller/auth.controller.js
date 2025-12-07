@@ -19,21 +19,29 @@ export const login = asyncHandler(async (req, res) => {
     throw new ResponseError("Invalid email or password", 401);
   }
 
-  const token = jwt.sign(
+  const accessToken = jwt.sign(
     { userId: user.id, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: "1d" }
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: "30m" }
   );
 
-  res.cookie("token", token, {
+  const refreshToken = jwt.sign(
+    { userId: user.id },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: "7d" }
+  );
+
+  res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: true,
+    sameSite: 'None',
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
   res.status(200).json({
     success: true,
     message: "Login successful",
-    token: token,
+    accessToken: accessToken,
     user: {
       id: user.id,
       name: user.name,
@@ -41,6 +49,32 @@ export const login = asyncHandler(async (req, res) => {
       role: user.role,
     },
   });
+});
+
+export const refresh = asyncHandler(async (req, res) => {
+    const cookies = req.cookies;
+
+    if (!cookies?.refreshToken) return res.status(401).json({ message: 'Unauthorized' });
+
+    const refreshToken = cookies.refreshToken;
+
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+        
+        const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
+
+        if (!user) return res.status(401).json({ message: 'Unauthorized' });
+
+        const accessToken = jwt.sign(
+            { userId: user.id, role: user.role },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: '2m' }
+        );
+
+        res.json({ accessToken });
+    } catch (err) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
 });
 
 export const register = asyncHandler(async (req, res) => {
@@ -61,7 +95,7 @@ export const register = asyncHandler(async (req, res) => {
     { email, hashedPassword, name },
     process.env.JWT_SECRET,
     {
-      expiresIn: "5m",
+      expiresIn: "30m",
     }
   );
 
@@ -149,6 +183,8 @@ export const verifyEmail = asyncHandler(async (req, res) => {
 });
 
 export const logout = asyncHandler(async (req, res) => {
-  res.clearCookie("token");
+  const cookies = req.cookies;
+  if (!cookies?.refreshToken) return res.sendStatus(204); // No content
+  res.clearCookie("refreshToken", { httpOnly: true, sameSite: 'None', secure: true });
   res.status(200).json({ success: true, message: "Logged out successfully" });
 });
