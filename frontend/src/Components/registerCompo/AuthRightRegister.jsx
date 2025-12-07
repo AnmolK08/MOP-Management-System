@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userSignup } from "../../Redux/Slices/authSlice";
 import { useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from 'react-toastify';
 import { Eye, EyeOff } from "lucide-react";
 
 export default function AuthRightRegister() {
@@ -40,7 +40,7 @@ export default function AuthRightRegister() {
     }
 
     const toastId = toast.loading("Creating your account...");
-    
+
     try {
       await dispatch(userSignup({
         name: formData.name,
@@ -48,18 +48,18 @@ export default function AuthRightRegister() {
         password: formData.password
       })).unwrap();
 
-      toast.success("Please verify your email", { id: toastId });
-      navigate("/email-verification", { 
+      toast.update(toastId, { render: "Please verify your email", type: "success", isLoading: false, autoClose: 3000 });
+      navigate("/email-verification", {
         state: { email: formData.email }
       });
     } catch (error) {
-      toast.error(error || "Registration failed", { id: toastId });
+      toast.update(toastId, { render: error || "Registration failed", type: "error", isLoading: false, autoClose: 3000 });
     }
-    finally{
+    finally {
       setDisable(false)
     }
   }
-  
+
   return (
     <div className="flex flex-1 items-center justify-center w-full">
       <div className="w-full max-w-sm sm:max-w-md"> {/* narrower like login */}
@@ -162,7 +162,7 @@ export default function AuthRightRegister() {
             type="submit"
             className={`w-full py-3 rounded-lg text-sm font-bold text-white 
                        bg-[#e7764e] hover:bg-[#e24d1b] focus:ring-2 focus:ring-offset-2 
-                       focus:ring-[#ffcdb2] transition ${disable?"pointer-events-none":""}`}
+                       focus:ring-[#ffcdb2] transition ${disable ? "pointer-events-none" : ""}`}
           >
             Register
           </button>

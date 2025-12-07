@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import toast from "react-hot-toast";
+import { toast } from 'react-toastify';
 import { fetchProviderAllOrders, updateProviderOrders } from "../Redux/Slices/orderSlice";
 import { addAmtInWallet, getAllUsers, togglePremiumStatus } from "../Redux/Slices/providerSlice";
 import ConfirmationDialog from "../Components/ConfirmationDialog";
@@ -70,7 +70,7 @@ const BillingPage = () => {
       return toast.error("Enter valid amount");
     if (Number(walletAmount) <= 0)
       return toast.error("Amount must be greater than zero");
-    
+
     setIsConfirmDialogOpen(true);
   };
 
@@ -78,9 +78,9 @@ const BillingPage = () => {
     const toastId = toast.loading("Adding wallet amount...");
     dispatch(addAmtInWallet({ customerId: selectedUser.customer.id, amount: Number(walletAmount) }))
       .then((res) => {
-        if (res.error) toast.error(res.payload || "Failed to add wallet amount", { id: toastId });
+        if (res.error) toast.update(toastId, { render: res.payload || "Failed to add wallet amount", type: "error", isLoading: false, autoClose: 3000 });
         else {
-          toast.success("Wallet amount added successfully!", { id: toastId });
+          toast.update(toastId, { render: "Wallet amount added successfully!", type: "success", isLoading: false, autoClose: 3000 });
           setWalletAmount("");
         }
       });
@@ -140,7 +140,7 @@ const BillingPage = () => {
               <h3 className="font-semibold text-lg">{selectedUser.name}</h3>
               <p className="text-gray-600 text-sm">{selectedUser.email}</p>
             </div>
-             
+
             {/* <button
               onClick={handleTogglePremium}
               className={`px-4 py-2 rounded-md font-semibold ${
@@ -151,7 +151,7 @@ const BillingPage = () => {
             >
               {selectedUser.customer.premium ? "Remove Premium" : "Add Premium"}
             </button> */}
-          
+
             <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center w-full sm:w-auto">
               <input
                 type="number"

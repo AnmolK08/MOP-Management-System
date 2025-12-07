@@ -19,7 +19,7 @@ import {
   RiUserLine,
 } from "react-icons/ri";
 import { LogoIcon } from "../Components/SvgIcons";
-import toast from "react-hot-toast";
+import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from "react-redux";
 import { userLogout } from "../Redux/Slices/authSlice";
 import profileImg from "../assets/UserProfile.png";
@@ -58,19 +58,18 @@ const DashboardLayout = () => {
   }, [isSidebarOpen]);
 
   const deleteNotificationHandler = (id) => {
-    if(!id) toast.error("Invalid Notification ID");
+    if (!id) toast.error("Invalid Notification ID");
 
     const toastId = toast.loading("Deleting Notification...");
-
     dispatch(deleteNotification(id)).then((res) => {
       if (res.error) {
-        toast.error(res.error.message, { id: toastId });
+        toast.update(toastId, { render: res.error.message, type: "error", isLoading: false, autoClose: 3000 });
       }
       else {
-        toast.success("Notification Deleted", { id: toastId });
+        toast.update(toastId, { render: "Notification Deleted", type: "success", isLoading: false, autoClose: 3000 });
       }
     }).catch((err) => {
-      toast.error(err.message || "Something went wrong", { id: toastId });
+      toast.update(toastId, { render: err.message || "Something went wrong", type: "error", isLoading: false, autoClose: 3000 });
     });
   };
 
@@ -79,13 +78,13 @@ const DashboardLayout = () => {
     const toastId = toast.loading("Clearing Notifications...");
     dispatch(clearAllNotifications()).then((res) => {
       if (res.error) {
-        toast.error(res.error.message, { id: toastId });
+        toast.update(toastId, { render: res.error.message, type: "error", isLoading: false, autoClose: 3000 });
       }
       else {
-        toast.success("All Notifications Cleared", { id: toastId });
+        toast.update(toastId, { render: "All Notifications Cleared", type: "success", isLoading: false, autoClose: 3000 });
       }
     }).catch((err) => {
-      toast.error(err.message || "Something went wrong", { id: toastId });
+      toast.update(toastId, { render: err.message || "Something went wrong", type: "error", isLoading: false, autoClose: 3000 });
     });
   };
 
@@ -117,7 +116,7 @@ const DashboardLayout = () => {
 
     socket.on("newNotification", (data) => {
       // Show popup for the new notification
-      toast.success(`${data.message}`, { duration: 3000 });
+      toast.success(`${data.message}`, { autoClose: 3000 });
 
       dispatch(addNotification(data));
     });
@@ -130,7 +129,7 @@ const DashboardLayout = () => {
     dispatch(userLogout());
     localStorage.removeItem("token");
     navigate("/login");
-    toast.success("Logged out", { id: toastId });
+    toast.update(toastId, { render: "Logged out", type: "success", isLoading: false, autoClose: 3000 });
   };
 
   const navItems = [
@@ -154,9 +153,8 @@ const DashboardLayout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:relative inset-y-0 left-0 z-30 w-[280px] md:w-64 h-full bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0`}
+        className={`fixed md:relative inset-y-0 left-0 z-30 w-[280px] md:w-64 h-full bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0`}
       >
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-2">
@@ -182,10 +180,9 @@ const DashboardLayout = () => {
                     to={item.path}
                     end={item.end}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-4 py-3 rounded-lg text-sm sm:text-base transition-all duration-200 ${
-                        isActive
-                          ? "bg-blue-50 text-blue-600 font-semibold"
-                          : "text-gray-700 hover:bg-gray-100"
+                      `flex items-center gap-3 px-4 py-3 rounded-lg text-sm sm:text-base transition-all duration-200 ${isActive
+                        ? "bg-blue-50 text-blue-600 font-semibold"
+                        : "text-gray-700 hover:bg-gray-100"
                       }`
                     }
                   >
@@ -223,9 +220,9 @@ const DashboardLayout = () => {
               }}
               className="ml-3 flex md:hidden items-center justify-center w-9 h-9  bg-white  "
             >
-            <div className="size-6 text-[#ec6d13]">
-              <LogoIcon />
-            </div>
+              <div className="size-6 text-[#ec6d13]">
+                <LogoIcon />
+              </div>
             </Link>
 
             <div className="flex items-center gap-4 ml-auto">
@@ -267,11 +264,10 @@ const DashboardLayout = () => {
                 </button>
 
                 <div
-                  className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 transition-all duration-200 origin-top-right ${
-                    isDropdownOpen
+                  className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 transition-all duration-200 origin-top-right ${isDropdownOpen
                       ? "opacity-100 scale-100"
                       : "opacity-0 scale-95 pointer-events-none"
-                  }`}
+                    }`}
                 >
                   <Link
                     to="/u/profile"

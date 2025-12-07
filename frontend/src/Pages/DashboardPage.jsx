@@ -11,7 +11,7 @@ import {
   seenUserLatestOrder,
   updateOrder,
 } from "../Redux/Slices/orderSlice";
-import toast from "react-hot-toast";
+import { toast } from 'react-toastify';
 import ConfirmationDialog from "../Components/ConfirmationDialog";
 import { getSocket } from "../socket";
 import { addNotification } from "../Redux/Slices/notificationSlice";
@@ -199,13 +199,9 @@ const DashboardPage = () => {
       const toastId = toast.loading("Placing an order");
       dispatch(placeOrder(orderData)).then((res) => {
         if (res.meta.requestStatus === "rejected") {
-          toast.error(res.payload, {
-            id: toastId,
-          });
+          toast.update(toastId, { render: res.payload, type: "error", isLoading: false, autoClose: 3000 });
         } else {
-          toast.success("Order placed", {
-            id: toastId,
-          });
+          toast.update(toastId, { render: "Order placed", type: "success", isLoading: false, autoClose: 3000 });
           setLatestOrder(res.payload);
         }
       });
@@ -214,13 +210,9 @@ const DashboardPage = () => {
       dispatch(updateOrder({ orderData, orderId: latestOrder.id })).then(
         (res) => {
           if (res.meta.requestStatus === "rejected") {
-            toast.error(res.payload, {
-              id: toastId,
-            });
+            toast.update(toastId, { render: res.payload, type: "error", isLoading: false, autoClose: 3000 });
           } else {
-            toast.success("Order updated", {
-              id: toastId,
-            });
+            toast.update(toastId, { render: "Order updated", type: "success", isLoading: false, autoClose: 3000 });
             setLatestOrder(res.payload);
           }
         }

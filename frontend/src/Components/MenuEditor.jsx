@@ -7,7 +7,7 @@ import {
   deleteMenu,
 } from "../Redux/Slices/menuSlice"; // Adjust path
 import MenuDialog from "./MenuDialog";
-import toast from "react-hot-toast";
+import { toast } from 'react-toastify';
 import ConfirmationDialog from "./ConfirmationDialog";
 
 const MenuEditor = () => {
@@ -46,59 +46,64 @@ const MenuEditor = () => {
   };
 
   // 3. Dispatch deleteMenu action
-const handleDeleteMenu = () => {
-  if (!activeMenu?.id) return;
+  const handleDeleteMenu = () => {
+    if (!activeMenu?.id) return;
 
-  const toastId = toast.loading("Deleting menu...");
+    const toastId = toast.loading("Deleting menu...");
 
-  dispatch(deleteMenu(activeMenu.id))
-    .then((res) => {
-      if (res.meta.requestStatus === "rejected") {
-        toast.error(res.payload || "Failed to delete menu!", { id: toastId });
-      } else {
-        toast.success("Menu deleted successfully!", { id: toastId });
-      }
-    })
-    .catch((error) => {
-      console.error("Error deleting menu:", error);
-      toast.error("An unexpected error occurred!", { id: toastId });
-    });
-};
+    dispatch(deleteMenu(activeMenu.id))
+      .then((res) => {
+        if (res.meta.requestStatus === "rejected") {
+          toast.update(toastId, { render: res.payload || "Failed to delete menu!", type: "error", isLoading: false, autoClose: 3000 });
+        } else {
+          toast.update(toastId, { render: "Menu deleted successfully!", type: "success", isLoading: false, autoClose: 3000 });
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting menu:", error);
+        toast.update(toastId, { render: "An unexpected error occurred!", type: "error", isLoading: false, autoClose: 3000 });
+      });
+  };
 
 
   // 4. Dispatch createMenu or updateMenu actions
-const handleSaveMenu = (menuData) => {
-  const toastId = toast.loading(
-    menuToEdit?.id ? "Updating menu..." : "Creating menu..."
-  );
+  const handleSaveMenu = (menuData) => {
+    const toastId = toast.loading(
+      menuToEdit?.id ? "Updating menu..." : "Creating menu..."
+    );
 
-  const action = menuToEdit?.id
-    ? updateMenu({ menuId: menuToEdit.id, ...menuData })
-    : createMenu(menuData);
+    const action = menuToEdit?.id
+      ? updateMenu({ menuId: menuToEdit.id, ...menuData })
+      : createMenu(menuData);
 
-  dispatch(action)
-    .then((res) => {
-      if (res.meta.requestStatus === "rejected") {
-        toast.error(res.payload || "Something went wrong!", {
-          id: toastId,
-        });
-      } else {
-        toast.success(
-          menuToEdit?.id
-            ? "Menu updated successfully!"
-            : "Menu created successfully!",
-          { id: toastId }
-        );
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      toast.error("An unexpected error occurred!", { id: toastId });
-    })
-    .finally(() => {
-      setIsDialogOpen(false);
-    });
-};
+    dispatch(action)
+      .then((res) => {
+        if (res.meta.requestStatus === "rejected") {
+          toast.update(toastId, {
+            render: res.payload || "Something went wrong!",
+            type: "error",
+            isLoading: false,
+            autoClose: 3000
+          });
+        } else {
+          toast.update(toastId, {
+            render: menuToEdit?.id
+              ? "Menu updated successfully!"
+              : "Menu created successfully!",
+            type: "success",
+            isLoading: false,
+            autoClose: 3000
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.update(toastId, { render: "An unexpected error occurred!", type: "error", isLoading: false, autoClose: 3000 });
+      })
+      .finally(() => {
+        setIsDialogOpen(false);
+      });
+  };
 
 
   // UI for loading state

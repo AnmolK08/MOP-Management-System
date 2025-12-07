@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from 'react-redux';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 import { userLogin } from '../../Redux/Slices/authSlice';
 import { Eye, EyeOff } from "lucide-react";
 
@@ -43,7 +43,7 @@ export default function AuthRight() {
 
     try {
       await dispatch(userLogin(credentials)).unwrap().then((res) => {
-        toast.success("Logged in successfully", { id: toastId });
+        toast.update(toastId, { render: "Logged in successfully", type: "success", isLoading: false, autoClose: 3000 });
         if (rememberMe) {
           localStorage.setItem("rememberedEmail", credentials.email);
         } else {
@@ -60,7 +60,7 @@ export default function AuthRight() {
     } catch (error) {
       console.error("Login error:", error);
       const errorMessage = typeof error === 'string' ? error : (error?.message || "Login failed");
-      toast.error(errorMessage, { id: toastId });
+      toast.update(toastId, { render: errorMessage, type: "error", isLoading: false, autoClose: 3000 });
     }
     finally {
       setDisable(false)
