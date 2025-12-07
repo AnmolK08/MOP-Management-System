@@ -14,7 +14,7 @@ import NotificationPanel from "../Components/NotificationPanel";
 import ScrollToTop from "../Components/ScrollToTop";
 import { LogoIcon } from "../Components/SvgIcons";
 import { userLogout } from "../Redux/Slices/authSlice";
-import toast from "react-hot-toast";
+import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from "react-redux";
 import profileImg from "../assets/UserProfile.png";
 import { getSocket } from "../socket";
@@ -32,45 +32,45 @@ const ProviderLayout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  
-    const notifications = useSelector((state) => state.notificationSlice.notifications);
-  
-    useEffect(() => {
-      if (!notifications || notifications.length === 0) dispatch(getAllNotifications());
-    }, [dispatch]);
-  
-    const deleteNotificationHandler = (id) => {
-      if(!id) toast.error("Invalid Notification ID");
-  
-      const toastId = toast.loading("Deleting Notification...");
-  
-      dispatch(deleteNotification(id)).then((res) => {
-        if (res.error) {
-          toast.error(res.error.message, { id: toastId });
-        }
-        else {
-          toast.success("Notification Deleted", { id: toastId });
-        }
-      }).catch((err) => {
-        toast.error(err.message || "Something went wrong", { id: toastId });
-      });
-    };
-  
-    const clearAllNotificationsHandler = () => {
-  
-      const toastId = toast.loading("Clearing Notifications...");
-      dispatch(clearAllNotifications()).then((res) => {
-        if (res.error) {
-          toast.error(res.error.message, { id: toastId });
-        }
-        else {
-          toast.success("All Notifications Cleared", { id: toastId });
-        }
-      }).catch((err) => {
-        toast.error(err.message || "Something went wrong", { id: toastId });
-      });
-    };
-  
+
+  const notifications = useSelector((state) => state.notificationSlice.notifications);
+
+  useEffect(() => {
+    if (!notifications || notifications.length === 0) dispatch(getAllNotifications());
+  }, [dispatch]);
+
+  const deleteNotificationHandler = (id) => {
+    if (!id) toast.error("Invalid Notification ID");
+
+    const toastId = toast.loading("Deleting Notification...");
+
+    dispatch(deleteNotification(id)).then((res) => {
+      if (res.error) {
+        toast.update(toastId, { render: res.error.message, type: "error", isLoading: false, autoClose: 3000 });
+      }
+      else {
+        toast.update(toastId, { render: "Notification Deleted", type: "success", isLoading: false, autoClose: 3000 });
+      }
+    }).catch((err) => {
+      toast.update(toastId, { render: err.message || "Something went wrong", type: "error", isLoading: false, autoClose: 3000 });
+    });
+  };
+
+  const clearAllNotificationsHandler = () => {
+
+    const toastId = toast.loading("Clearing Notifications...");
+    dispatch(clearAllNotifications()).then((res) => {
+      if (res.error) {
+        toast.update(toastId, { render: res.error.message, type: "error", isLoading: false, autoClose: 3000 });
+      }
+      else {
+        toast.update(toastId, { render: "All Notifications Cleared", type: "success", isLoading: false, autoClose: 3000 });
+      }
+    }).catch((err) => {
+      toast.update(toastId, { render: err.message || "Something went wrong", type: "error", isLoading: false, autoClose: 3000 });
+    });
+  };
+
 
   // Close sidebars on route change
   useEffect(() => {
@@ -86,27 +86,27 @@ const ProviderLayout = () => {
     socket.on("newOrder", (data) => {
       // Show toast notification
       toast.success(`${data.notification?.message || data.message || 'New order received'}`);
-      
+
       // Update orders
       if (data.order) {
         dispatch(addOrdersInProvider(data.order));
       }
-      
+
       // Add notification to store - handle both data structures
       const notification = data.notification || data;
       dispatch(addNotification(notification));
     });
 
-    socket.on("cancelOrder" , ({updatedOrder , notification})=>{
-        toast.success(notification.message);
-        dispatch(addNotification(notification));
-        dispatch(updateCancelStatus({Id: updatedOrder.id}));
+    socket.on("cancelOrder", ({ updatedOrder, notification }) => {
+      toast.success(notification.message);
+      dispatch(addNotification(notification));
+      dispatch(updateCancelStatus({ Id: updatedOrder.id }));
     })
 
-    socket.on("updateOrderNotification" , ({notification , updatedOrder})=>{
-        toast.success(notification.message);
-        dispatch(addNotification(notification));
-        dispatch(updateOrdersInProvider(updatedOrder));
+    socket.on("updateOrderNotification", ({ notification, updatedOrder }) => {
+      toast.success(notification.message);
+      dispatch(addNotification(notification));
+      dispatch(updateOrdersInProvider(updatedOrder));
     })
 
     return () => {
@@ -140,7 +140,7 @@ const ProviderLayout = () => {
     dispatch(userLogout());
     localStorage.removeItem("token");
     navigate("/login");
-    toast.success("Logged out", { id: toastId });
+    toast.update(toastId, { render: "Logged out", type: "success", isLoading: false, autoClose: 3000 });
   };
 
   const navItems = [
@@ -164,9 +164,8 @@ const ProviderLayout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:relative inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-200 ease-in-out ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0`}
+        className={`fixed md:relative inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-200 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0`}
       >
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-2">
@@ -188,10 +187,9 @@ const ProviderLayout = () => {
                     to={item.path}
                     end={item.end}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 ${
-                        isActive
-                          ? "bg-blue-50 text-blue-600"
-                          : "text-gray-700 hover:bg-gray-100"
+                      `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 ${isActive
+                        ? "bg-blue-50 text-blue-600"
+                        : "text-gray-700 hover:bg-gray-100"
                       }`
                     }
                   >
@@ -271,9 +269,8 @@ const ProviderLayout = () => {
                 </button>
 
                 <div
-                  className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-1 z-50 ${
-                    isDropdownOpen ? "block" : "hidden"
-                  }`}
+                  className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-1 z-50 ${isDropdownOpen ? "block" : "hidden"
+                    }`}
                 >
                   <NavLink
                     to="/a/profile"

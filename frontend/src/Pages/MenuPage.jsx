@@ -3,7 +3,7 @@ import OrderDialog from "../Components/OrderDialog";
 import Menu from "../Components/Menu";
 import { useDispatch, useSelector } from "react-redux";
 import { placeOrder } from "../Redux/Slices/orderSlice";
-import toast from "react-hot-toast";
+import { toast } from 'react-toastify';
 import { fetchMenu } from "../Redux/Slices/menuSlice";
 
 const MenuPage = () => {
@@ -13,9 +13,9 @@ const MenuPage = () => {
   const { menu } = useSelector((state) => state.menuSlice);
 
   const dispatch = useDispatch();
-  useEffect(()=>{
-    window.scrollTo({top:0, behavior:"smooth"})
-  },[])
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [])
 
   useEffect(() => {
     if (menu === null) {
@@ -27,13 +27,9 @@ const MenuPage = () => {
     const toastId = toast.loading("Placing an order");
     dispatch(placeOrder(orderData)).then((res) => {
       if (res.meta.requestStatus === "rejected") {
-        toast.error(res.payload, {
-          id: toastId,
-        });
+        toast.update(toastId, { render: res.payload, type: "error", isLoading: false, autoClose: 3000 });
       } else
-        toast.success("Order placed", {
-          id: toastId,
-        });
+        toast.update(toastId, { render: "Order placed", type: "success", isLoading: false, autoClose: 3000 });
       setOrderDialogOpen(false);
     });
   };
@@ -105,7 +101,7 @@ const MenuPage = () => {
                 <p className="text-sm font-semibold text-[#ec6d13]">
                   7 Lunches <br />
                   7 Dinners
-                  
+
                 </p>
               </div>
               <div className="bg-gray-50 rounded-lg p-4 col-span-2">

@@ -1,6 +1,6 @@
 import React from 'react'
 import { FacebookIcon, InstagramIcon, LogoIcon, TwitterIcon } from './SvgIcons';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 
 const Footer = () => {
     const copyToClipboard = (value) => {
@@ -9,7 +9,7 @@ const Footer = () => {
                 .then(() => {
                     toast.success('Copied to clipboard');
                 })
-                .catch(() => {});
+                .catch(() => { });
         }
     };
 
@@ -102,7 +102,7 @@ const Footer = () => {
                             </button>
                         </div>
                     </div>
-                    
+
                     {/* Copyright - Second Row */}
                     <div>
                         <p className="text-sm text-gray-600">

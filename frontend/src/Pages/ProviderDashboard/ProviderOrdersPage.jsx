@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import OrderDetailsModal from "../../Components/OrderDetailsModal";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProviderOrders, markOrdersDelivered, markOrdersSeen } from "../../Redux/Slices/orderSlice";
-import toast from "react-hot-toast";
+import { toast } from 'react-toastify';
 import { updateWallet } from "../../Redux/Slices/providerSlice";
 
 const ProviderOrdersPage = () => {
@@ -89,9 +89,9 @@ const ProviderOrdersPage = () => {
       dispatch(markOrdersSeen({ orderIds }))
         .then((res) => {
           if (res.error) {
-            toast.error(res.payload || "Failed to mark orders as seen", { id: toastId })
+            toast.update(toastId, { render: res.payload || "Failed to mark orders as seen", type: "error", isLoading: false, autoClose: 3000 })
           } else {
-            toast.success("Orders marked as seen", { id: toastId })
+            toast.update(toastId, { render: "Orders marked as seen", type: "success", isLoading: false, autoClose: 3000 })
             setSelectedOrders({})
             setSelectForSeen(false)
             setMark("")
@@ -104,9 +104,9 @@ const ProviderOrdersPage = () => {
       dispatch(markOrdersDelivered({ orderIds }))
         .then((res) => {
           if (res.error) {
-            toast.error(res.payload || "Failed to mark orders as delivered", { id: toastId })
+            toast.update(toastId, { render: res.payload || "Failed to mark orders as delivered", type: "error", isLoading: false, autoClose: 3000 })
           } else {
-            toast.success("Orders marked as delivered", { id: toastId })
+            toast.update(toastId, { render: "Orders marked as delivered", type: "success", isLoading: false, autoClose: 3000 })
             setSelectedOrders({})
             setSelectForDelivered(false)
             setMark("")
@@ -243,8 +243,8 @@ const ProviderOrdersPage = () => {
                   <td className="py-3 px-4">
                     <span
                       className={`px-2 py-1 text-sm font-semibold rounded-full ${order.customer.premium
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-gray-100 text-gray-800"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-gray-100 text-gray-800"
                         }`}
                     >
                       {order.customer.premium ? "Premium" : "Normal"}

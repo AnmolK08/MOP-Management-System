@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, getAllUsers, togglePremiumStatus } from "../../Redux/Slices/providerSlice";
-import { toast } from "react-hot-toast";
+import { toast } from 'react-toastify';
 import { deleteUserFromOrders, updateProviderOrders } from "../../Redux/Slices/orderSlice";
 import ConfirmationDialog from "../../Components/ConfirmationDialog";
 import { RiDeleteBin5Line } from "react-icons/ri";
@@ -41,11 +41,9 @@ const ProviderUsersPage = () => {
     dispatch(togglePremiumStatus(customerId))
       .then((res) => {
         if (res.error) {
-          toast.error(res.error.message || "Failed to toggle premium status", {
-            id: toastId,
-          });
+          toast.update(toastId, { render: res.error.message || "Failed to toggle premium status", type: "error", isLoading: false, autoClose: 3000 });
         } else {
-          toast.success("Premium status toggled successfully", { id: toastId });
+          toast.update(toastId, { render: "Premium status toggled successfully", type: "success", isLoading: false, autoClose: 3000 });
           if (providerOrders.length !== 0) {
             dispatch(updateProviderOrders({ Id: customerId }));
           }
@@ -53,7 +51,7 @@ const ProviderUsersPage = () => {
         }
       })
       .catch(() => {
-        toast.error("An unexpected error occurred", { id: toastId });
+        toast.update(toastId, { render: "An unexpected error occurred", type: "error", isLoading: false, autoClose: 3000 });
       });
   };
 
@@ -75,8 +73,8 @@ const ProviderUsersPage = () => {
 
   const handleDeleteUser = (userId) => {
     const toastId = toast.loading("Deleting user...");
-    if(!userId) {
-      toast.error("User ID is missing",{
+    if (!userId) {
+      toast.error("User ID is missing", {
         id: toastId,
       });
       return;
@@ -84,16 +82,16 @@ const ProviderUsersPage = () => {
     dispatch(deleteUser(userId))
       .then((res) => {
         if (res.error) {
-          toast.error(res.error.message || "Failed to delete user", { id: toastId });
+          toast.update(toastId, { render: res.error.message || "Failed to delete user", type: "error", isLoading: false, autoClose: 3000 });
         } else {
-          toast.success("User deleted successfully", { id: toastId });
-          if(providerOrders.length !== 0) {
-            dispatch(deleteUserFromOrders({Id : userId}));
+          toast.update(toastId, { render: "User deleted successfully", type: "success", isLoading: false, autoClose: 3000 });
+          if (providerOrders.length !== 0) {
+            dispatch(deleteUserFromOrders({ Id: userId }));
           }
         }
       })
       .catch(() => {
-        toast.error("An unexpected error occurred", { id: toastId });
+        toast.update(toastId, { render: "An unexpected error occurred", type: "error", isLoading: false, autoClose: 3000 });
       });
   }
 
@@ -142,55 +140,54 @@ const ProviderUsersPage = () => {
           </thead>
           <tbody>
             {filteredUsers.length > 0 ? (
-            filteredUsers.map((user) => (
-              <tr key={user.id} className="border-b">
-                <td className="p-3">{user.name}</td>
-                <td className="p-3">{user.email}</td>
-                <td className="p-3">
-                  <span
-                    className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                      user.customer.premium
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    {user.customer.premium ? "Premium" : "Normal"}
-                  </span>
-                </td>
-                <td className="p-3">{user.customer.wallet}</td>
-                <td className="p-3">
-                  <button
-                    onClick={() =>
-                      setConfirmDialog({
-                        isOpen: true,
-                        userId: user.customer.id,
-                        userName: user.name,
-                        isPremium: user.customer.premium,
-                      })
-                    }
-                    className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-600 transition-colors"
-                  >
-                    Toggle Premium
-                  </button>
-                </td>
-                <td className="p-3">
-                  <button
-                    className="flex items-center justify-center cursor-pointer w-8 h-8 rounded-full hover:bg-red-100 transition-colors"
-                    title="Delete User"
-                    onClick={() =>
-                      setDeleteDialog({
-                        isOpen: true,
-                        userId: user.id,
-                        userName: user.name,
-                      })
-                    }
-                  >
-                    <RiDeleteBin5Line color="red" size={20} />
-                  </button>
-                </td>
-              </tr>
-            ))
-          ) : (
+              filteredUsers.map((user) => (
+                <tr key={user.id} className="border-b">
+                  <td className="p-3">{user.name}</td>
+                  <td className="p-3">{user.email}</td>
+                  <td className="p-3">
+                    <span
+                      className={`px-2 py-1 text-xs font-semibold rounded-full ${user.customer.premium
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-gray-100 text-gray-800"
+                        }`}
+                    >
+                      {user.customer.premium ? "Premium" : "Normal"}
+                    </span>
+                  </td>
+                  <td className="p-3">{user.customer.wallet}</td>
+                  <td className="p-3">
+                    <button
+                      onClick={() =>
+                        setConfirmDialog({
+                          isOpen: true,
+                          userId: user.customer.id,
+                          userName: user.name,
+                          isPremium: user.customer.premium,
+                        })
+                      }
+                      className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-600 transition-colors"
+                    >
+                      Toggle Premium
+                    </button>
+                  </td>
+                  <td className="p-3">
+                    <button
+                      className="flex items-center justify-center cursor-pointer w-8 h-8 rounded-full hover:bg-red-100 transition-colors"
+                      title="Delete User"
+                      onClick={() =>
+                        setDeleteDialog({
+                          isOpen: true,
+                          userId: user.id,
+                          userName: user.name,
+                        })
+                      }
+                    >
+                      <RiDeleteBin5Line color="red" size={20} />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
                 <td colSpan="6" className="text-center py-4 text-gray-500">
                   No users found.

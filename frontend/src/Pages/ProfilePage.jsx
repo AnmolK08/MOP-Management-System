@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../Redux/Slices/profileSlice";
 import profileImg from "../assets/UserProfile.png";
-import { toast } from "react-hot-toast";
+import { toast } from 'react-toastify';
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { fetchUser } from "../Redux/Slices/authSlice";
 
@@ -35,12 +35,12 @@ const ProfilePage = () => {
     }
 
     const toastId = toast.loading("Updating password...");
-    dispatch(updateProfile({oldPass : formData.oldPass , newPass : formData.newPass , confPass : formData.confPass})).then((res) => {
+    dispatch(updateProfile({ oldPass: formData.oldPass, newPass: formData.newPass, confPass: formData.confPass })).then((res) => {
       if (res.meta.requestStatus === "fulfilled") {
-        toast.success("Password updated successfully", { id: toastId });
+        toast.update(toastId, { render: "Password updated successfully", type: "success", isLoading: false, autoClose: 3000 });
         setFormData({ oldPass: "", newPass: "", confPass: "" });
       } else {
-        toast.error(res.payload || "Failed to update password", { id: toastId });
+        toast.update(toastId, { render: res.payload || "Failed to update password", type: "error", isLoading: false, autoClose: 3000 });
       }
     });
   };
