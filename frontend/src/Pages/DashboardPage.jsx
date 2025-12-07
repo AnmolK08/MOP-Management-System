@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 import ConfirmationDialog from "../Components/ConfirmationDialog";
 import { getSocket } from "../socket";
 import { addNotification } from "../Redux/Slices/notificationSlice";
-import { updateUserPlan, updateUserWallet } from "../Redux/Slices/authSlice";
+import { fetchUser, updateUserPlan, updateUserWallet } from "../Redux/Slices/authSlice";
 
 // Child components for better organization
 const MenuCard = ({ menu, onOrderNow }) => (
@@ -135,8 +135,9 @@ const DashboardPage = () => {
     };
 
     if (menu == null) fetch();
+    if (user == null || !user.customer) dispatch(fetchUser());
 
-  }, [menu, dispatch]);
+  }, [menu, dispatch, user]);
 
   useEffect(() => {
     const socket = getSocket();

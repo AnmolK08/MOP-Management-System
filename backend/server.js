@@ -1,6 +1,7 @@
 import express from "express";
 import { config } from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import errorHandler from "./utils/ErrorHandler.js";
 import authRoutes from "./routes/auth.route.js";
 import providerRoutes from "./routes/provider.route.js";
@@ -14,6 +15,7 @@ import { connectDB } from "./config/db.js";
 config();
 
 app.use(express.json());
+app.use(cookieParser());
 const CLIENT_URL = process.env.FRONTEND_URL;
 
 app.use(
