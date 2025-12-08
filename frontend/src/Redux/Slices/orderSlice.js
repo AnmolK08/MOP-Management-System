@@ -6,6 +6,7 @@ import { userLogout } from "./authSlice";
 const initialState = {
   userOrders: [],
   providerOrders: [],
+  billingUserOrders: [],
   allOrders : [],
   loading: false,
   error: null,
@@ -51,8 +52,6 @@ export const fetchUserOrders = createAsyncThunk(
     }
   }
 );
-
-// 3. USER: Cancel order
 export const cancelOrder = createAsyncThunk(
   "orders/cancelOrder",
   async (orderId, { rejectWithValue }) => {
@@ -222,6 +221,22 @@ export const markOrdersDelivered = createAsyncThunk(
   }
 )
 
+export const fetchOrdersByUserId = createAsyncThunk(
+  "orders/ordersByUserId",
+  async ({userId},{rejectWithValue})=>{
+    try {
+      const token = localStorage.getItem("token")
+      const orders = await axiosInstance.get(`/order/getOrderByUser/${userId}`,{ headers: { Authorization: `Bearer ${token}` } }
+    )
+      return orders.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch orders by user id"
+      );
+    }
+  }
+)
+
 // --- The Slice Definition ---
 const ordersSlice = createSlice({
   name: "orders",
@@ -317,6 +332,12 @@ const ordersSlice = createSlice({
       .addCase(fetchProviderOrders.fulfilled, (state, action) => {
         state.loading = false;
         state.providerOrders = action.payload;
+      })
+
+      // Fetch Billing/Selected User Orders
+      .addCase(fetchOrdersByUserId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.billingUserOrders = action.payload;
       })
 
       .addCase(updateOrder.fulfilled, (state, action) => {

@@ -179,7 +179,10 @@ export const getOrderByUser = asyncHandler(async (req, res) => {
   if (!userId) {
     throw new ResponseError("Please provide user id");
   }
-  const orders = await prisma.order.findMany({ where: { customerId: userId } });
+  const orders = await prisma.order.findMany({ 
+    where: { customerId: userId },
+    orderBy: { date: "desc" }
+  });
   res.status(200).json({ success: true, data: orders });
 }); //done
 
