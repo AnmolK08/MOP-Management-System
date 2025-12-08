@@ -67,7 +67,7 @@ const NotificationPanel = ({
         {notifications.length > 0 && (
           <button
             onClick={onClearAll}
-            className="text-xs text-red-600 hover:text-red-700 font-medium hover:underline transition-colors"
+            className="text-xs cursor-pointer text-red-600 hover:text-red-700 font-medium hover:underline transition-colors"
           >
             Clear All
           </button>
@@ -122,7 +122,7 @@ const NotificationPanel = ({
                   {/* Delete Button */}
                   <button
                     onClick={() => onDelete(notif.id)}
-                    className="flex-shrink-0 text-gray-300 hover:text-red-500 transition-colors opacity-100 group-hover:opacity-100 focus:opacity-100"
+                    className="flex-shrink-0 cursor-pointer text-gray-300 hover:text-red-500 transition-colors opacity-100 group-hover:opacity-100 focus:opacity-100"
                     aria-label="Delete notification"
                   >
                     <RiCloseCircleLine size={18} />

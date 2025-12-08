@@ -45,7 +45,7 @@ const MenuCard = ({ menu, onOrderNow }) => (
       </ul>
       <button
         onClick={onOrderNow}
-        className="w-full bg-blue-500 text-white py-2.5 px-4 rounded-lg hover:bg-blue-600 transition-colors font-medium"
+        className="cursor-pointer w-full bg-blue-500 text-white py-2.5 px-4 rounded-lg hover:bg-blue-600 transition-colors font-medium"
       >
         Order Now
       </button>
@@ -89,13 +89,13 @@ const LatestOrderCard = ({ order, onEdit, onCancel }) => {
         <div className="flex gap-3 mt-4">
           <button
             onClick={onEdit}
-            className="flex-1 bg-yellow-400 text-white py-2 rounded-lg hover:bg-yellow-500"
+            className="cursor-pointer flex-1 bg-yellow-400 text-white py-2 rounded-lg hover:bg-yellow-500"
           >
             Edit Order
           </button>
           <button
             onClick={() => setIsOpen(true)}
-            className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
+            className="cursor-pointer flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
           >
             Cancel Order
           </button>

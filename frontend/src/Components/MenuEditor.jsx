@@ -149,13 +149,13 @@ const MenuEditor = () => {
           <div className="flex flex-col sm:flex-row gap-3 mt-4">
             <button
               onClick={handleOpenEditDialog}
-              className="flex-1 bg-yellow-400 text-white py-2 rounded-lg hover:bg-yellow-500 font-semibold"
+              className="flex-1 bg-yellow-400 text-white py-2 rounded-lg hover:bg-yellow-500 font-semibold cursor-pointer"
             >
               Edit Menu
             </button>
             <button
               onClick={() => setIsConformationDialogOpen(true)}
-              className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 font-semibold"
+              className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 font-semibold cursor-pointer"
             >
               Delete Menu
             </button>
@@ -178,7 +178,7 @@ const MenuEditor = () => {
           </p>
           <button
             onClick={handleOpenAddDialog}
-            className="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600"
+            className="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 cursor-pointer"
           >
             Add New Menu
           </button>

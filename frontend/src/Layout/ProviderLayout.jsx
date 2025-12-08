@@ -157,7 +157,7 @@ const ProviderLayout = () => {
       {/* Overlay for mobile view */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-white/30 backdrop-blur-sm z-20 md:hidden"
+          className="fixed inset-0 bg-white/30 backdrop-blur-sm z-20 md:hidden cursor-pointer"
           onClick={() => setSidebarOpen(false)}
         ></div>
       )}
@@ -174,7 +174,7 @@ const ProviderLayout = () => {
             </div>
             <h2 className="text-[#181411] text-xl font-bold">Minipahadganj</h2>
           </div>
-          <button onClick={() => setSidebarOpen(false)} className="md:hidden">
+          <button onClick={() => setSidebarOpen(false)} className="md:hidden cursor-pointer">
             <RiCloseLine size={24} />
           </button>
         </div>
@@ -212,7 +212,7 @@ const ProviderLayout = () => {
         {/* Header */}
         <header className="bg-white sticky top-0 z-10">
           <div className="flex items-center justify-between px-4 py-3">
-            <button onClick={() => setSidebarOpen(true)} className="md:hidden">
+            <button onClick={() => setSidebarOpen(true)} className="md:hidden cursor-pointer">
               <RiMenuLine size={24} />
             </button>
 
@@ -234,7 +234,7 @@ const ProviderLayout = () => {
               <div className="relative" ref={notifRef}>
                 <button
                   onClick={() => setIsNotifPanelOpen(!isNotifPanelOpen)}
-                  className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  className="relative p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
                   aria-label="Toggle notifications"
                 >
                   <RiNotification3Line size={24} className="text-gray-700" />
@@ -258,7 +258,7 @@ const ProviderLayout = () => {
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 cursor-pointer"
                 >
                   <img
                     src={profileImg}
@@ -280,7 +280,7 @@ const ProviderLayout = () => {
                   </NavLink>
                   <button
                     onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 cursor-pointer"
                   >
                     Logout
                   </button>

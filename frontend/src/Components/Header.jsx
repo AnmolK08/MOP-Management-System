@@ -14,8 +14,8 @@ const Header = () => {
           <h2 className="text-[#181411] text-xl font-bold leading-tight tracking-[-0.015em]">Minipahadganj</h2>
         </div>
         <div className="flex items-center gap-4">
-          <button 
-            className="md:hidden text-stone-700"
+          <button
+            className="md:hidden text-stone-700 cursor-pointer"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <MenuIcon />
@@ -29,8 +29,8 @@ const Header = () => {
             </nav>
             <a href="/login">
               <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-11 px-5 bg-[#ec6d13] text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-orange-600 transition-colors">
-              <span className="truncate">Login / Register</span>
-            </button>
+                <span className="truncate">Login / Register</span>
+              </button>
             </a>
           </div>
         </div>

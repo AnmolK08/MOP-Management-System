@@ -89,7 +89,7 @@ const OrderHistoryPage = () => {
                 }
               }
             }}
-            className="px-3 py-2 bg-gray-50 border-r flex items-center justify-center text-gray-600"
+            className="cursor-pointer px-3 py-2 bg-gray-50 border-r flex items-center justify-center text-gray-600"
           >
             <span role="img" aria-label="Open calendar">
               📅
@@ -152,7 +152,7 @@ const OrderHistoryPage = () => {
             setFilter("All");
             setSortBy("dateDesc");
           }}
-          className="px-4 py-2 rounded-md border bg-gray-100 text-gray-700 hover:bg-gray-200 text-sm"
+          className="cursor-pointer px-4 py-2 rounded-md border bg-gray-100 text-gray-700 hover:bg-gray-200 text-sm"
         >
           Reset
         </button>
@@ -195,7 +195,7 @@ const OrderHistoryPage = () => {
                   <td className="py-3 px-4">
                     <button
                       onClick={() => handleViewClick(order)}
-                      className="text-blue-500 hover:underline"
+                      className="cursor-pointer text-blue-500 hover:underline"
                     >
                       View
                     </button>

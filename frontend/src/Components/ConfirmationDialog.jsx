@@ -36,7 +36,7 @@ const ConfirmationDialog = ({ isOpen, onClose, onConfirm, message, title = 'Conf
                     <button
                         type="button"
                         onClick={onClose}
-                        className="w-full sm:w-auto px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                        className="w-full cursor-pointer sm:w-auto px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
                     >
                         Cancel
                     </button>
@@ -46,7 +46,7 @@ const ConfirmationDialog = ({ isOpen, onClose, onConfirm, message, title = 'Conf
                             onConfirm();
                             onClose();
                         }}
-                        className="w-full sm:w-auto px-4 py-2.5 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors"
+                        className="w-full cursor-pointer sm:w-auto px-4 py-2.5 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors"
                     >
                         Yes, continue
                     </button>

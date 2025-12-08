@@ -7,7 +7,7 @@ export default function BackButton({location}) {
   return (
     <button
       onClick={() => navigate(`/${location}`)}
-      className="flex items-center gap-2 text-sm text-gray-600 hover:text-[#e7764e] font-medium transition"
+      className="flex cursor-pointer items-center gap-2 text-sm text-gray-600 hover:text-[#e7764e] font-medium transition"
     >
       <ArrowLeft size={18} />
       Back

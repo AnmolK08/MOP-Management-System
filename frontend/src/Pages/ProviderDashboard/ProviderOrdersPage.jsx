@@ -146,12 +146,12 @@ const ProviderOrdersPage = () => {
           placeholder="Search by User name"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="p-2 border rounded-md w-full md:w-auto flex-grow"
+          className="p-2 border rounded-md w-full md:w-auto flex-grow cursor-pointer"
         />
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
-          className="p-2 border rounded-md w-full sm:w-auto flex-1 sm:flex-initial"
+          className="p-2 border rounded-md w-full sm:w-auto flex-1 sm:flex-initial cursor-pointer"
         >
           <option value="All">All Type</option>
           <option value="LUNCH">Lunch</option>
@@ -160,7 +160,7 @@ const ProviderOrdersPage = () => {
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="p-2 border rounded-md w-full sm:w-auto flex-1 sm:flex-initial"
+          className="p-2 border rounded-md w-full sm:w-auto flex-1 sm:flex-initial cursor-pointer"
         >
           <option value="All">All Status</option>
           <option value="DELIVERED">Delivered</option>
@@ -171,7 +171,7 @@ const ProviderOrdersPage = () => {
         <select
           value={mark}
           onChange={(e) => handleMark(e)}
-          className="p-2 border rounded-md w-full sm:w-auto flex-1 sm:flex-initial bg-green-500 text-white font-medium"
+          className="p-2 border rounded-md w-full sm:w-auto flex-1 sm:flex-initial bg-green-500 text-white font-medium cursor-pointer"
         >
           <option className="bg-white text-black" value="">--Select Mark For--</option>
           <option className="bg-white text-black" value="MarkSeen">Mark Seen</option>
@@ -204,7 +204,7 @@ const ProviderOrdersPage = () => {
                       <input
                         type="checkbox"
                         disabled={selectForSeen ? order.status !== "PLACED" ? true : false : selectForDelivered && (order.status !== "PLACED" && order.status !== "SEEN") ? true : false}
-                        className="h-4 w-4 text-blue-600"
+                        className="h-4 w-4 text-blue-600 cursor-pointer"
                         checked={selectForSeen ?
                           (order.status !== "PLACED"
                             ? true
@@ -264,8 +264,8 @@ const ProviderOrdersPage = () => {
       </div>
       {(selectForSeen || selectForDelivered) && <div className="w-full flex justify-end mt-4">
         <div className="flex gap-2">
-          <button className="p-3 rounded-xl text-white bg-red-500" onClick={cancelSelect}>Cancel</button>
-          <button className={`p-3 rounded-xl text-white bg-blue-500 ${loading ? "opacity-50 cursor-not-allowed" : ""}`} onClick={markAs} disabled={loading}>Mark As {selectForSeen ? "Seen" : "Delivered"}</button>
+          <button className="p-3 rounded-xl text-white bg-red-500 cursor-pointer" onClick={cancelSelect}>Cancel</button>
+          <button className={`p-3 rounded-xl text-white bg-blue-500 cursor-pointer ${loading ? "opacity-50 cursor-not-allowed" : ""}`} onClick={markAs} disabled={loading}>Mark As {selectForSeen ? "Seen" : "Delivered"}</button>
         </div>
       </div>}
     </div>

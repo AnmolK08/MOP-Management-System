@@ -73,7 +73,7 @@ const MenuPage = () => {
               </ul>
               <button
                 onClick={() => setOrderDialogOpen(true)}
-                className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                className="cursor-pointer w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors font-medium"
               >
                 Order Now
               </button>

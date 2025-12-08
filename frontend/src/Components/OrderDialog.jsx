@@ -74,7 +74,7 @@ const OrderDialog = ({ isOpen, onClose, menu, onPlaceOrder, editingOrder }) => {
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b">
                     <h2 className="text-xl font-semibold">{editingOrder ? 'Edit' : 'Place'} Order</h2>
-                    <button onClick={onClose}><RiCloseLine size={24} /></button>
+                    <button onClick={onClose} className="cursor-pointer"><RiCloseLine size={24} /></button>
                 </div>
 
                 <div className="bg-blue-50 p-4">
@@ -101,7 +101,7 @@ const OrderDialog = ({ isOpen, onClose, menu, onPlaceOrder, editingOrder }) => {
                                             type="button"
                                             onClick={() => handleItemCount(item, false)}
                                             disabled={!selectedItems[item]}
-                                            className="disabled:opacity-50"
+                                            className="cursor-pointer disabled:opacity-50"
                                         >
                                             <RiSubtractLine size={20} />
                                         </button>
@@ -112,7 +112,7 @@ const OrderDialog = ({ isOpen, onClose, menu, onPlaceOrder, editingOrder }) => {
                                             type="button"
                                             onClick={() => handleItemCount(item, true)}
                                             disabled={totalSelections >= REQUIRED_SELECTIONS}
-                                            className="disabled:opacity-50"
+                                            className="cursor-pointer disabled:opacity-50"
                                         >
                                             <RiAddLine size={20} />
                                         </button>
@@ -130,7 +130,7 @@ const OrderDialog = ({ isOpen, onClose, menu, onPlaceOrder, editingOrder }) => {
                                 <button
                                     type="button"
                                     onClick={() => setRiceOption("Roti only")}
-                                    className={`p-3 rounded-lg text-center ${
+                                    className={`cursor-pointer p-3 rounded-lg text-center ${
                                         riceOption === "Roti only"
                                             ? "bg-blue-50 border-2 border-blue-500"
                                             : "bg-gray-50 border-2 border-transparent"
@@ -141,7 +141,7 @@ const OrderDialog = ({ isOpen, onClose, menu, onPlaceOrder, editingOrder }) => {
                                 <button
                                     type="button"
                                     onClick={() => setRiceOption("Roti and Rice")}
-                                    className={`p-3 rounded-lg text-center ${
+                                    className={`cursor-pointer p-3 rounded-lg text-center ${
                                         riceOption === "Roti and Rice"
                                             ? "bg-blue-50 border-2 border-blue-500"
                                             : "bg-gray-50 border-2 border-transparent"
@@ -156,14 +156,14 @@ const OrderDialog = ({ isOpen, onClose, menu, onPlaceOrder, editingOrder }) => {
 
                 {/* Footer */}
                 <div className="flex justify-end gap-3 p-4 border-t bg-white">
-                    <button type="button" onClick={onClose} className="px-6 py-2 bg-gray-100 rounded-lg">
+                    <button type="button" onClick={onClose} className="cursor-pointer px-6 py-2 bg-gray-100 rounded-lg">
                         Cancel
                     </button>
                     <button
                         type="submit"
                         form="order-form"
                         disabled={totalSelections < 1 || totalSelections > REQUIRED_SELECTIONS}
-                        className="px-6 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50"
+                        className="cursor-pointer px-6 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50"
                     >
                         {totalSelections >= 1 && totalSelections <= REQUIRED_SELECTIONS
                             ? editingOrder

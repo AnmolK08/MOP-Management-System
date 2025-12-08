@@ -55,7 +55,7 @@ const MenuDialog = ({ isOpen, onClose, onSave, existingMenu }) => {
                     <h3 className="text-lg font-semibold text-gray-800">
                         {existingMenu ? 'Edit Menu' : 'Add New Menu'}
                     </h3>
-                    <button onClick={onClose} className="text-gray-500 hover:text-gray-800"><RiCloseLine size={24} /></button>
+                    <button onClick={onClose} className="text-gray-500 cursor-pointer hover:text-gray-800"><RiCloseLine size={24} /></button>
                 </div>
 
                 {/* Dialog Body (Scrollable) */}
@@ -84,7 +84,7 @@ const MenuDialog = ({ isOpen, onClose, onSave, existingMenu }) => {
                             {options.map((item, index) => (
                                 <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded-lg">
                                     <span className="text-gray-800">{item}</span>
-                                    <button onClick={() => handleRemoveItem(index)} className="text-red-500 hover:text-red-700 font-bold">✕</button>
+                                    <button onClick={() => handleRemoveItem(index)} className="text-red-500 hover:text-red-700 cursor-pointer font-bold">✕</button>
                                 </div>
                             ))}
                         </div>
@@ -97,7 +97,7 @@ const MenuDialog = ({ isOpen, onClose, onSave, existingMenu }) => {
                                 className="flex-grow p-2 border rounded-lg"
                                 onKeyPress={(e) => e.key === 'Enter' && handleAddItem()}
                             />
-                            <button onClick={handleAddItem} className="bg-blue-500 text-white px-4 rounded-lg font-semibold">Add</button>
+                            <button onClick={handleAddItem} className="bg-blue-500 text-white px-4 cursor-pointer rounded-lg font-semibold">Add</button>
                         </div>
                     </div>
                 </div>
