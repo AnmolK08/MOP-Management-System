@@ -146,7 +146,7 @@ const DashboardLayout = () => {
       <ScrollToTop />
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-20 md:hidden"
+          className="fixed inset-0 bg-white/30 backdrop-blur-sm z-20 md:hidden cursor-pointer"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -165,7 +165,7 @@ const DashboardLayout = () => {
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="md:hidden text-gray-500 hover:text-gray-700"
+            className="md:hidden text-gray-500 hover:text-gray-700 cursor-pointer"
           >
             <RiCloseLine size={22} />
           </button>
@@ -207,7 +207,7 @@ const DashboardLayout = () => {
           <div className="flex items-center justify-between px-4 py-3">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="text-gray-600 md:hidden"
+              className="text-gray-600 md:hidden cursor-pointer"
             >
               <RiMenuLine size={24} />
             </button>
@@ -230,7 +230,7 @@ const DashboardLayout = () => {
               <div className="relative" ref={notifRef}>
                 <button
                   onClick={() => setIsNotifPanelOpen(!isNotifPanelOpen)}
-                  className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  className="relative p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
                   aria-label="Toggle notifications"
                 >
                   <RiNotification3Line size={22} className="text-gray-700" />
@@ -254,7 +254,7 @@ const DashboardLayout = () => {
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 cursor-pointer"
                 >
                   <img
                     src={profileImg}
@@ -265,8 +265,8 @@ const DashboardLayout = () => {
 
                 <div
                   className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 transition-all duration-200 origin-top-right ${isDropdownOpen
-                      ? "opacity-100 scale-100"
-                      : "opacity-0 scale-95 pointer-events-none"
+                    ? "opacity-100 scale-100"
+                    : "opacity-0 scale-95 pointer-events-none"
                     }`}
                 >
                   <Link
@@ -277,7 +277,7 @@ const DashboardLayout = () => {
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 cursor-pointer"
                   >
                     Logout
                   </button>
@@ -288,7 +288,7 @@ const DashboardLayout = () => {
         </header>
 
         {/* Main Area */}
-        <main className="flex-1 bg-gray-50 p-4 md:p-6">
+        <main className="flex-1 bg-gray-50 p-4 md:p-6 overflow-y-auto">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>

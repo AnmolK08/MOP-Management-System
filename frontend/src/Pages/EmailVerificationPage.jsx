@@ -37,7 +37,7 @@ const EmailVerificationPage = () => {
           <div className="space-y-2">
             <p className="text-xs text-gray-500">Didn’t get it?</p>
             <button
-              className="text-[#d06842] hover:text-[#d06842] font-medium text-sm transition-colors"
+              className="cursor-pointer text-[#d06842] hover:text-[#d06842] font-medium text-sm transition-colors"
               onClick={() =>
                 alert("Resend functionality will be implemented")
               }

@@ -83,7 +83,7 @@ function ResetRight() {
                 </div>
                 <button
                     type="submit"
-                    className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 transition duration-300 font-semibold"
+                    className="w-full cursor-pointer bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 transition duration-300 font-semibold"
                 >
                     Reset Password
                 </button>

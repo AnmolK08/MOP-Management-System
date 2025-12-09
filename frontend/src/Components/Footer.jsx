@@ -71,7 +71,7 @@ const Footer = () => {
                         <button
                             type="button"
                             onClick={() => copyToClipboard('minnipahadganjrestaurant@gmail.com')}
-                            className="inline-flex items-center gap-2 text-gray-900 hover:text-[#ec6d13] transition-colors text-base font-medium text-left"
+                            className="inline-flex items-center gap-2 text-gray-900 hover:text-[#ec6d13] transition-colors text-base font-medium text-left cursor-pointer"
                         >
                             <span>minnipahadganjrestaurant@gmail.com</span>
                             <span className="text-xs opacity-70">📋</span>
@@ -95,7 +95,7 @@ const Footer = () => {
                             <button
                                 type="button"
                                 onClick={() => copyToClipboard('+91 9990651919')}
-                                className="inline-flex items-center gap-2 text-gray-900 font-medium hover:text-[#ec6d13] transition-colors"
+                                className="inline-flex items-center gap-2 text-gray-900 font-medium hover:text-[#ec6d13] transition-colors cursor-pointer"
                             >
                                 <span>+91 9990651919</span>
                                 <span className="text-xs opacity-70">📋</span>
@@ -117,7 +117,7 @@ const Footer = () => {
                         <button
                             type="button"
                             onClick={() => copyToClipboard('theminiteam7@gmail.com')}
-                            className="inline-flex items-center gap-2 text-xs text-gray-500 hover:text-[#ec6d13] transition-colors"
+                            className="inline-flex items-center gap-2 text-xs text-gray-500 hover:text-[#ec6d13] transition-colors cursor-pointer"
                         >
                             <span>
                                 DEV &amp; CONTACT: <span className="font-medium">theminiteam7@gmail.com</span>

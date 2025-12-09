@@ -123,7 +123,7 @@ export default function AuthRightRegister() {
                 type="button"
                 aria-label={showPass ? "Hide password" : "Show password"}
                 onClick={() => setShowPass(!showPass)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800"
+                className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800"
               >
                 {showPass ? <Eye /> : <EyeOff />}
               </button>
@@ -148,7 +148,7 @@ export default function AuthRightRegister() {
                 type="button"
                 aria-label={showConfirm ? "Hide confirm password" : "Show confirm password"}
                 onClick={() => setShowConfirm(!showConfirm)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 cursor-pointer hover:text-gray-800"
               >
                 {showConfirm ? <Eye /> : <EyeOff />}
               </button>
@@ -160,7 +160,7 @@ export default function AuthRightRegister() {
           {/* Submit */}
           <button
             type="submit"
-            className={`w-full py-3 rounded-lg text-sm font-bold text-white 
+            className={`w-full py-3 rounded-lg text-sm cursor-pointer font-bold text-white 
                        bg-[#e7764e] hover:bg-[#e24d1b] focus:ring-2 focus:ring-offset-2 
                        focus:ring-[#ffcdb2] transition ${disable ? "pointer-events-none" : ""}`}
           >
@@ -174,7 +174,7 @@ export default function AuthRightRegister() {
           <button
             type="button"
             onClick={() => navigate("/login")}
-            className="font-medium text-[#db5326] hover:text-[#d45839] transition"
+            className="font-medium text-[#db5326] cursor-pointer hover:text-[#d45839] transition"
           >
             Login
           </button>

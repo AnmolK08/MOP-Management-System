@@ -10,6 +10,7 @@ import paymentRoutes from "./routes/payment.route.js"
 import fetchRoute from "./routes/fetch.route.js"
 import profileRoutes from "./routes/profile.route.js"
 import notificationRoutes from "./routes/notification.route.js"
+import { healthRateLimiter } from "./middleware/rateLimiting.js";
 import { app, server } from "./config/socket.js"
 import { connectDB } from "./config/db.js";
 config();
@@ -32,6 +33,15 @@ app.use("/payment", paymentRoutes)
 app.use("/fetch", fetchRoute)
 app.use("/profile" , profileRoutes);
 app.use("/notifications", notificationRoutes);
+
+app.get("/health", healthRateLimiter, (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    message: "Server is running",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
 
 app.use(errorHandler);
 

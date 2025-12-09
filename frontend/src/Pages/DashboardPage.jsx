@@ -45,7 +45,7 @@ const MenuCard = ({ menu, onOrderNow }) => (
       </ul>
       <button
         onClick={onOrderNow}
-        className="w-full bg-blue-500 text-white py-2.5 px-4 rounded-lg hover:bg-blue-600 transition-colors font-medium"
+        className="cursor-pointer w-full bg-blue-500 text-white py-2.5 px-4 rounded-lg hover:bg-blue-600 transition-colors font-medium"
       >
         Order Now
       </button>
@@ -55,6 +55,21 @@ const MenuCard = ({ menu, onOrderNow }) => (
 
 const LatestOrderCard = ({ order, onEdit, onCancel }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "DELIVERED":
+        return "bg-green-100 text-green-800";
+      case "APPROVED":
+        return "bg-yellow-100 text-yellow-800";
+      case "PLACED":
+        return "bg-blue-100 text-blue-800";
+      case "CANCELLED":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
 
   return (
     <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
@@ -82,20 +97,20 @@ const LatestOrderCard = ({ order, onEdit, onCancel }) => {
       </ul>
       <div className="flex justify-between items-center mt-4 text-sm">
         <p className="font-medium">
-          Status: <span className="text-green-600">{order.status}</span>
+          Status: <span className={`py-1 px-2 rounded-full ${getStatusClass(order.status)}`}>{order.status}</span>
         </p>
       </div>
       {order.status == "PLACED" && (
         <div className="flex gap-3 mt-4">
           <button
             onClick={onEdit}
-            className="flex-1 bg-yellow-400 text-white py-2 rounded-lg hover:bg-yellow-500"
+            className="cursor-pointer flex-1 bg-yellow-400 text-white py-2 rounded-lg hover:bg-yellow-500"
           >
             Edit Order
           </button>
           <button
             onClick={() => setIsOpen(true)}
-            className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
+            className="cursor-pointer flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
           >
             Cancel Order
           </button>
@@ -179,6 +194,11 @@ const DashboardPage = () => {
       dispatch(deliveredUserLatestOrder());
     });
 
+    socket.on("announcementNotification", ({ notification }) => {
+      toast.success(notification.message);
+      dispatch(addNotification(notification));
+    });
+
     return () => {
       socket.off("updateWalletNotification");
       socket.off("userPlanNotification");
@@ -186,6 +206,7 @@ const DashboardPage = () => {
       socket.off("updateMenuNotification");
       socket.off("orderSeenNotification");
       socket.off("orderDeliveredNotification");
+      socket.off("announcementNotification");
     };
   }, [dispatch]);
 
@@ -293,9 +314,9 @@ const DashboardPage = () => {
                   : "Normal"}
             </p>
           </div>
-          <div className="bg-green-50 rounded-lg p-4">
+          <div className={`rounded-lg p-4 ${user.customer?.wallet < 0 ? "bg-red-50" : "bg-green-50"}`}>
             <p className="text-sm text-gray-600">Wallet</p>
-            <p className="text-xl font-semibold text-green-600">
+            <p className={`text-xl font-semibold ${user.customer?.wallet < 0 ? "text-red-600" : "text-green-600"}`}>
               {" "}
               {user === null
                 ? "Loading..."

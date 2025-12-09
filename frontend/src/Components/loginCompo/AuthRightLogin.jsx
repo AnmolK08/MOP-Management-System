@@ -126,7 +126,7 @@ export default function AuthRight() {
                        placeholder:text-gray-400 transition"
               required
             />
-            <div className="absolute right-5 top-3 text-gray-600" onClick={() => setShowPass(!showPass)}>
+            <div className="absolute right-5 top-3 text-gray-600 cursor-pointer" onClick={() => setShowPass(!showPass)}>
               {!showPass ? <EyeOff />
                 : <Eye />}
             </div>
@@ -139,7 +139,7 @@ export default function AuthRight() {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                className="h-4 w-4 rounded border-[#ff9770] text-[#ff9770] focus:ring-[#ff9770]"
+                className="h-4 w-4 rounded border-[#ff9770] text-[#ff9770] focus:ring-[#ff9770] cursor-pointer"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
               />
@@ -148,7 +148,7 @@ export default function AuthRight() {
             <button
               type="button"
               onClick={() => navigate("/forgot-password")}
-              className={`font-medium text-[#ff7849] hover:text-[#e76f51] transition`}
+              className={`font-medium text-[#ff7849] hover:text-[#e76f51] transition cursor-pointer`}
             >
               Forgot Password?
             </button>
@@ -159,7 +159,7 @@ export default function AuthRight() {
             type="submit"
             className={`w-full py-2.5 sm:py-3 px-4 rounded-lg shadow-sm text-sm sm:text-base font-bold text-white 
                        bg-[#ff9770] hover:bg-[#ff7849] focus:ring-2 focus:ring-offset-2 focus:ring-[#ffcdb2] 
-                       transition duration-150 ease-in-out ${disable ? "pointer-events-none" : ""}`}
+                       transition duration-150 ease-in-out cursor-pointer ${disable ? "pointer-events-none" : ""}`}
           >
             Login
           </button>
@@ -171,7 +171,7 @@ export default function AuthRight() {
           <button
             type="button"
             onClick={() => navigate("/signup")}
-            className="font-medium text-[#ff7849] hover:text-[#e76f51] transition"
+            className="font-medium text-[#ff7849] hover:text-[#e76f51] transition cursor-pointer"
           >
             Register
           </button>

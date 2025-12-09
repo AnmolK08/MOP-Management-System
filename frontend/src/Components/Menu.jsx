@@ -131,118 +131,118 @@ const Menu = () => {
 
 
 
-//   const playTick = React.useCallback(() => {
-//   const ctx = audioCtxRef.current;
-//   if (!ctx) return;
-//   const osc = ctx.createOscillator();
-//   const gain = ctx.createGain();
+  //   const playTick = React.useCallback(() => {
+  //   const ctx = audioCtxRef.current;
+  //   if (!ctx) return;
+  //   const osc = ctx.createOscillator();
+  //   const gain = ctx.createGain();
 
-//   osc.type = "triangle";       // softer timbre [changeable] [web:71]
-//   osc.frequency.value = 900;    // pitch Hz [changeable] [web:44]
+  //   osc.type = "triangle";       // softer timbre [changeable] [web:71]
+  //   osc.frequency.value = 900;    // pitch Hz [changeable] [web:44]
 
-//   gain.gain.value = 0.0001;
-//   osc.connect(gain);
-//   gain.connect(ctx.destination);
+  //   gain.gain.value = 0.0001;
+  //   osc.connect(gain);
+  //   gain.connect(ctx.destination);
 
-//   const now = ctx.currentTime;
-//   gain.gain.setValueAtTime(0.0001, now);
-//   gain.gain.exponentialRampToValueAtTime(0.012, now + 0.008);  // peak & attack [changeable]
-//   gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);  // decay [changeable]
+  //   const now = ctx.currentTime;
+  //   gain.gain.setValueAtTime(0.0001, now);
+  //   gain.gain.exponentialRampToValueAtTime(0.012, now + 0.008);  // peak & attack [changeable]
+  //   gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);  // decay [changeable]
 
-//   osc.start(now);
-//   osc.stop(now + 0.11); // total duration cap [optional]
-// }, []);
-
-
-// const playTick = React.useCallback(() => {
-//   const ctx = audioCtxRef.current;
-//   if (!ctx) return;
-//   const osc = ctx.createOscillator();
-//   const gain = ctx.createGain();
-
-//   osc.type = "square";        // bright, clicky [changeable] [web:71]
-//   osc.frequency.value = 2000; // high pitch [changeable] [web:44]
-
-//   gain.gain.value = 0.0001;
-//   osc.connect(gain);
-//   gain.connect(ctx.destination);
-
-//   const now = ctx.currentTime;
-//   gain.gain.setValueAtTime(0.0001, now);
-//   gain.gain.exponentialRampToValueAtTime(0.022, now + 0.003); // fast attack, louder [changeable]
-//   gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06); // short decay [changeable]
-
-//   osc.start(now);
-//   osc.stop(now + 0.08);
-// }, []);
+  //   osc.start(now);
+  //   osc.stop(now + 0.11); // total duration cap [optional]
+  // }, []);
 
 
-// const playTick = React.useCallback(() => {
-//   const ctx = audioCtxRef.current;
-//   if (!ctx) return;
-//   const osc = ctx.createOscillator();
-//   const gain = ctx.createGain();
+  // const playTick = React.useCallback(() => {
+  //   const ctx = audioCtxRef.current;
+  //   if (!ctx) return;
+  //   const osc = ctx.createOscillator();
+  //   const gain = ctx.createGain();
 
-//   osc.type = "sine";          // pure tone [changeable] [web:71]
-//   osc.frequency.value = 1200; // mid pitch [changeable] [web:44]
+  //   osc.type = "square";        // bright, clicky [changeable] [web:71]
+  //   osc.frequency.value = 2000; // high pitch [changeable] [web:44]
 
-//   gain.gain.value = 0.0001;
-//   osc.connect(gain);
-//   gain.connect(ctx.destination);
+  //   gain.gain.value = 0.0001;
+  //   osc.connect(gain);
+  //   gain.connect(ctx.destination);
 
-//   const now = ctx.currentTime;
-//   gain.gain.setValueAtTime(0.0001, now);
-//   gain.gain.exponentialRampToValueAtTime(0.01, now + 0.005);  // moderate attack [changeable]
-//   gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04); // very short decay [changeable]
+  //   const now = ctx.currentTime;
+  //   gain.gain.setValueAtTime(0.0001, now);
+  //   gain.gain.exponentialRampToValueAtTime(0.022, now + 0.003); // fast attack, louder [changeable]
+  //   gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06); // short decay [changeable]
 
-//   osc.start(now);
-//   osc.stop(now + 0.06);
-// }, []);
+  //   osc.start(now);
+  //   osc.stop(now + 0.08);
+  // }, []);
 
 
-// const playTick = React.useCallback(() => {
-//   const ctx = audioCtxRef.current;
-//   if (!ctx) return;
-//   const osc = ctx.createOscillator();
-//   const gain = ctx.createGain();
+  // const playTick = React.useCallback(() => {
+  //   const ctx = audioCtxRef.current;
+  //   if (!ctx) return;
+  //   const osc = ctx.createOscillator();
+  //   const gain = ctx.createGain();
 
-//   osc.type = "sawtooth";      // edgy, retro [changeable] [web:71]
-//   osc.frequency.value = 1500; // bright [changeable] [web:44]
+  //   osc.type = "sine";          // pure tone [changeable] [web:71]
+  //   osc.frequency.value = 1200; // mid pitch [changeable] [web:44]
 
-//   gain.gain.value = 0.0001;
-//   osc.connect(gain);
-//   gain.connect(ctx.destination);
+  //   gain.gain.value = 0.0001;
+  //   osc.connect(gain);
+  //   gain.connect(ctx.destination);
 
-//   const now = ctx.currentTime;
-//   gain.gain.setValueAtTime(0.0001, now);
-//   gain.gain.exponentialRampToValueAtTime(0.018, now + 0.004); // quick attack [changeable]
-//   gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.07); // short decay [changeable]
+  //   const now = ctx.currentTime;
+  //   gain.gain.setValueAtTime(0.0001, now);
+  //   gain.gain.exponentialRampToValueAtTime(0.01, now + 0.005);  // moderate attack [changeable]
+  //   gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04); // very short decay [changeable]
 
-//   osc.start(now);
-//   osc.stop(now + 0.09);
-// }, []);
+  //   osc.start(now);
+  //   osc.stop(now + 0.06);
+  // }, []);
 
-const playTick = React.useCallback(() => {
-  const ctx = audioCtxRef.current;
-  if (!ctx) return;
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
 
-  osc.type = "sine";            // pure, round body [changeable] [web:71]
-  osc.frequency.value = 600;    // deeper pitch [changeable] [web:44]
+  // const playTick = React.useCallback(() => {
+  //   const ctx = audioCtxRef.current;
+  //   if (!ctx) return;
+  //   const osc = ctx.createOscillator();
+  //   const gain = ctx.createGain();
 
-  gain.gain.value = 0.0001;
-  osc.connect(gain);
-  gain.connect(ctx.destination);
+  //   osc.type = "sawtooth";      // edgy, retro [changeable] [web:71]
+  //   osc.frequency.value = 1500; // bright [changeable] [web:44]
 
-  const now = ctx.currentTime;
-  gain.gain.setValueAtTime(0.0001, now);
-  gain.gain.exponentialRampToValueAtTime(0.02, now + 0.004);  // firm attack for punch [changeable] [web:44]
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.095); // medium-long decay [changeable] [web:44]
+  //   gain.gain.value = 0.0001;
+  //   osc.connect(gain);
+  //   gain.connect(ctx.destination);
 
-  osc.start(now);
-  osc.stop(now + 0.12);
-}, []);
+  //   const now = ctx.currentTime;
+  //   gain.gain.setValueAtTime(0.0001, now);
+  //   gain.gain.exponentialRampToValueAtTime(0.018, now + 0.004); // quick attack [changeable]
+  //   gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.07); // short decay [changeable]
+
+  //   osc.start(now);
+  //   osc.stop(now + 0.09);
+  // }, []);
+
+  const playTick = React.useCallback(() => {
+    const ctx = audioCtxRef.current;
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = "sine";            // pure, round body [changeable] [web:71]
+    osc.frequency.value = 600;    // deeper pitch [changeable] [web:44]
+
+    gain.gain.value = 0.0001;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    const now = ctx.currentTime;
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.02, now + 0.004);  // firm attack for punch [changeable] [web:44]
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.095); // medium-long decay [changeable] [web:44]
+
+    osc.start(now);
+    osc.stop(now + 0.12);
+  }, []);
 
 
 
@@ -312,13 +312,12 @@ const playTick = React.useCallback(() => {
                 onClick={() => setSelectedDay(day)}
                 className={`
                   relative flex flex-col items-center justify-center px-6 pb-3 pt-2
-                  text-stone-500 transition-colors snap-center
+                  text-stone-500 transition-colors snap-center cursor-pointer
                   after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2
                   after:h-[2px] after:w-[0%] after:rounded-full after:transition-all after:duration-300
-                  ${
-                    day === selectedDay
-                      ? "text-[#ec6d13] after:bg-[#ec6d13] after:w-[60%]"
-                      : "hover:text-[#ec6d13] hover:after:bg-[#ec6d13]/50 hover:after:w-[60%]"
+                  ${day === selectedDay
+                    ? "text-[#ec6d13] after:bg-[#ec6d13] after:w-[60%]"
+                    : "hover:text-[#ec6d13] hover:after:bg-[#ec6d13]/50 hover:after:w-[60%]"
                   }
                 `}
                 role="tab"
