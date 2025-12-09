@@ -146,7 +146,7 @@ const DashboardLayout = () => {
       <ScrollToTop />
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-20 md:hidden cursor-pointer"
+          className="fixed inset-0 bg-white/30 backdrop-blur-sm z-20 md:hidden cursor-pointer"
           onClick={() => setSidebarOpen(false)}
         />
       )}

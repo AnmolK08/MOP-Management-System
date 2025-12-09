@@ -68,6 +68,21 @@ export const deleteUser = createAsyncThunk(
     }
 )
 
+export const announcementMsg = createAsyncThunk(
+    "provider/announcementMsg",
+    async(message, {rejectWithValue})=>{
+        try {
+            const token = localStorage.getItem("token");
+            const res = await axiosInstance.post(`/provider/announceMsg`, {message}, {
+                headers: { Authorization: `Bearer ${token}` },
+              });
+              return res.data.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || "Failed to send announcement")
+        }
+    }
+)
+
 const providerSlice = createSlice({
     name : "provider/users",
     initialState,

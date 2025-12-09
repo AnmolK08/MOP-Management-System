@@ -97,15 +97,15 @@ const MenuDialog = ({ isOpen, onClose, onSave, existingMenu }) => {
                                 className="flex-grow p-2 border rounded-lg"
                                 onKeyPress={(e) => e.key === 'Enter' && handleAddItem()}
                             />
-                            <button onClick={handleAddItem} className="bg-blue-500 text-white px-4 cursor-pointer rounded-lg font-semibold">Add</button>
+                            <button onClick={handleAddItem} className="bg-orange-500 text-white px-4 cursor-pointer rounded-lg font-semibold">Add</button>
                         </div>
                     </div>
                 </div>
 
                 {/* Dialog Footer */}
                 <div className="flex justify-end gap-3 p-4 border-t bg-gray-50 rounded-b-xl">
-                    <button onClick={onClose} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Cancel</button>
-                    <button onClick={handleSave} className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                    <button onClick={onClose} className="px-4 py-2 cursor-pointer bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Cancel</button>
+                    <button onClick={handleSave} className="px-4 py-2 cursor-pointer bg-green-500 text-white rounded-lg hover:bg-green-600">
                         {existingMenu ? 'Update Menu' : 'Publish Menu'}
                     </button>
                 </div>

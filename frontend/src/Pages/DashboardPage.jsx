@@ -179,6 +179,11 @@ const DashboardPage = () => {
       dispatch(deliveredUserLatestOrder());
     });
 
+    socket.on("announcementNotification", ({ notification }) => {
+      toast.success(notification.message);
+      dispatch(addNotification(notification));
+    });
+
     return () => {
       socket.off("updateWalletNotification");
       socket.off("userPlanNotification");
@@ -186,6 +191,7 @@ const DashboardPage = () => {
       socket.off("updateMenuNotification");
       socket.off("orderSeenNotification");
       socket.off("orderDeliveredNotification");
+      socket.off("announcementNotification");
     };
   }, [dispatch]);
 

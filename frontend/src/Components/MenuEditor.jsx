@@ -116,7 +116,7 @@ const MenuEditor = () => {
   }
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm mt-6">
+    <div className="bg-white p-6 rounded-xl shadow-sm mt-6 w-full sm:w-1/2">
       <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-4">
         <h3 className="text-xl font-semibold text-gray-800">
           Manage Today's Menu
@@ -178,7 +178,7 @@ const MenuEditor = () => {
           </p>
           <button
             onClick={handleOpenAddDialog}
-            className="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 cursor-pointer"
+            className="bg-orange-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-600 cursor-pointer"
           >
             Add New Menu
           </button>

@@ -99,7 +99,7 @@ export const updateMenu = asyncHandler(async (req, res) => {
   }));
   
   res
-    .status(201)
+    .status(200)
     .json({ success: true, message: "Menu updated successfully", data: menu });
 }); //done
 
@@ -209,3 +209,33 @@ export const deleteUser = asyncHandler(async (req, res) => {
     .status(200)
     .json({ success: true, message: "User deleted successfully", data: user });
 }); //done
+
+export const announcementMsg = asyncHandler(async (req, res) => {
+  const { message } = req.body;
+
+  if (!message) throw new ResponseError("Message is required", 401);
+
+  const customers = await prisma.user.findMany({
+    where: { role: "CUSTOMER" },
+    select: { id: true }
+  });
+
+  await Promise.all(customers.map(async ({ id }) => {
+    const socketId = await getRecieverSocketId(id);
+    const notification = await createNotification({
+      senderId: req.userId,
+      receiverId: id,
+      message,
+    });
+
+    if (socketId && notification) {
+      io.to(socketId).emit("announcementNotification", {notification});
+    }
+  }));
+  
+  res.status(200).json({
+    success: true,
+    message: "Announcement sent successfully",
+    data: message,
+  });
+})
