@@ -180,7 +180,7 @@ const BillingPage = () => {
                   <tr>
                     <th className="text-left py-3 px-4">Date</th>
                     <th className="text-left py-3 px-4">Status</th>
-                    <th className="text-left py-3 px-4">Paid</th>
+                    <th className="text-left py-3 px-4">Payment</th>
                     <th className="text-left py-3 px-4">Items</th>
                     <th className="text-left py-3 px-4">Type</th>
                     <th className="text-left py-3 px-4">Amount</th>
@@ -212,7 +212,7 @@ const BillingPage = () => {
                               order.paid
                             )}`}
                           >
-                            {order.paid ? "Paid" : "Not Paid"}
+                            {order.paid ? "Paid" : "Pending"}
                           </span>
                         </td>
 

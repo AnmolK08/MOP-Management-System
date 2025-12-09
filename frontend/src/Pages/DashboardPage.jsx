@@ -56,6 +56,21 @@ const MenuCard = ({ menu, onOrderNow }) => (
 const LatestOrderCard = ({ order, onEdit, onCancel }) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "DELIVERED":
+        return "bg-green-100 text-green-800";
+      case "APPROVED":
+        return "bg-yellow-100 text-yellow-800";
+      case "PLACED":
+        return "bg-blue-100 text-blue-800";
+      case "CANCELLED":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
   return (
     <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
       <div className="flex flex-col justify-between w-full gap-2 mb-4">
@@ -82,7 +97,7 @@ const LatestOrderCard = ({ order, onEdit, onCancel }) => {
       </ul>
       <div className="flex justify-between items-center mt-4 text-sm">
         <p className="font-medium">
-          Status: <span className="text-green-600">{order.status}</span>
+          Status: <span className={`py-1 px-2 rounded-full ${getStatusClass(order.status)}`}>{order.status}</span>
         </p>
       </div>
       {order.status == "PLACED" && (
@@ -299,9 +314,9 @@ const DashboardPage = () => {
                   : "Normal"}
             </p>
           </div>
-          <div className="bg-green-50 rounded-lg p-4">
+          <div className={`rounded-lg p-4 ${user.customer?.wallet < 0 ? "bg-red-50" : "bg-green-50"}`}>
             <p className="text-sm text-gray-600">Wallet</p>
-            <p className="text-xl font-semibold text-green-600">
+            <p className={`text-xl font-semibold ${user.customer?.wallet < 0 ? "text-red-600" : "text-green-600"}`}>
               {" "}
               {user === null
                 ? "Loading..."

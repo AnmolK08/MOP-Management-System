@@ -16,7 +16,7 @@ export const updateProfile = createAsyncThunk(
             const res = await axiosInstance.post("/profile/editPass", {oldPass , newPass , confPass }, {
                 headers: { Authorization: `Bearer ${token}` },
               });
-              return res.data.data;
+              return res.data;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Failed to update profile details")
         }   

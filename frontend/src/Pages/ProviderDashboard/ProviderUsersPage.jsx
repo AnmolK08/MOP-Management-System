@@ -165,7 +165,7 @@ const ProviderUsersPage = () => {
                           isPremium: user.customer.premium,
                         })
                       }
-                      className="cursor-pointer bg-blue-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-600 transition-colors"
+                      className="cursor-pointer bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors"
                     >
                       Toggle Premium
                     </button>

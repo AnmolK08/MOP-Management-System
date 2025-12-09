@@ -27,6 +27,12 @@ const AttendancePage = () => {
   const allOrders = useSelector((state) => state.orderSlice.userOrders);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
+  // Track the current month being displayed
+  const [currentMonth, setCurrentMonth] = useState(() => {
+    const now = new Date();
+    return { year: now.getFullYear(), month: now.getMonth() };
+  });
+
   useEffect(() => {
     if (!allOrders || allOrders.length === 0) {
       dispatch(fetchUserOrders());
@@ -36,6 +42,17 @@ const AttendancePage = () => {
   const deliveredOrders = useMemo(() => {
     return allOrders?.filter((order) => order.status === "DELIVERED") || [];
   }, [allOrders]);
+
+  // Filter orders by current month
+  const monthFilteredOrders = useMemo(() => {
+    return deliveredOrders.filter((order) => {
+      const orderDate = new Date(order.date);
+      return (
+        orderDate.getFullYear() === currentMonth.year &&
+        orderDate.getMonth() === currentMonth.month
+      );
+    });
+  }, [deliveredOrders, currentMonth]);
 
   const events = useMemo(() => {
     const groupedByDate = deliveredOrders.reduce((acc, order) => {
@@ -64,9 +81,8 @@ const AttendancePage = () => {
         {types.map((type, index) => (
           <div
             key={index}
-            className={`w-3 h-3 rounded-full ${
-              type === "LUNCH" ? "bg-orange-500" : "bg-blue-600"
-            } border border-white`}
+            className={`w-3 h-3 rounded-full ${type === "LUNCH" ? "bg-orange-500" : "bg-blue-600"
+              } border border-white`}
             style={{ margin: "0 2px" }}
           ></div>
         ))}
@@ -74,8 +90,9 @@ const AttendancePage = () => {
     );
   };
 
+  // Calculate stats based on current month
   const { consumedDays, totalLunch, totalDinner } = useMemo(() => {
-    const groupedByDate = deliveredOrders.reduce((acc, o) => {
+    const groupedByDate = monthFilteredOrders.reduce((acc, o) => {
       const dateKey = o.date.split("T")[0];
       acc[dateKey] = true;
       return acc;
@@ -83,10 +100,25 @@ const AttendancePage = () => {
 
     return {
       consumedDays: Object.keys(groupedByDate).length,
-      totalLunch: deliveredOrders.filter((o) => o.type === "LUNCH").length,
-      totalDinner: deliveredOrders.filter((o) => o.type === "DINNER").length,
+      totalLunch: monthFilteredOrders.filter((o) => o.type === "LUNCH").length,
+      totalDinner: monthFilteredOrders.filter((o) => o.type === "DINNER").length,
     };
-  }, [deliveredOrders]);
+  }, [monthFilteredOrders]);
+
+  // Handler for when calendar month changes
+  const handleDatesSet = (dateInfo) => {
+    const viewDate = dateInfo.view.currentStart;
+    setCurrentMonth({
+      year: viewDate.getFullYear(),
+      month: viewDate.getMonth(),
+    });
+  };
+
+  // Format current month for display
+  const currentMonthName = new Date(currentMonth.year, currentMonth.month).toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric'
+  });
 
   return (
     <div className="px-4 py-4 md:px-6 md:py-6 max-w-7xl mx-auto">
@@ -96,7 +128,8 @@ const AttendancePage = () => {
 
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="bg-white rounded-xl shadow-sm p-6 w-full lg:w-1/3 xl:w-1/4">
-          <h3 className="text-lg font-semibold text-gray-800 mb-6">Summary</h3>
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">Summary</h3>
+          <p className="text-sm text-gray-500 mb-4">{currentMonthName}</p>
           <div className="grid grid-cols-1 gap-4">
             <SummaryCard title="Total Consumed Days" value={consumedDays} />
             <SummaryCard title="Delivered Lunches" value={totalLunch} />
@@ -116,6 +149,7 @@ const AttendancePage = () => {
             }}
             events={events}
             eventContent={renderEventContent}
+            datesSet={handleDatesSet}
             height="auto"
             contentHeight="auto"
             aspectRatio={isMobile ? 0.8 : 1.35}

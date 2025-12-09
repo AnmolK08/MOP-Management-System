@@ -81,7 +81,7 @@ const OrderDetailsModal = ({ order, onClose }) => {
           <div className="flex justify-end p-4 sm:p-6 border-t mt-auto">
             <button
               onClick={onClose}
-              className="cursor-pointer px-4 sm:px-6 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors"
+              className="cursor-pointer px-4 sm:px-6 py-2 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition-colors"
             >
               Close
             </button>

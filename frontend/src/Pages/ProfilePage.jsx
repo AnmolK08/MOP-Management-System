@@ -30,7 +30,7 @@ const ProfilePage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.newPass !== formData.confPass) {
-      toast.error("New Password and Confirm Password must match");
+      toast.error("New Password and Confirm New Password must match");
       return;
     }
 
@@ -157,7 +157,6 @@ const ProfilePage = () => {
 
                 <button
                   type="submit"
-                  disabled={loading}
                   className="cursor-pointer w-full sm:w-auto px-6 py-2.5 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
                 >
                   {"Update Password"}
