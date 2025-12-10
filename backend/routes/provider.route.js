@@ -1,6 +1,6 @@
 import express from 'express';
 import isProvider from '../middleware/isProvider.js';
-import { announcementMsg, deleteMenu, deleteUser, getAllUsers, getLatestMenu, menuUpload, togglePremium, updateMenu } from '../controller/provider.controller.js';
+import { announcementMsg, deleteMenu, deleteUser, generateQRToken, getAllUsers, getLatestMenu, menuUpload, togglePremium, updateMenu } from '../controller/provider.controller.js';
 import isAuthenticated from '../middleware/isAuthenticated.js';
 
 const router = express.Router();
@@ -13,5 +13,6 @@ router.get('/getAllUsers' , isAuthenticated, isProvider , getAllUsers);
 router.patch('/togglePremium/:customerId' , isAuthenticated, isProvider , togglePremium);
 router.delete('/deleteUser/:userId' , isAuthenticated, isProvider , deleteUser);
 router.post('/announceMsg' , isAuthenticated, isProvider , announcementMsg);
+router.get("/generateQRToken", isAuthenticated, isProvider, generateQRToken);
 
 export default router;

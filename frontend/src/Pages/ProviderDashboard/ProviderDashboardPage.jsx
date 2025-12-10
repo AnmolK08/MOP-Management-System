@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import MenuEditor from "../../Components/MenuEditor";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProviderOrders } from "../../Redux/Slices/orderSlice";
 import { announcementMsg, getAllUsers } from "../../Redux/Slices/providerSlice";
-import { IoMdMegaphone, IoMdClose } from "react-icons/io";
+import { IoMdMegaphone, IoMdClose, IoMdQrScanner } from "react-icons/io";
 import { toast } from "react-toastify";
+import QRCodeGenerator from "../../Components/QRCodeGenerator";
 
 // A simple card for displaying stats
 const StatCard = ({ title, value }) => (
@@ -42,7 +43,7 @@ const AnnouncementModal = () => {
         toast.update(toastId, { render: "Announcement sent successfully", type: "success", isLoading: false, autoClose: 3000 });
       }
     });
-    
+
     setMessage("");
     handleClose();
   };
@@ -117,6 +118,7 @@ const ProviderDashboardPage = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.providerSlice.users);
   const orders = useSelector((state) => state.orderSlice.providerOrders);
+  const [isQRModalOpen, setQRModalOpen] = useState(false);
 
 
   useEffect(() => {
@@ -128,10 +130,21 @@ const ProviderDashboardPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-wrap sm:flex-row justify-between items-start sm:items-center gap-2">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Dashboard</h2>
-        <AnnouncementModal />
+        <div className="flex gap-2">
+          <AnnouncementModal />
+          <button
+            onClick={() => setQRModalOpen(true)}
+            className="flex items-center justify-center cursor-pointer gap-2 bg-orange-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg shadow hover:bg-orange-600 transition-all font-medium"
+          >
+            <IoMdQrScanner className="text-xl" />
+            <span className="hidden sm:inline">Generate QR Code</span>
+          </button>
+        </div>
       </div>
+
+      <QRCodeGenerator isOpen={isQRModalOpen} onClose={() => setQRModalOpen(false)} />
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <StatCard

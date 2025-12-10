@@ -237,6 +237,26 @@ export const fetchOrdersByUserId = createAsyncThunk(
   }
 )
 
+export const scanAndDelivered = createAsyncThunk(
+  "orders/scanAndDelivered",
+  async ({orderData, qrToken},{rejectWithValue})=>{
+    try {
+      const token = localStorage.getItem("token")
+      const res = await axiosInstance.put("/order/scanAndDelivered", {
+        items : orderData.items , 
+        type : orderData.type,
+        qrToken: qrToken
+      },{ headers: { Authorization: `Bearer ${token}` } }
+    )
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to scan and deliver order"
+      );
+    }
+  }
+)
+
 // --- The Slice Definition ---
 const ordersSlice = createSlice({
   name: "orders",
