@@ -83,6 +83,23 @@ export const announcementMsg = createAsyncThunk(
     }
 )
 
+export const generateQRToken = createAsyncThunk(
+  "provider/generateQRToken",
+  async (_, {rejectWithValue})=>{
+    try {
+      const token = localStorage.getItem("token")
+      const res = await axiosInstance.get("/provider/generateQRToken",
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to generate QR token"
+      );
+    }
+  }
+)
+
 const providerSlice = createSlice({
     name : "provider/users",
     initialState,

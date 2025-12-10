@@ -3,6 +3,7 @@ import ResponseError from "../types/ResponseError.js";
 import prisma from "../config/db.js";
 import {getRecieverSocketId, io} from "../config/socket.js";
 import { createNotification } from "./notifications.controller.js";
+import jwt from "jsonwebtoken";
 
 export const placeOrder = asyncHandler(async (req, res) => {
   const { items, type } = req.body;
@@ -492,3 +493,84 @@ const deliveredAndPaid = async (id)=>{
     });
     return updatedOrder;
 }
+
+export const placeOrderAndMarkAsDelivered = asyncHandler(async (req , res) => {
+  const {items , type, qrToken} = req.body;
+
+  if(!items || items.length === 0 || !type || !qrToken){
+    throw new ResponseError("Please provide all required fields including QR token");
+  }
+
+  try {
+    const decoded = jwt.verify(qrToken, process.env.QR_GENERATOR_SECRET);
+    
+    if (decoded.purpose !== 'order_delivery') {
+      throw new ResponseError("Invalid QR code", 401);
+    }
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      throw new ResponseError("QR code has expired. Please ask the provider for a new one.", 401);
+    }
+    throw new ResponseError("Invalid QR code", 401);
+  }
+
+  const menu = await prisma.menu.findFirst({
+    where: {
+      type: type,
+      date: {
+        gte: new Date(new Date().setHours(0, 0, 0, 0)),
+      },
+    },
+  });
+
+  if (!menu) throw new ResponseError("Menu is not provided yet.", 404);
+
+  const user = await prisma.customer.findUnique({
+    where: { userId: req.userId },
+  });
+
+  if (!user) {
+    throw new ResponseError("Customer profile not found", 404);
+  }
+
+  const existingOrder = await prisma.order.findFirst({
+    where: {
+      customerId: user.id,
+      type,
+      date: { gte: new Date(new Date().setHours(0, 0, 0, 0)) },
+    },
+  });
+  if (existingOrder) {
+    throw new ResponseError("You have already placed an order for today", 400);
+  }
+
+  const order = await prisma.order.create({
+    data: {
+      customerId: user.id,
+      items,
+      type,
+      status: "DELIVERED",
+      date: new Date(),
+    },include: {
+      customer: {
+        include: {
+          user: {  
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    }
+  });
+
+  if(!order){
+    throw new ResponseError("Failed to place order", 500);
+  }
+
+  res.status(201).json({
+    success: true,
+    message: "Order placed and marked as delivered successfully",
+    data: order,
+  }); 
+})

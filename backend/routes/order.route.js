@@ -13,6 +13,7 @@ import {
   getOrdersForToday,
   markOrdersSeen,
   markOrdersDelivered,
+  placeOrderAndMarkAsDelivered,
 } from "../controller/order.controller.js";
 import isAuthenticated from "../middleware/isAuthenticated.js";
 import isProvider from "../middleware/isProvider.js";
@@ -49,5 +50,7 @@ router.get("/ordersForToday" ,isAuthenticated, isProvider, getOrdersForToday);
 router.put("/markOrdersSeen", isAuthenticated, isProvider, markOrdersSeen);
 
 router.put("/markOrdersDelivered", isAuthenticated, isProvider, markOrdersDelivered);
+
+router.put("/scanAndDelivered", isAuthenticated, placeOrderAndMarkAsDelivered);
 
 export default router;

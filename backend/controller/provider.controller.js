@@ -3,6 +3,7 @@ import ResponseError from "../types/ResponseError.js";
 import prisma from "../config/db.js";
 import { getRecieverSocketId, io } from "../config/socket.js";
 import { createNotification } from "./notifications.controller.js";
+import jwt from "jsonwebtoken";
 
 export const menuUpload = asyncHandler(async (req, res) => {
   const { type, options , special} = req.body;
@@ -239,3 +240,20 @@ export const announcementMsg = asyncHandler(async (req, res) => {
     data: message,
   });
 })
+
+export const generateQRToken = asyncHandler(async (req, res) => {
+  const token = jwt.sign(
+    { 
+      purpose: 'order_delivery',
+      generatedAt: new Date().toISOString()
+    },
+    process.env.QR_GENERATOR_SECRET,
+    { expiresIn: '15d' }
+  );
+
+  res.status(200).json({
+    success: true,
+    message: "QR token generated successfully",
+    data: { token, expiresIn: '15 days' },
+  });
+});

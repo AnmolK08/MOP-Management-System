@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { RiCloseLine, RiAddLine, RiSubtractLine } from "react-icons/ri";
+import { IoMdQrScanner } from "react-icons/io";
+import QRScannerModal from "./QRScannerModal";
 
 const OrderDialog = ({ isOpen, onClose, menu, onPlaceOrder, editingOrder }) => {
     const [selectedItems, setSelectedItems] = useState({});
     const [riceOption, setRiceOption] = useState("Roti only");
+    const [isQRScannerOpen, setQRScannerOpen] = useState(false);
     const REQUIRED_SELECTIONS = menu?.special ? menu?.options.length : 2;
 
     useEffect(() => {
@@ -65,6 +68,15 @@ const OrderDialog = ({ isOpen, onClose, menu, onPlaceOrder, editingOrder }) => {
         onPlaceOrder(orderData);
     };
 
+    // Prepare order data for QR scanner
+    const prepareOrderData = () => {
+        const orderItems = Object.entries(selectedItems).flatMap(([item, count]) => Array(count).fill(item));
+        return {
+            items: menu?.special ? orderItems : [...orderItems, riceOption],
+            type: menu.type,
+        };
+    };
+
     return (
         <div
             className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50 p-4"
@@ -77,10 +89,10 @@ const OrderDialog = ({ isOpen, onClose, menu, onPlaceOrder, editingOrder }) => {
                     <button onClick={onClose} className="cursor-pointer"><RiCloseLine size={24} /></button>
                 </div>
 
-                <div className="bg-blue-50 p-4">
+                <div className="bg-orange-50 p-4">
                     <div className="flex justify-between items-center">
-                        <h3 className="font-medium text-blue-900">{menu?.type} Menu</h3>
-                        <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                        <h3 className="font-medium text-orange-900">{menu?.type} Menu</h3>
+                        <span className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm font-medium">
                             {totalSelections}/{REQUIRED_SELECTIONS} Selected
                         </span>
                     </div>
@@ -130,22 +142,20 @@ const OrderDialog = ({ isOpen, onClose, menu, onPlaceOrder, editingOrder }) => {
                                 <button
                                     type="button"
                                     onClick={() => setRiceOption("Roti only")}
-                                    className={`cursor-pointer p-3 rounded-lg text-center ${
-                                        riceOption === "Roti only"
-                                            ? "bg-blue-50 border-2 border-blue-500"
-                                            : "bg-gray-50 border-2 border-transparent"
-                                    }`}
+                                    className={`cursor-pointer p-3 rounded-lg text-center ${riceOption === "Roti only"
+                                        ? "bg-orange-50 border-2 border-orange-500"
+                                        : "bg-gray-50 border-2 border-transparent"
+                                        }`}
                                 >
                                     Roti Only
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => setRiceOption("Roti and Rice")}
-                                    className={`cursor-pointer p-3 rounded-lg text-center ${
-                                        riceOption === "Roti and Rice"
-                                            ? "bg-blue-50 border-2 border-blue-500"
-                                            : "bg-gray-50 border-2 border-transparent"
-                                    }`}
+                                    className={`cursor-pointer p-3 rounded-lg text-center ${riceOption === "Roti and Rice"
+                                        ? "bg-orange-50 border-2 border-orange-500"
+                                        : "bg-gray-50 border-2 border-transparent"
+                                        }`}
                                 >
                                     Roti and Rice
                                 </button>
@@ -155,24 +165,43 @@ const OrderDialog = ({ isOpen, onClose, menu, onPlaceOrder, editingOrder }) => {
                 </form>
 
                 {/* Footer */}
-                <div className="flex justify-end gap-3 p-4 border-t bg-white">
-                    <button type="button" onClick={onClose} className="cursor-pointer px-6 py-2 bg-gray-100 rounded-lg">
-                        Cancel
-                    </button>
+                <div className="flex justify-between gap-3 p-4 border-t bg-white">
+                    <div className="flex gap-3">
+                        <button type="button" onClick={onClose} className="cursor-pointer px-6 py-2 bg-gray-100 rounded-lg">
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            form="order-form"
+                            disabled={totalSelections < 1 || totalSelections > REQUIRED_SELECTIONS}
+                            className="cursor-pointer px-6 py-2 bg-orange-500 text-white rounded-lg disabled:opacity-50"
+                        >
+                            {totalSelections >= 1 && totalSelections <= REQUIRED_SELECTIONS
+                                ? editingOrder
+                                    ? "Update Order"
+                                    : "Place Order"
+                                : `Select ${Math.max(1 - totalSelections, 0)} More`}
+                        </button>
+                    </div>
                     <button
-                        type="submit"
-                        form="order-form"
+                        type="button"
+                        onClick={() => setQRScannerOpen(true)}
                         disabled={totalSelections < 1 || totalSelections > REQUIRED_SELECTIONS}
-                        className="cursor-pointer px-6 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50"
+                        className="cursor-pointer px-4 py-2 bg-orange-500 text-white rounded-lg disabled:opacity-50 flex items-center gap-2"
+                        title="Scan QR Code"
                     >
-                        {totalSelections >= 1 && totalSelections <= REQUIRED_SELECTIONS
-                            ? editingOrder
-                                ? "Update Order"
-                                : "Place Order"
-                            : `Select ${Math.max(1 - totalSelections, 0)} More`}
+                        <IoMdQrScanner className="text-xl" />
+                        <span className="hidden sm:inline">Scan QR</span>
                     </button>
                 </div>
             </div>
+
+            <QRScannerModal
+                isOpen={isQRScannerOpen}
+                onClose={() => setQRScannerOpen(false)}
+                parentClose={onClose}
+                orderData={prepareOrderData()}
+            />
         </div>
     );
 };
